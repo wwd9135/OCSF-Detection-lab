@@ -1,16 +1,5 @@
 # OCSF Detection Lab — Build Guide
 
-A follow-live runbook for the 4-week plan, stretched to a realistic 5 weeks at ~40 hrs/week.
-Written for someone who has stood up Windows Server / AD / DCs and has an existing Sigma+CI
-detection pipeline, but has **never touched ADCS/CA, Certipy, Logstash, or OpenSearch**, and
-wants OCSF explained from the ground up.
-
-> **How to read this.** Sections marked 🧠 **CONCEPT** explain something you haven't done before —
-> read them once, then never again. Sections marked ⚡ **DO** are the actual steps. Sections marked
-> ⚠️ **GOTCHA** are the half-day time-sinks; read them *before* you start the surrounding step, not after.
-> Everything AD/DC/KQL/CI-related is deliberately terse because you already own that muscle.
-
----
 
 ## Table of contents
 
@@ -135,7 +124,7 @@ schema, two genuinely different detection logics. That contrast is your blog pos
 Instead of "Sysmon event 1" and "auditd execve" and "Linux sshd" all having different field names
 for the same idea (a process started, a user logged in), OCSF gives you **one shape** per *kind of
 activity*, with the same field names regardless of source.
-
+.
 The pieces you'll touch:
 
 - **Category** — a broad domain. You'll use *System Activity* (id 1) and *IAM* (id 3).
