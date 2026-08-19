@@ -42,18 +42,20 @@ the thing you finish *with*, not the thing you start with.
 
 ## Environment assumptions and naming
 
-Adjust to taste, but the guide uses these throughout:
+Main Windows 11 laptop
+└── Hypervisor
+    ├── DC01      Windows Server / AD DS / DNS
+    ├── CA01      Windows Server / ADCS
+    ├── UBU01     Linux target / auditd / SSSD
+    └── SIEM01    Logstash / OpenSearch / Dashboards
 
-| Thing | Value |
-| --- | --- |
-| AD domain | `lab.local` |
-| DC | `DC01` — 10.0.0.10 |
-| CA (member server + ADCS) | `CA01` — 10.0.0.11 |
-| Ubuntu (domain-joined target) | `ubu01` — 10.0.0.20 |
-| Debian (domain-joined target) | `deb01` — 10.0.0.21 |
-| Pipeline host (Logstash + OpenSearch, 8 GB+) | `siem01` — 10.0.0.30 |
-| Attacker box (Kali or Ubuntu + Certipy) | `atk01` — 10.0.0.40 |
-| Low-priv test user | `bob@lab.local` (member of Domain Users only) |
+Spare physical laptop
+└── Kali Linux
+    ├── Certipy
+    ├── Impacket
+    ├── BloodHound tools
+    ├── Nmap
+    └── other attack tooling
 
 **Snapshot every VM before each attack run.** You will re-run these many times; a clean baseline
 is the difference between a two-hour fixture capture and a two-day one.
