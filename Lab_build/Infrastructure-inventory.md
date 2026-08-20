@@ -16,3 +16,4 @@ Spare physical laptop with core OS changed to Kali linux
     ├── BloodHound tools
     ├── Nmap
     └── other attack tooling
+.
