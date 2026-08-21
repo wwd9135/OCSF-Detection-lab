@@ -1,3 +1,11 @@
+Invoke-WebRequest `
+  -Uri "https://download.sysinternals.com/files/Sysmon.zip" `
+  -OutFile "$env:TEMP\Sysmon.zip"
+
+Expand-Archive `
+  -Path "$env:TEMP\Sysmon.zip" `
+  -DestinationPath "C:\Sysmon" `
+  -Force
 # OCSF Detection Lab — Build Guide
 
 
@@ -277,7 +285,7 @@ writeup evidence and your `telemetry-inventory.md` entry.
 ### Day 3–5: the familiar work (fast, because you own it)
 
 - Promote `DC01`, build the domain, add users incl. low-priv `bob`.
-- Join `ubu01` / `deb01` to `lab.local` via **SSSD**. It's fiddly but you get realistic auth
+- Join `ubu01` / to `local NAT` via **SSSD**. It's fiddly but you get realistic auth
   telemetry (4768/4769 on the DC, `sssd`/`sshd` on the box). Keep the `sssd.conf` you land on — it's
   a `telemetry-inventory.md` artefact.
 - Windows auditing: Advanced Audit Policy for **process creation with command line**
