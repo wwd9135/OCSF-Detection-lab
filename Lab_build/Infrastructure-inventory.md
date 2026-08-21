@@ -9,7 +9,7 @@ Main Windows 11 laptop
     ├── UBU01     Linux target / auditd / SSSD
     └── SIEM01    Logstash / OpenSearch / Dashboards
 
-Spare physical laptop with core OS changed to Kali linux 
+Spare physical laptop with core OS changed to Kali linux or ubuntu
 └── Kali Linux
     ├── Certipy
     ├── Impacket
