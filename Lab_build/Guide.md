@@ -6,6 +6,8 @@ Expand-Archive `
   -Path "$env:TEMP\Sysmon.zip" `
   -DestinationPath "C:\Sysmon" `
   -Force
+
+https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
 # OCSF Detection Lab — Build Guide
 
 
