@@ -1,14 +1,18 @@
-Invoke-WebRequest `
-  -Uri "https://download.sysinternals.com/files/Sysmon.zip" `
-  -OutFile "$env:TEMP\Sysmon.zip"
+sudo curl -o /etc/audit/rules.d/audit.rules https://raw.githubusercontent.com/Neo23x0/auditd/master/audit.rules
+sudo nano /etc/audit/auditd.conf
+Load the new audit rules:
 
-Expand-Archive `
-  -Path "$env:TEMP\Sysmon.zip" `
-  -DestinationPath "C:\Sysmon" `
-  -Force
+sudo auditctl -R /etc/audit/rules.d/audit.rules
+Restart the auditd service:
 
-https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
-https://medium.com/@jamesrawlings0/install-sysmon-on-windows-190d2d417717
+sudo service auditd restart
+Step 5: Verify Installation and Rules
+Check if auditd is running:
+
+sudo systemctl status auditd
+Verify that the rules have been loaded:
+
+sudo auditctl -l
 # OCSF Detection Lab — Build Guide
 
 
