@@ -1,18 +1,20 @@
-sudo curl -o /etc/audit/rules.d/audit.rules https://raw.githubusercontent.com/Neo23x0/auditd/master/audit.rules
-sudo nano /etc/audit/auditd.conf
-Load the new audit rules:
 
-sudo auditctl -R /etc/audit/rules.d/audit.rules
-Restart the auditd service:
+sudo nano /etc/audit/rules.d/lab.rules
+## 64-bit process execution
+-a always,exit -F arch=b64 -S execve -k process_exec
 
-sudo service auditd restart
-Step 5: Verify Installation and Rules
-Check if auditd is running:
+## 32-bit process execution
+-a always,exit -F arch=b32 -S execve -k process_exec
 
-sudo systemctl status auditd
-Verify that the rules have been loaded:
+## Identity/authentication-related files
+-w /etc/passwd -p wa -k identity
+-w /etc/group -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/sudoers -p wa -k privilege_config
 
-sudo auditctl -l
+## SSH configuration
+-w /etc/ssh/sshd_config -p wa -k ssh_config
+
 # OCSF Detection Lab — Build Guide
 
 
