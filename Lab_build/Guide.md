@@ -8,6 +8,7 @@ Expand-Archive `
   -Force
 
 https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+https://medium.com/@jamesrawlings0/install-sysmon-on-windows-190d2d417717
 # OCSF Detection Lab — Build Guide
 
 
