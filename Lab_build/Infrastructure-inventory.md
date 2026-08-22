@@ -16,4 +16,25 @@ Spare physical laptop with core OS changed to Kali linux or ubuntu
     ├── BloodHound tools
     ├── Nmap
     └── other attack tooling
-.
+
+The wider architecture linked together
+
+                         DC01
+                Active Directory + DNS
+                Identity / Kerberos
+                  /       |       \
+                 /        |        \
+                /         |         \
+       WinUser01         UBU01       CA01
+       Windows user      Linux       AD CS
+          |               |           |
+       processes       SSH/exec     certificates
+       logons          SSSD/auth    enrollment
+          \               |           /
+           \              |          /
+            \             |         /
+             -----------------------
+                       |
+                       v
+                     SIEM01
+                 central telemetry
