@@ -4,9 +4,13 @@ This doc will show the telemetry mappings and schemas used throughout this overa
 This will clearly show limitations and drawbacks of the chosen methods, and their efficiency at covering ground. 
 Namely the PKI/ CA infrastructure doesn't map cleanly to OCSF so I will note this limitation and the workarounds I came up with.
 
-## Telemetry mapping
+## Telemetry mapping, what currently visible
 
 
-## CA-PKI bottleneck
+### What was natively enabled vs what I enabled
+
+### CA-PKI bottleneck going into schema/ normalisation work.
 
 CA/PKI not having a valid conversion path to OCSF is a deliberate bottleneck of this project and I intend to discover a valid workaround.
+
+## Known blindspots
