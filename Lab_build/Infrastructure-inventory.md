@@ -2,7 +2,7 @@
 The lab will be split into two clean sections for attack & defence, I've deliberately used an old laptop with Kali and a windows 11 hypervisor laptop for defence so I can launch attacks and watch them unfold on the device and within the SIEM simuntaneously. 
 
 ## Architecture
-Main Windows 11 laptop
+```text
 └── Hypervisor
     ├── DC01      Windows Server / AD DS / DNS
     ├── CA01      Windows Server / ADCS
@@ -16,7 +16,7 @@ Spare physical laptop with core OS changed to Kali linux or ubuntu
     ├── BloodHound tools
     ├── Nmap
     └── other attack tooling
-
+```
 The wider architecture linked together
 
                          DC01
@@ -46,8 +46,10 @@ Logstash will be used to collect the data from the sources named in <GPT insert 
 
 Logstash will parse into OCSF and pass into OpenSearch <include more details when they arrive>
 
+OpenSearch is being used at the ingestion layer, it will take data and efficiently transport it to OpenSearch-Dashboards the SIEM UI interface. I am deploying via docker compose to allow for a configuration to persist through VM reboots and require no manual effort.
+
 OpenSearch data will be stored using a persistent Docker volume rather than solely within the OpenSearch container filesystem. This separates application lifecycle from telemetry storage, allowing containers to be recreated or upgraded without intentionally deleting indexed security data.
-Open search-dashboards will be utilized, SIEM01 will serve as a webserver allowing my Win user VM and my hypervisor itself to access the dashboards I create using standard TCP/HTTPS connections.
+Open search-dashboards will then be utilized, SIEM01 will serve as a webserver allowing my Win user VM and my hypervisor itself to access the dashboards I create using standard TCP/HTTPS connections.
 
 
 
@@ -67,6 +69,8 @@ The SIEM stack is hosted on SIEM01 and containerised using Docker to simplify de
 | **Persistent volume** | Stores OpenSearch indexes outside the lifecycle of the container so telemetry is retained if the container is recreated. |
 
 **The deployment lifecycle is:**
+
+```text
 docker compose up -d
         ↓
 Create Docker network
@@ -82,8 +86,9 @@ Connect Dashboards to OpenSearch
 Publish required ports on SIEM01
         ↓
 Dashboards accessible remotely through browser
-
+```
 ### Interface / port data
+```text
 SIEM01: 10.0.0.30
 
 OpenSearch API:
@@ -94,6 +99,6 @@ TCP 5601
 
 Administrative access:
 SSH TCP 22
-
+```
 
 ### LogStash
