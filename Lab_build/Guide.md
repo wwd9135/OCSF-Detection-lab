@@ -1,3 +1,37 @@
+So I'd reduce your WinUser01 config to roughly this
+winlogbeat.event_logs:
+  - name: Application
+    ignore_older: 72h
+
+  - name: System
+
+  - name: Security
+
+  - name: Microsoft-Windows-Sysmon/Operational
+
+  - name: Windows PowerShell
+    event_id: 400, 403, 600, 800
+
+  - name: Microsoft-Windows-PowerShell/Operational
+    event_id: 4103, 4104, 4105, 4106
+
+output.logstash:
+  hosts: ["10.0.0.30:5044"]
+
+processors:
+  - add_host_metadata: ~
+
+#logging.level: debug
+That's much closer to what your architecture actually requires.
+Now what's left?
+There are effectively four things before you see your first event in OpenSearch.
+Step 1 — validate Winlogbeat
+From elevated PowerShell in the Winlogbeat directory:
+.\winlogbeat.exe test config -c .\winlogbeat.yml -e
+You want:
+Config OK
+This catches YAML mistakes before anything else.
+
 ###################### Winlogbeat Configuration Example ########################
 
 # This file is an example configuration file highlighting only the most common
