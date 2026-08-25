@@ -2,6 +2,8 @@
 **REPO overview**
 
 Infrastructure design/ VM layout is explained in Lab_build/Infrastructure-inventory.md
+
+
 Standard telemetry before normalisation is explained in Lab_build/telemetry-inventory.md
 **Architecture design**
 ```text
