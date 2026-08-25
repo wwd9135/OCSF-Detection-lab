@@ -60,6 +60,8 @@ Spare physical laptop with core OS changed to Kali linux or ubuntu
 
 ## Lab explanation
 This lab was designed from scratch, I used Vmware workstation pro with a local NAT group. Then stood up 5 VMs total, windows server, linux server, windows / linux endpoints. I Stood up a DC, enabled AD-DS to create a functioning active directory & domain server, then I created a certificate authority server, to generate CA/ PKI related traffic down the line, and to grant certificates to the relevant devices within the network. 
+
+
 I then stood up a OpenSearch / dashboards SIEM on my SIEM-01 linux server, used docker to configure it and docker compose to automate the setup of the SIEM allowing the SIEM to function as expected without ongoing maintanance, freezing the version number of OpenSearch deliberately so I wont need to reconfgiure if it auto updated itself.
 From here the OpenSearch SIEM dashboard was reachable via HTTPS, the docker container hosting OpenSearch-Dashboards on SIEM01 was acting as a webserver now. I can reach the SIEM via my personal laptop or the windows user VM within the local NAT.
 
