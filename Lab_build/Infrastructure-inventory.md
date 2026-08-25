@@ -6,6 +6,7 @@ The lab will be split into two clean sections for attack & defence, I've deliber
 └── Hypervisor
     ├── DC01      Windows Server / AD DS / DNS
     ├── CA01      Windows Server / ADCS
+    ├── WinUser   Windows 11 user/ Sysmon
     ├── UBU01     Linux target / auditd / SSSD
     └── SIEM01    Logstash / OpenSearch / Dashboards
 
