@@ -140,4 +140,9 @@ volumes:
 networks:
   opensearch-net:
 ```
+
+### Dashboard configuration
+It's important to change the default username from admin upon first logon
+
+And to create SIEM RBAC roles, such as- SIEM-ADMIN, readonly viewer etc. So you're not running everything on a global admin account that can accidently delete the entire pipeline.
 ### LogStash
