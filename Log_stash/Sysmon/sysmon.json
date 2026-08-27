@@ -1,0 +1,68 @@
+Context- I plan to write the host metadata in the umapped OCSF section, I want it passed along unchanged, and to be folded under a single field if possible
+Next the WinLog.Event_data- I want this to be directly mapped to OCSF without any changes, and I want to ensure that all the key-value pairs in the Event_data are preserved as they are.
+
+"ParentImage" => "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                   "CommandLine" => "\"C:\\WINDOWS\\system32\\whoami.exe\"",
+             "ParentProcessGuid" => "{CBCB36EB-4479-6A8E-0404-000000000900}",
+                        "Hashes" => "MD5=956692DADC5B2CEB46E9219F7A5BEFFA,SHA256=23240EF9F8B0A9A324110B1C2331DE31DC1B0E08F5359CB707E51A939AF56CD3,IMPHASH=E4464BCD92DF7AC69CCD074CB9C0EFED",
+                          "User" => "LOCAL\\Administrator",
+              "OriginalFileName" => "whoami.exe",
+                "IntegrityLevel" => "High",
+                   "Description" => "whoami - displays logged on user information",
+              "CurrentDirectory" => "C:\\Program Files\\WinLogbeat\\",
+                       "LogonId" => "0x5e2284",
+                   "ProcessGuid" => "{CBCB36EB-4AE9-6A8E-4B04-000000000900}",
+                      "RuleName" => "-",
+                       "Product" => "Microsoft® Windows® Operating System",
+                   "FileVersion" => "10.0.26100.1882 (WinBuild.160101.0800)",
+             "ParentCommandLine" => "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" ",
+               "ParentProcessId" => "1028",
+             "TerminalSessionId" => "2",
+                       "Company" => "Microsoft Corporation",
+                     "ProcessId" => "8",
+                    "ParentUser" => "LOCAL\\Administrator",
+                     "LogonGuid" => "{CBCB36EB-3FBE-6A8E-8422-5E0000000000}",
+                         "Image" => "C:\\Windows\\System32\\whoami.exe",
+                       "UtcTime" => "2026-08-26 02:09:45.933"
+
+
+Description:[]
+
+
+**sysmon -> OCSF / attribute type:**
+ - > category_uid / integer
+ - > class_uid / integer
+host.hostname -> Device.hostname / String
+
+# PROCESS.__
+EventData.CommandLine -> process.cmd_line / String
+EventData.ProcessGuid -> process.cpid / UUID
+EventData.UtcTime -> process.created_time / Timestamp
+EventData.OriginalFileName -> process.name / Process Name
+EventData.ParentCommandLine -> process.parent_process / Process
+EventData.ParentProcessId -> process.pid / Integer
+EventData.ProcessId -> process.uid / String
+EventData.User -> process.user / User
+
+file object:[
+    CurrentDirectory -> file.path / File
+    Hashes -> file.hashes / Hash
+    __ -> type_id / Integer
+    __ -> name / FileName 
+    __ -> extension / String
+    #TODO- harvest the file type/ extension(same thing) and name from the 'path' field
+]
+
+## METADATA- AI to help fill in and contextualize the metadata fields for OCSF mapping
+ -> metadata.log_name / String
+ -> original_time / String
+product? ask ai im confused what data this wants?
+fullEvent -> raw_data / 
+version / String
+
+
+category- system activity
+    Class- process activity- 1007
+    {
+
+    }
