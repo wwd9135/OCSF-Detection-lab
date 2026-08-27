@@ -1,0 +1,103 @@
+# NEXT
+# - Fix integer types: check the schema for fields that must be integers.
+# - Map source process fields to OCSF process fields using the correct types.
+# - Map device.hostname.
+# - Verify the result with rubydebug.
+
+
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+
+  if [winlog][provider_name] == "Microsoft-Windows-Sysmon" and
+     [winlog][event_id] == "1" {
+
+    mutate {
+      add_field => {
+        "category_uid"  => "1"
+        "category_name" => "System Activity"
+
+        "class_uid"     => "1007"
+        "class_name"    => "Process Activity"
+
+        "activity_id"   => "1"
+        "activity_name" => "Launch"
+
+        "type_uid"      => "100701"
+        "type_name"     => "Process Activity Launch"
+
+        "severity_id"   => "1"
+
+        "[metadata][version]"             => "1.8.0"
+        "[metadata][product][name]"       => "Sysmon"
+        "[metadata][product][vendor_name]" => "Microsoft"
+      }
+    }
+
+    mutate {
+      convert => {
+        "severity_id" => "integer"
+        "activity_id" => "integer"
+        "class_uid"    => "integer"
+        "type_uid"     => "integer"
+        "category_uid" => "integer"
+      }
+    }
+
+    mutate {
+        copy => {
+          "[winlog][event_data][ProcessId]" =>
+          "[process][pid]"
+
+          "[winlog][event_data][ProcessGuid]" =>
+          "[process][uid]"
+
+          "[winlog][event_data][CommandLine]" =>
+          "[process][cmd_line]"
+
+          "[winlog][event_data][UtcTime]" =>
+          "[process][created_time]"
+
+          "[winlog][event_data][Image]" =>
+          "[process][file][path]"
+
+          "[winlog][event_data][CurrentDirectory]" =>
+          "[process][working_directory]"
+
+          "[winlog][event_data][OriginalFileName]" =>
+          "[process][file][internal_name]"
+
+          "[winlog][event_data][User]" =>
+          "[process][user]"
+
+          "[winlog][event_data][ParentProcessId]" =>
+          "[process][parent_process][pid]"
+
+          "[winlog][event_data][ParentImage]" =>
+          "[process][parent_process][path]"
+
+          "[winlog][event_data][ParentCommandLine]" =>
+          "[process][parent_process][cmd_line]"
+
+          "[winlog][event_data][Hashes]" =>
+          "[process][file][hashes]"
+
+          "[host][hostname]" =>
+          "[device][hostname]"
+
+          "[host][ip]" =>
+          "[device][ip]"
+      }
+    }
+  }
+}
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+}
