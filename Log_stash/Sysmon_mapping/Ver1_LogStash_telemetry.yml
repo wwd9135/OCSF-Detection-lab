@@ -2,61 +2,8 @@
 # At this point I have the raw sysmon and my replacements, process & device will replace event_data and the bulk of the metadata fields
 # Ultimately this will lead to a much shorterned log, but I kept this for evidence of normalisation/ to log progress.
 
-{
-        "metadata" => {
-        "version" => "1.8.0",
-        "product" => {
-            "vendor_name" => "Microsoft",
-                "name" => "Sysmon"
-        }
-    },
-    "severity_id" => 1,
-    "activity_name" => "Launch",
-        "class_uid" => 1007,
-    "category_uid" => 1,
-        "@version" => "1",
-            "tags" => [
-        [0] "beats_input_codec_plain_applied"
-    ],
-            "ecs" => {
-        "version" => "8.0.0"
-    },
-        "message" => "Process Create:\nRuleName: -\nUtcTime: 2026-08-28 03:19:09.844\nProcessGuid: {CBCB36EB-FE2D-6A90-5003-000000000A00}\nProcessId: 8588\nImage: C:\\Windows\\System32\\taskhostw.exe\nFileVersion: 10.0.26100.8328 (WinBuild.160101.0800)\nDescription: Host Process for Windows Tasks\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: taskhostw.exe\nCommandLine: taskhostw.exe\nCurrentDirectory: C:\\WINDOWS\\system32\\\nUser: NT AUTHORITY\\SYSTEM\nLogonGuid: {CBCB36EB-7F1A-6A90-E703-000000000000}\nLogonId: 0x3e7\nTerminalSessionId: 0\nIntegrityLevel: System\nHashes: MD5=9E9370331B9D14ABBA21091FFFCD1D1E,SHA256=EA8D441DF237FB3D3B7A27A95FDE186E19C94D58A618F5C29ED5FC13CB155E96,IMPHASH=2196268E7A2880E3ADC74481297D0C4B\nParentProcessGuid: {CBCB36EB-7F1C-6A90-1D00-000000000A00}\nParentProcessId: 1368\nParentImage: C:\\Windows\\System32\\svchost.exe\nParentCommandLine: C:\\WINDOWS\\system32\\svchost.exe -k netsvcs -p -s Schedule\nParentUser: NT AUTHORITY\\SYSTEM",
-    "activity_id" => 1,
-    "class_name" => "Process Activity",
-            "agent" => {
-                "id" => "77455700-12e6-4e33-88e9-928006668ea8",
-            "version" => "9.5.2",
-                "name" => "WinUser-01",
-                "type" => "winlogbeat",
-        "ephemeral_id" => "01b649c2-8546-4d8b-97c2-121c53d75c5b"
-    },
-        "process" => {
-        "parent_process" => {
-            "cmd_line" => "C:\\WINDOWS\\system32\\svchost.exe -k netsvcs -p -s Schedule",
-                "pid" => "1368",
-                "path" => "C:\\Windows\\System32\\svchost.exe"
-        },
-                "cmd_line" => "taskhostw.exe",
-                    "user" => "NT AUTHORITY\\SYSTEM",
-                    "uid" => "{CBCB36EB-FE2D-6A90-5003-000000000A00}",
-                    "file" => {
-            "internal_name" => "taskhostw.exe",
-                    "path" => "C:\\Windows\\System32\\taskhostw.exe",
-                "hashes" => "MD5=9E9370331B9D14ABBA21091FFFCD1D1E,SHA256=EA8D441DF237FB3D3B7A27A95FDE186E19C94D58A618F5C29ED5FC13CB155E96,IMPHASH=2196268E7A2880E3ADC74481297D0C4B"
-        },
-                    "pid" => "8588",
-            "created_time" => "2026-08-28 03:19:09.844",
-        "working_directory" => "C:\\WINDOWS\\system32\\"
-    },
-        "device" => {
-        "hostname" => "WinUser-01",
-            "ip" => [
-            [0] "fe80::5f2d:2ebd:10a2:a5c2",
-            [1] "10.0.0.14"
-        ]
-    },
-        "type_name" => "Process Activity Launch",
+
+        {"type_name" => "Process Activity Launch",
         "type_uid" => 100701,
         "winlog" => {
             "channel" => "Microsoft-Windows-Sysmon/Operational",

@@ -1,0 +1,123 @@
+: {
+Aug 28 09:21:19 siem01 logstash[4375]:             "agent" => {
+Aug 28 09:21:19 siem01 logstash[4375]:         "ephemeral_id" => "01b649c2-8546-4d8b-97c2-121c53d75c5b",
+Aug 28 09:21:19 siem01 logstash[4375]:                 "name" => "WinUser-01",
+Aug 28 09:21:19 siem01 logstash[4375]:              "version" => "9.5.2",
+Aug 28 09:21:19 siem01 logstash[4375]:                 "type" => "winlogbeat",
+Aug 28 09:21:19 siem01 logstash[4375]:                   "id" => "77455700-12e6-4e33-88e9-928006668ea8"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:             "event" => {
+Aug 28 09:21:19 siem01 logstash[4375]:             "code" => "1",
+Aug 28 09:21:19 siem01 logstash[4375]:           "action" => "Process Create (rule: ProcessCreate)",
+Aug 28 09:21:19 siem01 logstash[4375]:          "created" => "2026-08-28T04:17:01.460Z",
+Aug 28 09:21:19 siem01 logstash[4375]:         "provider" => "Microsoft-Windows-Sysmon",
+Aug 28 09:21:19 siem01 logstash[4375]:             "kind" => "event"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:          "type_uid" => 100701,
+Aug 28 09:21:19 siem01 logstash[4375]:     "category_name" => "System Activity",
+Aug 28 09:21:19 siem01 logstash[4375]:         "type_name" => "Process Activity Launch",
+Aug 28 09:21:19 siem01 logstash[4375]:     "activity_name" => "Launch",
+Aug 28 09:21:19 siem01 logstash[4375]:        "@timestamp" => 2026-08-28T04:16:59.653Z,
+Aug 28 09:21:19 siem01 logstash[4375]:          "metadata" => {
+Aug 28 09:21:19 siem01 logstash[4375]:         "product" => {
+Aug 28 09:21:19 siem01 logstash[4375]:             "vendor_name" => "Microsoft",
+Aug 28 09:21:19 siem01 logstash[4375]:                    "name" => "Sysmon"
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:         "version" => "1.8.0"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:            "winlog" => {
+Aug 28 09:21:19 siem01 logstash[4375]:               "channel" => "Microsoft-Windows-Sysmon/Operational",
+Aug 28 09:21:19 siem01 logstash[4375]:         "provider_guid" => "{5770385F-C22A-43E0-BF4C-06F5698FFBD9}",
+Aug 28 09:21:19 siem01 logstash[4375]:         "provider_name" => "Microsoft-Windows-Sysmon",
+Aug 28 09:21:19 siem01 logstash[4375]:         "computer_name" => "WinUser-01.Local.lab",
+Aug 28 09:21:19 siem01 logstash[4375]:                  "user" => {
+Aug 28 09:21:19 siem01 logstash[4375]:                   "name" => "SYSTEM",
+Aug 28 09:21:19 siem01 logstash[4375]:                 "domain" => "NT AUTHORITY",
+Aug 28 09:21:19 siem01 logstash[4375]:             "identifier" => "S-1-5-18",
+Aug 28 09:21:19 siem01 logstash[4375]:                   "type" => "User"
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:               "version" => 5,
+Aug 28 09:21:19 siem01 logstash[4375]:            "event_data" => {
+Aug 28 09:21:19 siem01 logstash[4375]:             "TerminalSessionId" => "0",
+Aug 28 09:21:19 siem01 logstash[4375]:                "IntegrityLevel" => "System",
+Aug 28 09:21:19 siem01 logstash[4375]:                       "Product" => "Microsoft® Windows® Operating System",
+Aug 28 09:21:19 siem01 logstash[4375]:                   "FileVersion" => "10.0.26100.8737 (WinBuild.160101.0800)",
+Aug 28 09:21:19 siem01 logstash[4375]:                       "Company" => "Microsoft Corporation",
+Aug 28 09:21:19 siem01 logstash[4375]:                    "ParentUser" => "NT AUTHORITY\\SYSTEM",
+Aug 28 09:21:19 siem01 logstash[4375]:                     "LogonGuid" => "{CBCB36EB-7F1A-6A90-E703-000000000000}",
+Aug 28 09:21:19 siem01 logstash[4375]:                      "RuleName" => "-",
+Aug 28 09:21:19 siem01 logstash[4375]:                       "LogonId" => "0x3e7",
+Aug 28 09:21:19 siem01 logstash[4375]:                   "Description" => "Host Process for Windows Services",
+Aug 28 09:21:19 siem01 logstash[4375]:             "ParentProcessGuid" => "{CBCB36EB-7F1A-6A90-0B00-000000000A00}"
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:                "opcode" => "Info",
+Aug 28 09:21:19 siem01 logstash[4375]:                  "task" => "Process Create (rule: ProcessCreate)",
+Aug 28 09:21:19 siem01 logstash[4375]:             "record_id" => 17174,
+Aug 28 09:21:19 siem01 logstash[4375]:               "process" => {
+Aug 28 09:21:19 siem01 logstash[4375]:                "pid" => 3604,
+Aug 28 09:21:19 siem01 logstash[4375]:             "thread" => {
+Aug 28 09:21:19 siem01 logstash[4375]:                 "id" => 3796
+Aug 28 09:21:19 siem01 logstash[4375]:             }
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:              "event_id" => "1"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:         "class_uid" => 1007,
+Aug 28 09:21:19 siem01 logstash[4375]:           "message" => "Process Create:\nRuleName: -\nUtcTime: 2026-08-28 04:16:59.650\nProcessGuid: {CBCB36EB-0BBB-6A91-4804-000000000A00}\nProcessId: 4360\nImage: C:\\Windows\\System32\\svchost.exe\nFileVersion: 10.0.26100.8737 (WinBuild.160101.0800)\nDescription: Host Process for Windows Services\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: svchost.exe\nCommandLine: C:\\WINDOWS\\system32\\svchost.exe -k GPSvcGroup\nCurrentDirectory: C:\\WINDOWS\\system32\\\nUser: NT AUTHORITY\\SYSTEM\nLogonGuid: {CBCB36EB-7F1A-6A90-E703-000000000000}\nLogonId: 0x3e7\nTerminalSessionId: 0\nIntegrityLevel: System\nHashes: MD5=07FE1BE55D1049C7B48E270C466502D4,SHA256=1222A44A5FDB4EFDE4DFCB41093648627950E7EC02D8667F1C26CCAE31D922E2,IMPHASH=DE43BD45CC98C143357416C7519ECCFD\nParentProcessGuid: {CBCB36EB-7F1A-6A90-0B00-000000000A00}\nParentProcessId: 788\nParentImage: C:\\Windows\\System32\\services.exe\nParentCommandLine: C:\\WINDOWS\\system32\\services.exe\nParentUser: NT AUTHORITY\\SYSTEM",
+Aug 28 09:21:19 siem01 logstash[4375]:          "@version" => "1",
+Aug 28 09:21:19 siem01 logstash[4375]:               "ecs" => {
+Aug 28 09:21:19 siem01 logstash[4375]:         "version" => "8.0.0"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:            "device" => {
+Aug 28 09:21:19 siem01 logstash[4375]:         "hostname" => "WinUser-01",
+Aug 28 09:21:19 siem01 logstash[4375]:               "ip" => [
+Aug 28 09:21:19 siem01 logstash[4375]:             [0] "fe80::5f2d:2ebd:10a2:a5c2",
+Aug 28 09:21:19 siem01 logstash[4375]:             [1] "10.0.0.14"
+Aug 28 09:21:19 siem01 logstash[4375]:         ]
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:              "host" => {
+Aug 28 09:21:19 siem01 logstash[4375]:                 "name" => "winuser-01",
+Aug 28 09:21:19 siem01 logstash[4375]:                  "mac" => [
+Aug 28 09:21:19 siem01 logstash[4375]:             [0] "00-0C-29-F2-B9-0D"
+Aug 28 09:21:19 siem01 logstash[4375]:         ],
+Aug 28 09:21:19 siem01 logstash[4375]:         "architecture" => "x86_64",
+Aug 28 09:21:19 siem01 logstash[4375]:                   "os" => {
+Aug 28 09:21:19 siem01 logstash[4375]:               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+Aug 28 09:21:19 siem01 logstash[4375]:                 "name" => "Windows 11 Pro",
+Aug 28 09:21:19 siem01 logstash[4375]:                 "type" => "windows",
+Aug 28 09:21:19 siem01 logstash[4375]:             "platform" => "windows",
+Aug 28 09:21:19 siem01 logstash[4375]:              "version" => "10.0",
+Aug 28 09:21:19 siem01 logstash[4375]:               "family" => "windows",
+Aug 28 09:21:19 siem01 logstash[4375]:                "build" => "26200.9168"
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:               "log" => {
+Aug 28 09:21:19 siem01 logstash[4375]:         "level" => "information"
+Aug 28 09:21:19 siem01 logstash[4375]:     },
+Aug 28 09:21:19 siem01 logstash[4375]:              "tags" => [
+Aug 28 09:21:19 siem01 logstash[4375]:         [0] "beats_input_codec_plain_applied"
+Aug 28 09:21:19 siem01 logstash[4375]:     ],
+Aug 28 09:21:19 siem01 logstash[4375]:      "category_uid" => 1,
+Aug 28 09:21:19 siem01 logstash[4375]:          "raw_data" => "Process Create:\nRuleName: -\nUtcTime: 2026-08-28 04:16:59.650\nProcessGuid: {CBCB36EB-0BBB-6A91-4804-000000000A00}\nProcessId: 4360\nImage: C:\\Windows\\System32\\svchost.exe\nFileVersion: 10.0.26100.8737 (WinBuild.160101.0800)\nDescription: Host Process for Windows Services\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: svchost.exe\nCommandLine: C:\\WINDOWS\\system32\\svchost.exe -k GPSvcGroup\nCurrentDirectory: C:\\WINDOWS\\system32\\\nUser: NT AUTHORITY\\SYSTEM\nLogonGuid: {CBCB36EB-7F1A-6A90-E703-000000000000}\nLogonId: 0x3e7\nTerminalSessionId: 0\nIntegrityLevel: System\nHashes: MD5=07FE1BE55D1049C7B48E270C466502D4,SHA256=1222A44A5FDB4EFDE4DFCB41093648627950E7EC02D8667F1C26CCAE31D922E2,IMPHASH=DE43BD45CC98C143357416C7519ECCFD\nParentProcessGuid: {CBCB36EB-7F1A-6A90-0B00-000000000A00}\nParentProcessId: 788\nParentImage: C:\\Windows\\System32\\services.exe\nParentCommandLine: C:\\WINDOWS\\system32\\services.exe\nParentUser: NT AUTHORITY\\SYSTEM",
+Aug 28 09:21:19 siem01 logstash[4375]:       "activity_id" => 1,
+Aug 28 09:21:19 siem01 logstash[4375]:       "severity_id" => 1,
+Aug 28 09:21:19 siem01 logstash[4375]:        "class_name" => "Process Activity",
+Aug 28 09:21:19 siem01 logstash[4375]:           "process" => {
+Aug 28 09:21:19 siem01 logstash[4375]:            "parent_process" => {
+Aug 28 09:21:19 siem01 logstash[4375]:             "cmd_line" => "C:\\WINDOWS\\system32\\services.exe",
+Aug 28 09:21:19 siem01 logstash[4375]:                  "pid" => 788,
+Aug 28 09:21:19 siem01 logstash[4375]:                 "path" => "C:\\Windows\\System32\\services.exe"
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:                       "uid" => "{CBCB36EB-0BBB-6A91-4804-000000000A00}",
+Aug 28 09:21:19 siem01 logstash[4375]:                  "cmd_line" => "C:\\WINDOWS\\system32\\svchost.exe -k GPSvcGroup",
+Aug 28 09:21:19 siem01 logstash[4375]:         "working_directory" => "C:\\WINDOWS\\system32\\",
+Aug 28 09:21:19 siem01 logstash[4375]:                      "file" => {
+Aug 28 09:21:19 siem01 logstash[4375]:             "internal_name" => "svchost.exe",
+Aug 28 09:21:19 siem01 logstash[4375]:                      "path" => "C:\\Windows\\System32\\svchost.exe",
+Aug 28 09:21:19 siem01 logstash[4375]:                    "hashes" => "MD5=07FE1BE55D1049C7B48E270C466502D4,SHA256=1222A44A5FDB4EFDE4DFCB41093648627950E7EC02D8667F1C26CCAE31D922E2,IMPHASH=DE43BD45CC98C143357416C7519ECCFD"
+Aug 28 09:21:19 siem01 logstash[4375]:         },
+Aug 28 09:21:19 siem01 logstash[4375]:              "created_time" => "2026-08-28 04:16:59.650",
+Aug 28 09:21:19 siem01 logstash[4375]:                      "user" => "NT AUTHORITY\\SYSTEM",
+Aug 28 09:21:19 siem01 logstash[4375]:                       "pid" => 4360
+Aug 28 09:21:19 siem01 logstash[4375]:     }
+Aug 28 09:21:19 siem01 logstash[4375]: }

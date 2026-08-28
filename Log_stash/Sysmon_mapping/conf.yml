@@ -1,9 +1,11 @@
-# NEXT
-# - Fix integer types: check the schema for fields that must be integers.
-# - Map source process fields to OCSF process fields using the correct types.
-# - Map device.hostname.
-# - Verify the result with rubydebug.
-
+The event is not fully OCSF-valid yet. The next corrections are:
+- Remove message, because it duplicates raw_data.
+- Map process.user into an OCSF user object rather than storing a string.
+- Nest the parent executable under process.parent_process.file.path.
+- Split the hash string into structured MD5, SHA-256, and IMPHASH values.
+- Convert created_time into an OCSF epoch-millisecond timestamp.
+- Decide whether device.ip should contain one address or whether the addresses should use an OCSF list field.
+- Clean up the leftover ECS/Winlogbeat fields after retaining anything useful.
 
 input {
   beats {
@@ -12,7 +14,6 @@ input {
 }
 
 filter {
-
   if [winlog][provider_name] == "Microsoft-Windows-Sysmon" and
      [winlog][event_id] == "1" {
 
@@ -32,65 +33,47 @@ filter {
 
         "severity_id"   => "1"
 
-        "[metadata][version]"             => "1.8.0"
-        "[metadata][product][name]"       => "Sysmon"
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Sysmon"
         "[metadata][product][vendor_name]" => "Microsoft"
       }
     }
-
+    mutate {
+      remove_field => 
+       ["message"]
+    }
     mutate {
       convert => {
-        "severity_id" => "integer"
-        "activity_id" => "integer"
-        "class_uid"    => "integer"
-        "type_uid"     => "integer"
-        "category_uid" => "integer"
+        "severity_id"   => "integer"
+        "activity_id"   => "integer"
+        "class_uid"      => "integer"
+        "type_uid"       => "integer"
+        "category_uid"   => "integer"
       }
     }
-
     mutate {
-        copy => {
-          "[winlog][event_data][ProcessId]" =>
-          "[process][pid]"
-
-          "[winlog][event_data][ProcessGuid]" =>
-          "[process][uid]"
-
-          "[winlog][event_data][CommandLine]" =>
-          "[process][cmd_line]"
-
-          "[winlog][event_data][UtcTime]" =>
-          "[process][created_time]"
-
-          "[winlog][event_data][Image]" =>
-          "[process][file][path]"
-
-          "[winlog][event_data][CurrentDirectory]" =>
-          "[process][working_directory]"
-
-          "[winlog][event_data][OriginalFileName]" =>
-          "[process][file][internal_name]"
-
-          "[winlog][event_data][User]" =>
-          "[process][user]"
-
-          "[winlog][event_data][ParentProcessId]" =>
-          "[process][parent_process][pid]"
-
-          "[winlog][event_data][ParentImage]" =>
-          "[process][parent_process][path]"
-
-          "[winlog][event_data][ParentCommandLine]" =>
-          "[process][parent_process][cmd_line]"
-
-          "[winlog][event_data][Hashes]" =>
-          "[process][file][hashes]"
-
-          "[host][hostname]" =>
-          "[device][hostname]"
-
-          "[host][ip]" =>
-          "[device][ip]"
+      rename => {
+        "[event][original]"                           => "raw_data"
+        "[winlog][event_data][ProcessId]"             => "[process][pid]"
+        "[winlog][event_data][ProcessGuid]"           => "[process][uid]"
+        "[winlog][event_data][CommandLine]"           => "[process][cmd_line]"
+        "[winlog][event_data][UtcTime]"               => "[process][created_time]"
+        "[winlog][event_data][Image]"                 => "[process][file][path]"
+        "[winlog][event_data][CurrentDirectory]"      => "[process][working_directory]"
+        "[winlog][event_data][OriginalFileName]"      => "[process][file][internal_name]"
+        "[winlog][event_data][User]"                  => "[process][user]"
+        "[winlog][event_data][ParentProcessId]"       => "[process][parent_process][pid]"
+        "[winlog][event_data][ParentImage]"           => "[process][parent_process][path]"
+        "[winlog][event_data][ParentCommandLine]"     => "[process][parent_process][cmd_line]"
+        "[winlog][event_data][Hashes]"                => "[process][file][hashes]"
+        "[host][hostname]"                            => "[device][hostname]"
+        "[host][ip][1]"                               => "[device][ip]"
+      }
+    }
+    mutate {
+      convert => {
+        "[process][pid]"                 => "integer"
+        "[process][parent_process][pid]" => "integer"
       }
     }
   }
