@@ -1,0 +1,69 @@
+ {
+      "category_uid" => 1,
+     "activity_name" => "Launch",
+          "metadata" => {
+         "original_event_uid" => "WinUser-01.Local.lab:Microsoft-Windows-Sysmon/Operational:18054",
+               "log_provider" => "Microsoft-Windows-Sysmon",
+                 "log_source" => "WinUser-01.Local.lab:Microsoft-Windows-Sysmon/Operational",
+                 "event_code" => "1",
+                    "version" => "1.8.0",
+                    "product" => {
+             "vendor_name" => "Microsoft",
+                    "name" => "Sysmon"
+         },
+                "log_version" => "5",
+              "original_time" => 1787973491613
+     },
+              "time" => 1787973491613,
+         "type_name" => "Process Activity Launch",
+          "type_uid" => 100701,
+         "class_uid" => 1007,
+        "class_name" => "Process Activity",
+     "category_name" => "System Activity",
+           "process" => {
+            "parent_process" => {
+                 "path" => "C:\\Windows\\System32\\svchost.exe",
+                  "pid" => 1368,
+             "cmd_line" => "C:\\WINDOWS\\system32\\svchost.exe -k netsvcs -p -s Schedule"
+         },
+                      "user" => "LOCAL\\Administrator",
+                       "uid" => "{CBCB36EB-4F73-6A92-1E07-000000000A00}",
+         "working_directory" => "C:\\WINDOWS\\system32\\",
+                       "pid" => 4724,
+              "created_time" => 1787973491613,
+                      "file" => {
+                "name" => "taskhostw.exe",
+                "path" => "C:\\Windows\\System32\\taskhostw.exe",
+             "type_id" => 8,
+                "type" => "Executable File",
+              "hashes" => [
+                 [0] {
+                     "algorithm_id" => 1,
+                            "value" => "9E9370331B9D14ABBA21091FFFCD1D1E",
+                        "algorithm" => "MD5"
+                 },
+                 [1] {
+                     "algorithm_id" => 3,
+                            "value" => "EA8D441DF237FB3D3B7A27A95FDE186E19C94D58A618F5C29ED5FC13CB155E96",
+                        "algorithm" => "SHA-256"
+                 },
+                 [2] {
+                     "algorithm_id" => 18,
+                            "value" => "2196268E7A2880E3ADC74481297D0C4B",
+                        "algorithm" => "Imphash"
+                 }
+             ]
+         },
+                  "cmd_line" => "taskhostw.exe -flow showtoast -checkup recoverability"
+     },
+       "activity_id" => 1,
+       "severity_id" => 1,
+            "device" => {
+         "hostname" => "WinUser-01",
+              "mac" => "00-0C-29-F2-B9-0D",
+               "ip" => "10.0.0.14",
+          "type_id" => 0,
+             "type" => "Unknown"
+     },
+        "@timestamp" => 2026-08-29T03:18:11.616Z
+ }

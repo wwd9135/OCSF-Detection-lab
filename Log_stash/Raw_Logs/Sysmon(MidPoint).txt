@@ -1,0 +1,139 @@
+{
+     "activity_name" => "Launch",
+        "class_name" => "Process Activity",
+              "host" => {
+                 "name" => "winuser-01",
+                  "mac" => [
+             [0] "00-0C-29-F2-B9-0D"
+         ],
+                   "os" => {
+                 "name" => "Windows 11 Pro",
+               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+                 "type" => "windows",
+             "platform" => "windows",
+                "build" => "26200.9168",
+              "version" => "10.0",
+               "family" => "windows"
+         },
+         "architecture" => "x86_64",
+                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
+                   "ip" => [
+             [0] "fe80::5f2d:2ebd:10a2:a5c2"
+         ]
+     },
+      "category_uid" => 1,
+        "@timestamp" => 2026-08-28T17:36:15.654Z,
+            "device" => {
+               "ip" => "10.0.0.14",
+         "hostname" => "WinUser-01"
+     },
+            "winlog" => {
+             "record_id" => 17492,
+                  "task" => "Process Create (rule: ProcessCreate)",
+               "channel" => "Microsoft-Windows-Sysmon/Operational",
+                "opcode" => "Info",
+               "process" => {
+                "pid" => 3604,
+             "thread" => {
+                 "id" => 3796
+             }
+         },
+         "computer_name" => "WinUser-01.Local.lab",
+         "provider_name" => "Microsoft-Windows-Sysmon",
+               "version" => 5,
+              "event_id" => "1",
+            "event_data" => {
+                    "ParentUser" => "LOCAL\\Administrator",
+                       "LogonId" => "0xbfabb",
+                     "LogonGuid" => "{CBCB36EB-7FA6-6A90-BBFA-0B0000000000}",
+                   "Description" => "PWA Identity Proxy Host",
+                "IntegrityLevel" => "High",
+                   "FileVersion" => "152.0.4191.53",
+                       "Product" => "Microsoft Edge",
+                       "Company" => "Microsoft Corporation",
+                      "RuleName" => "-",
+             "ParentProcessGuid" => "{CBCB36EB-C70D-6A91-ED04-000000000A00}",
+             "TerminalSessionId" => "1"
+         },
+         "provider_guid" => "{5770385F-C22A-43E0-BF4C-06F5698FFBD9}",
+                  "user" => {
+                 "domain" => "NT AUTHORITY",
+                   "name" => "SYSTEM",
+                   "type" => "User",
+             "identifier" => "S-1-5-18"
+         }
+     },
+       "activity_id" => 1,
+          "@version" => "1",
+               "log" => {
+         "level" => "information"
+     },
+              "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+               "ecs" => {
+         "version" => "8.0.0"
+     },
+       "severity_id" => 1,
+          "metadata" => {
+         "version" => "1.8.0",
+         "product" => {
+             "vendor_name" => "Microsoft",
+                    "name" => "Sysmon"
+         }
+     },
+          "type_uid" => 100701,
+             "agent" => {
+                 "name" => "WinUser-01",
+         "ephemeral_id" => "01b649c2-8546-4d8b-97c2-121c53d75c5b",
+              "version" => "9.5.2",
+                 "type" => "winlogbeat",
+                   "id" => "77455700-12e6-4e33-88e9-928006668ea8"
+     },
+           "process" => {
+                      "user" => "LOCAL\\Administrator",
+                  "cmd_line" => "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\152.0.4191.53\\identity_helper.exe\" --type=utility --utility-sub-type=winrt_app_id.mojom.WinrtAppIdService --lang=en-US --service-sandbox-type=windows_package_identity --skip-read-main-dll --metrics-shmem-handle=6260,i,14762315882550762621,877127090612687630,524288 --field-trial-handle=2208,i,11308826269856921620,1113715030799308884,262144 --variations-seed-version --pseudonymization-salt-handle=2216,i,9277283671342300524,17104352740185769408,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=6312 /prefetch:14",
+            "parent_process" => {
+                  "pid" => 4844,
+             "cmd_line" => "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --flag-switches-begin --flag-switches-end --no-startup-window",
+                 "path" => "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+         },
+                      "file" => {
+             "internal_name" => "identity_helper.exe",
+                      "path" => "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\152.0.4191.53\\identity_helper.exe",
+                    "hashes" => [
+                 [0] {
+                        "algorithm" => "MD5",
+                     "algorithm_id" => 1,
+                            "value" => "79F59539512059FCFC6C397EA963A411"
+                 },
+                 [1] {
+                        "algorithm" => "SHA-256",
+                     "algorithm_id" => 3,
+                            "value" => "104C7B05C2C4A8A1006DCC468E19C7BE03E50568A90F2006FFF627DB4D71BC81"
+                 },
+                 [2] {
+                        "algorithm" => "Imphash",
+                     "algorithm_id" => 18,
+                            "value" => "497AE51AD32BA861108FD684650862C7"
+                 }
+             ]
+         },
+              "created_time" => "2026-08-28 17:36:15.629",
+                       "pid" => 8788,
+         "working_directory" => "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\152.0.4191.53\\",
+                       "uid" => "{CBCB36EB-C70F-6A91-F704-000000000A00}"
+     },
+         "class_uid" => 1007,
+     "category_name" => "System Activity",
+         "type_name" => "Process Activity Launch",
+          "raw_data" => "Process Create:\nRuleName: -\nUtcTime: 2026-08-28 17:36:15.629\nProcessGuid: {CBCB36EB-C70F-6A91-F704-000000000A00}\nProcessId: 8788\nImage: C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\152.0.4191.53\\identity_helper.exe\nFileVersion: 152.0.4191.53\nDescription: PWA Identity Proxy Host\nProduct: Microsoft E
+          dge\nCompany: Microsoft Corporation\nOriginalFileName: identity_helper.exe\nCommandLine: \"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\152.0.4191.53\\identity_helper.exe\" --type=utility --utility-sub-type=winrt_app_id.mojom.WinrtAppIdService --lang=en-US --service-sandbox-type=windows_package_identity --skip-read-main-dll --metrics-shmem-handle=6260,i,14762315882550762621,877127090612687630,524288 --field-trial-handle=2208,i,11308826269856921620,1113715030799308884,262144 --variations-seed-version --pseudonymization-salt-handle=2216,i,9277283671342300524,17104352740185769408,4 --trace-process-track-uuid=3190708991934122588 --mojo-platform-channel-handle=6312 /prefetch:14\nCurrentDirectory: C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\152.0.4191.53\\\nUser: LOCAL\\Administrator\nLogonGuid: {CBCB36EB-7FA6-6A90-BBFA-0B0000000000}\nLogonId: 0xbfabb\nTerminalSessionId: 1\nIntegrityLevel: High\nHashes: MD5=79F59539512059FCFC6C397EA963A411,SHA256=104C7B05C2C4A8A1006DCC468E19C7BE03E50568A90F2006FFF627DB4D71BC81,IMPHASH=497AE51AD32BA861108FD684650862C7\nParentProcessGuid: {CBCB36EB-C70D-6A91-ED04-000000000A00}\nParentProcessId: 4844\nParentImage: C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\nParentCommandLine: \"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --flag-switches-begin --flag-switches-end --no-startup-window\nParentUser: LOCAL\\Administrator",
+             "event" => {
+         "provider" => "Microsoft-Windows-Sysmon",
+             "kind" => "event",
+           "action" => "Process Create (rule: ProcessCreate)",
+             "code" => "1",
+          "created" => "2026-08-28T17:36:16.386Z"
+     }
+ }
