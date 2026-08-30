@@ -1,0 +1,88 @@
+{
+          "agent" => {
+         "ephemeral_id" => "01b649c2-8546-4d8b-97c2-121c53d75c5b",
+                   "id" => "77455700-12e6-4e33-88e9-928006668ea8",
+                 "name" => "WinUser-01",
+              "version" => "9.5.2",
+                 "type" => "winlogbeat"
+     },
+        "message" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0xbfabb\n\nProcess Information:\n\tNew Process ID:\t\t0x13fc\n\tNew Process Name:\tC:\\Windows\\System32\\taskhostw.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0x558\n\tCreator Process Name:\tC:\\Windows\\System32\\svchost.exe\n\tProcess Command Line:\t\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+           "host" => {
+                   "os" => {
+             "platform" => "windows",
+                 "name" => "Windows 11 Pro",
+               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+                 "type" => "windows",
+              "version" => "10.0",
+               "family" => "windows",
+                "build" => "26200.9168"
+         },
+                 "name" => "winuser-01",
+             "hostname" => "WinUser-01",
+         "architecture" => "x86_64",
+                   "ip" => [
+             [0] "fe80::5f2d:2ebd:10a2:a5c2",
+             [1] "10.0.0.14"
+         ],
+                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
+                  "mac" => [
+             [0] "00-0C-29-F2-B9-0D"
+         ]
+     },
+         "winlog" => {
+                "opcode" => "Info",
+               "channel" => "Security",
+               "process" => {
+                "pid" => 4,
+             "thread" => {
+                 "id" => 7784
+             }
+         },
+               "version" => 2,
+              "event_id" => "4688",
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+                  "task" => "Process Creation",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+         "computer_name" => "WinUser-01.Local.lab",
+            "event_data" => {
+                  "TargetUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+                  "TargetLogonId" => "0xbfabb",
+               "TargetDomainName" => "LOCAL",
+                 "SubjectUserSid" => "S-1-5-18",
+                 "TargetUserName" => "Administrator",
+              "SubjectDomainName" => "LOCAL",
+                "SubjectUserName" => "WINUSER-01$",
+                      "ProcessId" => "0x558",
+                   "NewProcessId" => "0x13fc",
+              "ParentProcessName" => "C:\\Windows\\System32\\svchost.exe",
+             "TokenElevationType" => "TokenElevationTypeDefault (1)",
+                 "MandatoryLabel" => "S-1-16-12288",
+                 "NewProcessName" => "C:\\Windows\\System32\\taskhostw.exe",
+                 "SubjectLogonId" => "0x3e7"
+         },
+             "record_id" => 38049
+     },
+     "@timestamp" => 2026-08-30T18:20:57.474Z,
+          "event" => {
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "outcome" => "success",
+          "created" => "2026-08-30T18:20:59.125Z",
+             "code" => "4688",
+             "kind" => "event",
+           "action" => "Process Creation",
+         "original" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0xbfabb\n\nProcess Information:\n\tNew Process ID:\t\t0x13fc\n\tNew Process Name:\tC:\\Windows\\System32\\taskhostw.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0x558\n\tCreator Process Name:\tC:\\Windows\\System32\\svchost.exe\n\tProcess Command Line:\t\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator."
+     },
+            "log" => {
+         "level" => "information"
+     },
+       "@version" => "1",
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ]
+ }

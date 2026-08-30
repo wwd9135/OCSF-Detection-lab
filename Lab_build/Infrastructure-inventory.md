@@ -142,8 +142,124 @@ networks:
   opensearch-net:
 ```
 
-### Dashboard configuration
+### OpenSearch Dashboard configuration
 It's important to change the default username from admin upon first logon
 
-And to create SIEM RBAC roles, such as- SIEM-ADMIN, readonly viewer etc. So you're not running everything on a global admin account that can accidently delete the entire pipeline.
-### LogStash
+And to create SIEM RBAC roles, such as- SIEM-ADMIN, read only viewer etc. So you're not running everything on a global admin account that can accidently delete the entire pipeline.
+
+OpenSearch dashboards will automatically ingest data from OpenSearch when its received, if the configuration is correct. To achieve this, OpenSearch must be configure correctly with the following plugin installed:
+```code
+# First check:
+sudo -u logstash /usr/share/logstash/bin/logstash-plugin list | grep opensearch
+
+# If not installed, use:
+sudo /usr/share/logstash/bin/logstash-plugin install logstash-output-opensearch
+```
+Move on to LogStash configuration from here as OpenSearch is ready to receive.
+
+## LogStash configuration
+LogStash is a core part of the traditional ELK stack, handling forwarding & efficient parsing/ filtering on raw data before it hits a custom SIEM, this is useful when your SIEM doesnt have built in indexing / parsing for raw traffic.
+
+**Configuration guide- Linux server**
+```code
+# Install Logstash, then make sure it runs as the logstash service user rather than root.
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch \
+  | sudo gpg --dearmor -o /usr/share/keyrings/elastic-keyring.gpg
+sudo apt-get install apt-transport-https
+echo "deb [signed-by=/usr/share/keyrings/elastic-keyring.gpg] https://artifacts.elastic.co/packages/9.x/apt stable main" \
+  | sudo tee /etc/apt/sources.list.d/elastic-9.x.list
+sudo apt-get update
+sudo apt-get install logstash
+# Then start it:
+sudo systemctl start logstash
+# Enable at boot:
+sudo systemctl enable logstash
+# Check:
+sudo systemctl status logstash
+```
+
+**Useful linux paths:**
+```code
+/usr/share/logstash/bin/logstash
+/etc/logstash/logstash.yml
+/etc/logstash/conf.d/
+# Install the OpenSearch output plugin:
+sudo /usr/share/logstash/bin/logstash-plugin install logstash-output-opensearch
+Check it installed:
+sudo -u logstash /usr/share/logstash/bin/logstash-plugin list | grep opensearch
+Your input plugin for Winlogbeat is the Beats input, typically listening on:
+TCP 5044
+Minimal pipeline shape:
+input {
+  beats {
+    port => 5044
+  }
+}
+
+output {
+  opensearch {
+    hosts => ["https://localhost:9200"]
+    user => "logstash"
+    password => "PASSWORD"
+    index => "ocsf-process-%{+YYYY.MM.dd}"
+    ssl_certificate_verification => false
+  }
+}
+Validate the config before restarting:
+sudo -u logstash /usr/share/logstash/bin/logstash \
+  --path.settings /etc/logstash \
+  --config.test_and_exit \
+  -f /etc/logstash/conf.d/your-config.conf
+Restart Logstash:
+sudo systemctl restart logstash
+Check status:
+sudo systemctl status logstash
+Follow logs:
+sudo journalctl -u logstash -f
+```
+
+### LogStash filtering config
+To put it simply log stash config has three sections:
+
+1. Input  - Name input sources and ports to listen on for traffic uploading.
+2. Filter - Using ruby & basic filtering to add, remove, rename fields in the raw traffic.
+3. Output - 
+
+**Input example:**
+```json
+input {
+  beats {
+    port => 5044
+  }
+}
+```
+This example shows using winbeats forwarder via port 5044 to receive the raw traffic.
+
+**Filter example**
+This is where it gets more complicated, the goal when manually mapping to a set schema, OCSF in my instance, is to do multiple rounds of careful tuning, start by keeping raw telemetry logs to refer back to, then working through the raw data and creating a mapping table from raw- OCSF. And removing uneccessary fields, I'd recommend keeping a raw_data field, so analysts can use the full raw data if its needed. 
+
+The following path shows a complete example.
+Log_stash\Sysmon_mapping\conf.yml
+
+
+**Output example:**
+```json
+output {
+  stdout {
+    codec => rubydebug
+  }
+
+  opensearch {
+    hosts => ["https://localhost:9200"]
+
+    user => "logstash"
+    password => "YOUR_PASSWORD"
+
+    index => "ocsf-process-%{+YYYY.MM.dd}"
+
+    ssl_certificate_verification => false
+  }
+}
+```
+When debugging/ testing parsing it's recommended to just use the stdout rubydebug section.
+Once you're filtering logic is perfectted adding the openSearch clause is needed to ingest the data into the SIEM and do further testing.

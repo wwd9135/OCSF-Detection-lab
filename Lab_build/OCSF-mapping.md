@@ -56,6 +56,45 @@ I recorded several versions of the raw data and my config files to show progress
 Sysmon was the first source to be mapped, and would serve as the foundational point to map auditd & Windows events, since I was collecting process execution telemetry from those two sources too, I could use my sysmon normalisation work to compare to auditd (linux) and winevents and see how they differ and where they align. 
 This also meant I could combine WinEvent with sysmon to potentially merge information and increase the overall hollistcness of a single log, IE. sysmon and winevents are raised simuntaneously for each process execution, so I can merge alerts to increase the strength and quality.
 
-## Windows event mappings
+I completed my sysmon mapping and removed a bulk of the original telemetry fields using the remove command/filter:
+mutate {
+      remove_field => [
+        "winlog",
+        "host",
+        "event",
+        "agent",
+        "ecs",
+        "log",
+        "tags",
+        "message",
+        "@version",
+      ]
+    }
+Now the telemetry was normalized with all of the original sysmon fields removed, leaving OCSF offical fields remaining only.
 
-### Event ID-
+From here I engineered a output path now which still allowed for proper testing while I proved OpenSeach / dashboards we working and not losing any telemetry, 
+This is an example of the structure to be used. Keeping rubydebug allows for full logging to troubleshoot any hiccups in the indexing/ ingestion process.
+```json
+output {
+  stdout {
+    codec => rubydebug
+  }
+
+  opensearch {
+    hosts => ["https://localhost:9200"]
+
+    user => "logstash"
+    password => "YOUR_PASSWORD"
+
+    index => "ocsf-process-%{+YYYY.MM.dd}"
+
+    ssl_certificate_verification => false
+  }
+}
+```
+
+## Windows event mappings
+Event ID:
+
+
+## Linux Auditd mappings.

@@ -1,0 +1,88 @@
+]: {
+Aug 30 11:30:50 siem01 logstash[5423]:          "agent" => {
+Aug 30 11:30:50 siem01 logstash[5423]:         "ephemeral_id" => "01b649c2-8546-4d8b-97c2-121c53d75c5b",
+Aug 30 11:30:50 siem01 logstash[5423]:                   "id" => "77455700-12e6-4e33-88e9-928006668ea8",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "name" => "WinUser-01",
+Aug 30 11:30:50 siem01 logstash[5423]:              "version" => "9.5.2",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "type" => "winlogbeat"
+Aug 30 11:30:50 siem01 logstash[5423]:     },
+Aug 30 11:30:50 siem01 logstash[5423]:        "message" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0xbfabb\n\nProcess Information:\n\tNew Process ID:\t\t0x13fc\n\tNew Process Name:\tC:\\Windows\\System32\\taskhostw.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0x558\n\tCreator Process Name:\tC:\\Windows\\System32\\svchost.exe\n\tProcess Command Line:\t\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
+Aug 30 11:30:50 siem01 logstash[5423]:            "ecs" => {
+Aug 30 11:30:50 siem01 logstash[5423]:         "version" => "8.0.0"
+Aug 30 11:30:50 siem01 logstash[5423]:     },
+Aug 30 11:30:50 siem01 logstash[5423]:           "host" => {
+Aug 30 11:30:50 siem01 logstash[5423]:                   "os" => {
+Aug 30 11:30:50 siem01 logstash[5423]:             "platform" => "windows",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "name" => "Windows 11 Pro",
+Aug 30 11:30:50 siem01 logstash[5423]:               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "type" => "windows",
+Aug 30 11:30:50 siem01 logstash[5423]:              "version" => "10.0",
+Aug 30 11:30:50 siem01 logstash[5423]:               "family" => "windows",
+Aug 30 11:30:50 siem01 logstash[5423]:                "build" => "26200.9168"
+Aug 30 11:30:50 siem01 logstash[5423]:         },
+Aug 30 11:30:50 siem01 logstash[5423]:                 "name" => "winuser-01",
+Aug 30 11:30:50 siem01 logstash[5423]:             "hostname" => "WinUser-01",
+Aug 30 11:30:50 siem01 logstash[5423]:         "architecture" => "x86_64",
+Aug 30 11:30:50 siem01 logstash[5423]:                   "ip" => [
+Aug 30 11:30:50 siem01 logstash[5423]:             [0] "fe80::5f2d:2ebd:10a2:a5c2",
+Aug 30 11:30:50 siem01 logstash[5423]:             [1] "10.0.0.14"
+Aug 30 11:30:50 siem01 logstash[5423]:         ],
+Aug 30 11:30:50 siem01 logstash[5423]:                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
+Aug 30 11:30:50 siem01 logstash[5423]:                  "mac" => [
+Aug 30 11:30:50 siem01 logstash[5423]:             [0] "00-0C-29-F2-B9-0D"
+Aug 30 11:30:50 siem01 logstash[5423]:         ]
+Aug 30 11:30:50 siem01 logstash[5423]:     },
+Aug 30 11:30:50 siem01 logstash[5423]:         "winlog" => {
+Aug 30 11:30:50 siem01 logstash[5423]:                "opcode" => "Info",
+Aug 30 11:30:50 siem01 logstash[5423]:               "channel" => "Security",
+Aug 30 11:30:50 siem01 logstash[5423]:               "process" => {
+Aug 30 11:30:50 siem01 logstash[5423]:                "pid" => 4,
+Aug 30 11:30:50 siem01 logstash[5423]:             "thread" => {
+Aug 30 11:30:50 siem01 logstash[5423]:                 "id" => 7784
+Aug 30 11:30:50 siem01 logstash[5423]:             }
+Aug 30 11:30:50 siem01 logstash[5423]:         },
+Aug 30 11:30:50 siem01 logstash[5423]:               "version" => 2,
+Aug 30 11:30:50 siem01 logstash[5423]:              "event_id" => "4688",
+Aug 30 11:30:50 siem01 logstash[5423]:         "provider_name" => "Microsoft-Windows-Security-Auditing",
+Aug 30 11:30:50 siem01 logstash[5423]:                  "task" => "Process Creation",
+Aug 30 11:30:50 siem01 logstash[5423]:         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+Aug 30 11:30:50 siem01 logstash[5423]:              "keywords" => [
+Aug 30 11:30:50 siem01 logstash[5423]:             [0] "Audit Success"
+Aug 30 11:30:50 siem01 logstash[5423]:         ],
+Aug 30 11:30:50 siem01 logstash[5423]:         "computer_name" => "WinUser-01.Local.lab",
+Aug 30 11:30:50 siem01 logstash[5423]:            "event_data" => {
+Aug 30 11:30:50 siem01 logstash[5423]:                  "TargetUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+Aug 30 11:30:50 siem01 logstash[5423]:                  "TargetLogonId" => "0xbfabb",
+Aug 30 11:30:50 siem01 logstash[5423]:               "TargetDomainName" => "LOCAL",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "SubjectUserSid" => "S-1-5-18",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "TargetUserName" => "Administrator",
+Aug 30 11:30:50 siem01 logstash[5423]:              "SubjectDomainName" => "LOCAL",
+Aug 30 11:30:50 siem01 logstash[5423]:                "SubjectUserName" => "WINUSER-01$",
+Aug 30 11:30:50 siem01 logstash[5423]:                      "ProcessId" => "0x558",
+Aug 30 11:30:50 siem01 logstash[5423]:                   "NewProcessId" => "0x13fc",
+Aug 30 11:30:50 siem01 logstash[5423]:              "ParentProcessName" => "C:\\Windows\\System32\\svchost.exe",
+Aug 30 11:30:50 siem01 logstash[5423]:             "TokenElevationType" => "TokenElevationTypeDefault (1)",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "MandatoryLabel" => "S-1-16-12288",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "NewProcessName" => "C:\\Windows\\System32\\taskhostw.exe",
+Aug 30 11:30:50 siem01 logstash[5423]:                 "SubjectLogonId" => "0x3e7"
+Aug 30 11:30:50 siem01 logstash[5423]:         },
+Aug 30 11:30:50 siem01 logstash[5423]:             "record_id" => 38049
+Aug 30 11:30:50 siem01 logstash[5423]:     },
+Aug 30 11:30:50 siem01 logstash[5423]:     "@timestamp" => 2026-08-30T18:20:57.474Z,
+Aug 30 11:30:50 siem01 logstash[5423]:          "event" => {
+Aug 30 11:30:50 siem01 logstash[5423]:         "provider" => "Microsoft-Windows-Security-Auditing",
+Aug 30 11:30:50 siem01 logstash[5423]:          "outcome" => "success",
+Aug 30 11:30:50 siem01 logstash[5423]:          "created" => "2026-08-30T18:20:59.125Z",
+Aug 30 11:30:50 siem01 logstash[5423]:             "code" => "4688",
+Aug 30 11:30:50 siem01 logstash[5423]:             "kind" => "event",
+Aug 30 11:30:50 siem01 logstash[5423]:           "action" => "Process Creation",
+Aug 30 11:30:50 siem01 logstash[5423]:         "original" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0xbfabb\n\nProcess Information:\n\tNew Process ID:\t\t0x13fc\n\tNew Process Name:\tC:\\Windows\\System32\\taskhostw.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0x558\n\tCreator Process Name:\tC:\\Windows\\System32\\svchost.exe\n\tProcess Command Line:\t\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator."
+Aug 30 11:30:50 siem01 logstash[5423]:     },
+Aug 30 11:30:50 siem01 logstash[5423]:            "log" => {
+Aug 30 11:30:50 siem01 logstash[5423]:         "level" => "information"
+Aug 30 11:30:50 siem01 logstash[5423]:     },
+Aug 30 11:30:50 siem01 logstash[5423]:       "@version" => "1",
+Aug 30 11:30:50 siem01 logstash[5423]:           "tags" => [
+Aug 30 11:30:50 siem01 logstash[5423]:         [0] "beats_input_codec_plain_applied"
+Aug 30 11:30:50 siem01 logstash[5423]:     ]
+Aug 30 11:30:50 siem01 logstash[5423]: }

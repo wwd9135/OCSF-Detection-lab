@@ -1,0 +1,58 @@
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+    if [winlog][provider_name] == "Microsoft-Windows-Sysmon" and
+     [winlog][event_id] == "4688" {
+
+    mutate {
+      add_field => {
+        "category_uid"  => "1"
+        "category_name" => "System Activity"
+
+        "class_uid"     => "1007"
+        "class_name"    => "Process Activity"
+
+        "activity_id"   => "1"
+        "activity_name" => "Launch"
+
+        "type_uid"      => "100701"
+        "type_name"     => "Process Activity Launch"
+
+        "severity_id"   => "1"
+
+        "[process][file][type_id]" => "8"
+        "[process][file][type]"    => "Executable File"
+        "[device][type_id]"        => "0"
+        "[device][type]"           => "Unknown"
+
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Sysmon"
+        "[metadata][product][vendor_name]" => "Microsoft"
+        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+
+}
+
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+
+  opensearch {
+    hosts => ["https://localhost:9200"]
+
+    user => "logstash"
+    password => "YOUR_PASSWORD"
+
+    index => "ocsf-process-%{+YYYY.MM.dd}"
+
+    ssl_certificate_verification => false
+  }
+}
