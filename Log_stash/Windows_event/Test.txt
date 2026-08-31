@@ -1,0 +1,137 @@
+ System 
+
+  - Provider 
+
+   [ Name]  Microsoft-Windows-Security-Auditing 
+   [ Guid]  {54849625-5478-4994-a5ba-3e3b0328c30d} 
+ 
+   EventID 4625 
+ 
+   Version 0 
+ 
+   Level 0 
+ 
+   Task 12544 
+ 
+   Opcode 0 
+ 
+   Keywords 0x8010000000000000 
+ 
+  - TimeCreated 
+
+   [ SystemTime]  2026-08-31T20:08:31.0256600Z 
+ 
+   EventRecordID 39991 
+ 
+  - Correlation 
+
+   [ ActivityID]  {0288d24e-396a-0000-5cd6-88026a39dd01} 
+ 
+  - Execution 
+
+   [ ProcessID]  836 
+   [ ThreadID]  2480 
+ 
+   Channel Security 
+ 
+   Computer WinUser-01.Local.lab 
+ 
+   Security 
+ 
+
+- EventData 
+
+  SubjectUserSid S-1-5-18 
+  SubjectUserName WINUSER-01$ 
+  SubjectDomainName LOCAL 
+  SubjectLogonId 0x3e7 
+  TargetUserSid S-1-0-0 
+  TargetUserName Administrator 
+  TargetDomainName LOCAL 
+  Status 0xc000006d 
+  FailureReason %%2313 
+  SubStatus 0xc000006a 
+  LogonType 2 
+  LogonProcessName User32  
+  AuthenticationPackageName Negotiate 
+  WorkstationName WINUSER-01 
+  TransmittedServices - 
+  LmPackageName - 
+  KeyLength 0 
+  ProcessId 0x758 
+  ProcessName C:\Windows\System32\svchost.exe 
+  IpAddress 127.0.0.1 
+  IpPort 0 
+
+
+ System 
+
+  - Provider 
+
+   [ Name]  Microsoft-Windows-Security-Auditing 
+   [ Guid]  {54849625-5478-4994-a5ba-3e3b0328c30d} 
+ 
+   EventID 4624 
+ 
+   Version 3 
+ 
+   Level 0 
+ 
+   Task 12544 
+ 
+   Opcode 0 
+ 
+   Keywords 0x8020000000000000 
+ 
+  - TimeCreated 
+
+   [ SystemTime]  2026-08-31T20:09:57.8755933Z 
+ 
+   EventRecordID 40045 
+ 
+  - Correlation 
+
+   [ ActivityID]  {0288d24e-396a-0000-5cd6-88026a39dd01} 
+ 
+  - Execution 
+
+   [ ProcessID]  836 
+   [ ThreadID]  6236 
+ 
+   Channel Security 
+ 
+   Computer WinUser-01.Local.lab 
+ 
+   Security 
+ 
+
+- EventData 
+
+  SubjectUserSid S-1-5-18 
+  SubjectUserName WINUSER-01$ 
+  SubjectDomainName LOCAL 
+  SubjectLogonId 0x3e7 
+  TargetUserSid S-1-5-90-0-2 
+  TargetUserName DWM-2 
+  TargetDomainName Window Manager 
+  TargetLogonId 0x7c30e5 
+  LogonType 2 
+  LogonProcessName Advapi  
+  AuthenticationPackageName Negotiate 
+  WorkstationName - 
+  LogonGuid {00000000-0000-0000-0000-000000000000} 
+  TransmittedServices - 
+  LmPackageName - 
+  KeyLength 0 
+  ProcessId 0x724 
+  ProcessName C:\Windows\System32\winlogon.exe 
+  IpAddress - 
+  IpPort - 
+  ImpersonationLevel %%1833 
+  RestrictedAdminMode - 
+  RemoteCredentialGuard - 
+  TargetOutboundUserName - 
+  TargetOutboundDomainName - 
+  VirtualAccount %%1842 
+  TargetLinkedLogonId 0x7c30ff 
+  ElevatedToken %%1842 
