@@ -1,0 +1,323 @@
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+     [winlog][event_id] == "4624" {
+
+    mutate {
+      add_field => {
+        "category_uid"  => "3"
+        "category_name" => "Identity & Access Management"
+
+        "class_uid"  => "3002"
+        "class_name" => "Authentication"
+
+        "activity_id"   => "1"
+        "activity_name" => "Logon"
+
+        "type_uid"  => "300201"
+        "type_name" => "Authentication: Logon"
+
+        "severity_id" => "1"
+        "status_id"   => "1"
+        "status"      => "Success"
+
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Windows Security Auditing"
+        "[metadata][product][vendor_name]" => "Microsoft"
+        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+
+    date {
+      match => ["[event][created]", "ISO8601"]
+      target => "[@metadata][event_created]"
+      tag_on_failure => ["_ocsf_logged_time_parse_failure"]
+    }
+
+    mutate {
+      rename => {
+        "[event][original]"                           => "[raw_data]"
+        "[winlog][event_id]"                          => "[metadata][event_code]"
+        "[winlog][provider_name]"                     => "[metadata][log_provider]"
+        "[winlog][version]"                           => "[metadata][log_version]"
+
+        "[winlog][event_data][TargetUserName]"        => "[user][name]"
+        "[winlog][event_data][TargetDomainName]"      => "[user][domain]"
+        "[winlog][event_data][TargetUserSid]"         => "[user][uid]"
+
+        "[winlog][event_data][SubjectUserName]"       => "[actor][user][name]"
+        "[winlog][event_data][SubjectDomainName]"     => "[actor][user][domain]"
+        "[winlog][event_data][SubjectUserSid]"        => "[actor][user][uid]"
+        "[winlog][event_data][SubjectLogonId]"        => "[actor][session][uid]"
+
+        "[winlog][event_data][ProcessId]"             => "[actor][process][pid]"
+        "[winlog][event_data][ProcessName]"           => "[actor][process][file][path]"
+
+        "[winlog][event_data][TargetLogonId]"         => "[session][uid]"
+        "[winlog][event_data][TargetLinkedLogonId]"   => "[session][uid_alt]"
+        "[winlog][event_data][LogonGuid]"             => "[session][uuid]"
+
+        "[winlog][event_data][IpAddress]"             => "[src_endpoint][ip]"
+        "[winlog][event_data][IpPort]"                => "[src_endpoint][port]"
+        "[winlog][event_data][WorkstationName]"       => "[src_endpoint][hostname]"
+        "[winlog][event_data][LogonProcessName]"      => "[logon_process][name]"
+      }
+    }
+
+    ruby {
+      code => '
+        missing = lambda do |value|
+          value.nil? || value.to_s.strip.empty? || value.to_s.strip == "-"
+        end
+
+        event_time = event.get("@timestamp")
+        if event_time
+          epoch_ms = (event_time.to_f * 1000).round
+          iso_time = event_time.respond_to?(:to_iso8601) ? event_time.to_iso8601 : event_time.to_s
+
+          event.set("[time]", epoch_ms)
+          event.set("[time_dt]", iso_time)
+          event.set("[timezone_offset]", 0)
+          event.set("[metadata][original_time]", iso_time)
+          event.set("[metadata][profiles]", ["datetime"])
+          event.set("[session][created_time]", epoch_ms)
+          event.set("[session][created_time_dt]", iso_time)
+        end
+
+        logged_time = event.get("[@metadata][event_created]")
+        if logged_time
+          event.set("[metadata][logged_time]", (logged_time.to_f * 1000).round)
+          event.set("[metadata][logged_time_dt]", logged_time.respond_to?(:to_iso8601) ? logged_time.to_iso8601 : logged_time.to_s)
+        end
+
+        ["[actor][process][pid]"].each do |path|
+          value = event.get(path)
+          next if missing.call(value)
+
+          begin
+            event.set(path, Integer(value.to_s, 0))
+          rescue ArgumentError, TypeError
+            event.tag("_ocsf_hex_id_parse_failure")
+          end
+        end
+
+        ["[session][uid]", "[session][uid_alt]", "[actor][session][uid]"].each do |path|
+          value = event.get(path)
+          next if missing.call(value)
+
+          begin
+            event.set(path, Integer(value.to_s, 0).to_s)
+          rescue ArgumentError, TypeError
+            event.tag("_ocsf_hex_id_parse_failure")
+          end
+        end
+
+        session_uuid = event.get("[session][uuid]")
+        event.set("[session][uuid]", session_uuid.to_s.delete("{}").downcase) unless missing.call(session_uuid)
+
+        process_path = event.get("[actor][process][file][path]")
+        unless missing.call(process_path)
+          process_name = File.basename(process_path.to_s.tr("\\", "/"))
+          event.set("[actor][process][file][name]", process_name)
+          event.set("[actor][process][name]", process_name)
+        end
+
+        logon_process_name = event.get("[logon_process][name]")
+        event.set("[logon_process][name]", logon_process_name.to_s.strip) unless missing.call(logon_process_name)
+
+        ["[src_endpoint][ip]", "[src_endpoint][hostname]"].each do |path|
+          event.remove(path) if missing.call(event.get(path))
+        end
+
+        src_port = event.get("[src_endpoint][port]")
+        if missing.call(src_port)
+          event.remove("[src_endpoint][port]")
+        else
+          begin
+            event.set("[src_endpoint][port]", Integer(src_port.to_s, 10))
+          rescue ArgumentError, TypeError
+            event.tag("_ocsf_port_parse_failure")
+          end
+        end
+
+        event_data = event.get("[winlog][event_data]") || {}
+
+        logon_type_source = event_data["LogonType"]
+        unless missing.call(logon_type_source)
+          source_id = logon_type_source.to_i
+          logon_types = {
+            0 => [1, "System"],
+            2 => [2, "Interactive"],
+            3 => [3, "Network"],
+            4 => [4, "Batch"],
+            5 => [5, "OS Service"],
+            7 => [7, "Unlock"],
+            8 => [8, "Network Cleartext"],
+            9 => [9, "New Credentials"],
+            10 => [10, "Remote Interactive"],
+            11 => [11, "Cached Interactive"],
+            12 => [12, "Cached Remote Interactive"],
+            13 => [13, "Cached Unlock"]
+          }
+          normalized = logon_types.fetch(source_id, [99, "Windows Logon Type 
+          is_remote = [3, 8, 10, 12].include?(source_id)
+
+          event.set("[logon_type_id]", normalized[0])
+          event.set("[logon_type]", normalized[1])
+          event.set("[is_remote]", is_remote)
+          event.set("[is_cleartext]", source_id == 8)
+          event.set("[session][is_remote]", is_remote)
+        end
+
+        auth_package = event_data["AuthenticationPackageName"]
+        lm_package = event_data["LmPackageName"]
+        unless missing.call(auth_package)
+          package_name = auth_package.to_s.strip
+          package_key = package_name.upcase
+
+          if package_key.start_with?("KERBEROS")
+            event.set("[auth_protocol_id]", 2)
+            event.set("[auth_protocol]", "Kerberos")
+          elsif package_key.start_with?("NTLM") || (!missing.call(lm_package) && lm_package.to_s.upcase.start_with?("NTLM", "LM"))
+            event.set("[auth_protocol_id]", 1)
+            event.set("[auth_protocol]", "NTLM")
+          elsif package_key.start_with?("DIGEST")
+            event.set("[auth_protocol_id]", 3)
+            event.set("[auth_protocol]", "Digest")
+          else
+            event.set("[auth_protocol_id]", 99)
+            event.set("[auth_protocol]", package_name)
+          end
+        else
+          event.set("[auth_protocol_id]", 0)
+          event.set("[auth_protocol]", "Unknown")
+        end
+
+        classify_user = lambda do |prefix|
+          name = event.get("#{prefix}[name]").to_s
+          uid = event.get("#{prefix}[uid]").to_s
+
+          if ["S-1-5-18", "S-1-5-19", "S-1-5-20"].include?(uid) || name.end_with?("$") || ["SYSTEM", "LOCAL SERVICE", "NETWORK SERVICE"].include?(name.upcase)
+            event.set("#{prefix}[type_id]", 3)
+            event.set("#{prefix}[type]", "System")
+          elsif uid.end_with?("-500") || name.casecmp("Administrator") == 0
+            event.set("#{prefix}[type_id]", 2)
+            event.set("#{prefix}[type]", "Admin")
+          else
+            event.set("#{prefix}[type_id]", 1)
+            event.set("#{prefix}[type]", "User")
+          end
+        end
+
+        classify_user.call("[user]")
+        classify_user.call("[actor][user]")
+
+        computer_name = event.get("[winlog][computer_name]")
+        unless missing.call(computer_name)
+          endpoint_name = computer_name.to_s
+          endpoint_parts = endpoint_name.split(".", 2)
+          event.set("[dst_endpoint][name]", endpoint_name)
+          event.set("[dst_endpoint][hostname]", endpoint_parts[0])
+          event.set("[dst_endpoint][domain]", endpoint_parts[1]) if endpoint_parts.length == 2
+        end
+
+        host_uid = event.get("[host][id]")
+        event.set("[dst_endpoint][uid]", host_uid) unless missing.call(host_uid)
+
+        host_ips = event.get("[host][ip]")
+        if host_ips.is_a?(Array)
+          preferred_ip = host_ips.find { |ip| ip.to_s.match?(/\A\d{1,3}(?:\.\d{1,3}){3}\z/) } || host_ips.first
+          event.set("[dst_endpoint][ip]", preferred_ip) unless missing.call(preferred_ip)
+        elsif !missing.call(host_ips)
+          event.set("[dst_endpoint][ip]", host_ips)
+        end
+
+        host_macs = event.get("[host][mac]")
+        host_mac = host_macs.is_a?(Array) ? host_macs.first : host_macs
+        event.set("[dst_endpoint][mac]", host_mac) unless missing.call(host_mac)
+
+        boolean_value = lambda do |value|
+          case value.to_s.strip.downcase
+          when "yes", "true", "1"
+            true
+          when "no", "false", "0"
+            false
+          else
+            value
+          end
+        end
+
+        passthrough = {
+          "LmPackageName" => "lm_package_name",
+          "ElevatedToken" => "elevated_token",
+          "RemoteCredentialGuard" => "remote_credential_guard",
+          "TargetOutboundUserName" => "target_outbound_user_name",
+          "TargetOutboundDomainName" => "target_outbound_domain_name",
+          "TransmittedServices" => "transmitted_services",
+          "KeyLength" => "key_length",
+          "RestrictedAdminMode" => "restricted_admin_mode",
+          "VirtualAccount" => "virtual_account",
+          "ImpersonationLevel" => "impersonation_level"
+        }
+
+        passthrough.each do |source, target|
+          value = event_data[source]
+          next if missing.call(value)
+
+          if ["ElevatedToken", "RemoteCredentialGuard", "RestrictedAdminMode", "VirtualAccount"].include?(source)
+            value = boolean_value.call(value)
+          elsif source == "KeyLength"
+            begin
+              value = Integer(value.to_s, 10)
+            rescue ArgumentError, TypeError
+              event.tag("_ocsf_key_length_parse_failure")
+            end
+          end
+
+          event.set("[unmapped][windows][#{target}]", value)
+        end
+      '
+    }
+
+    mutate {
+      replace => {
+        "message" => "An account was successfully logged on."
+      }
+      convert => {
+        "category_uid"            => "integer"
+        "class_uid"               => "integer"
+        "activity_id"             => "integer"
+        "type_uid"                => "integer"
+        "severity_id"             => "integer"
+        "status_id"               => "integer"
+        "[metadata][log_version]" => "string"
+      }
+    }
+
+    mutate {
+      remove_field => [
+        "winlog",
+        "event",
+        "host",
+        "agent",
+        "ecs",
+        "log",
+        "tags",
+        "@version",
+        "@timestamp"
+      ]
+    }
+  }
+}
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+}
