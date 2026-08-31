@@ -1,0 +1,103 @@
+ {
+         "winlog" => {
+           "activity_id" => "{0288D24E-396A-0000-5CD6-88026A39DD01}",
+             "record_id" => 40095,
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+              "event_id" => "4624",
+            "event_data" => {
+                             "LogonGuid" => "{00000000-0000-0000-0000-000000000000}",
+                         "LmPackageName" => "-",
+                         "ElevatedToken" => "Yes",
+                             "ProcessId" => "0x330",
+                 "RemoteCredentialGuard" => "-",
+                        "TargetUserName" => "SYSTEM",
+                           "ProcessName" => "C:\\Windows\\System32\\services.exe",
+                "TargetOutboundUserName" => "-",
+                      "LogonProcessName" => "Advapi  ",
+                   "TransmittedServices" => "-",
+                                "IpPort" => "-",
+                       "WorkstationName" => "-",
+                             "KeyLength" => "0",
+                             "IpAddress" => "-",
+                   "RestrictedAdminMode" => "-",
+                             "LogonType" => "5",
+                       "SubjectUserName" => "WINUSER-01$",
+                         "TargetUserSid" => "S-1-5-18",
+                         "TargetLogonId" => "0x3e7",
+                        "VirtualAccount" => "No",
+                        "SubjectUserSid" => "S-1-5-18",
+                        "SubjectLogonId" => "0x3e7",
+                      "TargetDomainName" => "NT AUTHORITY",
+                     "SubjectDomainName" => "LOCAL",
+             "AuthenticationPackageName" => "Negotiate",
+                    "ImpersonationLevel" => "Impersonation",
+              "TargetOutboundDomainName" => "-",
+                   "TargetLinkedLogonId" => "0x0"
+         },
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+               "version" => 3,
+               "channel" => "Security",
+         "computer_name" => "WinUser-01.Local.lab",
+               "process" => {
+                "pid" => 836,
+             "thread" => {
+                 "id" => 7684
+             }
+         },
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+                  "task" => "Logon",
+                "opcode" => "Info"
+     },
+        "message" => "An account was successfully logged on.\n\nSubject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nLogon Information:\n\tLogon Type:\t\t5\n\tRestricted Admin Mode:\t-\n\tRemote Credential Guard:\t-\n\tVirtual Account:\t\tNo\n\tElevated Token:\t\tYes\n\nImpersonation Level:\t\tImpersonation\n\nNew Logon:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tSYSTEM\n\tAccount Domain:\t\tNT AUTHORITY\n\tLogon ID:\t\t0x3e7\n\tLinked Logon ID:\t\t0x0\n\tNetwork Account Name:\t-\n\tNetwork Account Domain:\t-\n\tLogon GUID:\t\t{00000000-0000-0000-0000-000000000000}\n\nProcess Information:\n\tProcess ID:\t\t0x330\n\tProcess Name:\t\tC:\\Windows\\System32\\services.exe\n\nNetwork Information:\n\tWorkstation Name:\t-\n\tSource Network Address:\t-\n\tSource Port:\t\t-\n\nDetailed Authentication Information:\n\tLogon Process:\t\tAdvapi  \n\tAuthentication Package:\tNegotiate\n\tTransited Services:\t-\n\tPackage Name (NTLM only):\t-\n\tKey Length:\t\t0\n\nThis event is generated when a logon session is created. It is generated on the computer that was accessed.\n\nThe subject fields indicate the account on the local system which requested the logon. This is most commonly a service such as the Server service, or a local process such as Winlogon.exe or Services.exe.\n\nThe logon type field indicates the kind of logon that occurred. The most common types are 2 (interactive) and 3 (network).\n\nThe New Logon fields indicate the account for whom the new logon was created, i.e. the account that was logged on.\n\nThe network fields indicate where a remote logon request originated. Workstation name is not always available and may be left blank in some cases.\n\nThe impersonation level field indicates the extent to which a process in the logon session can impersonate.\n\nThe authentication information fields provide detailed information about this specific logon request.\n\t- Logon GUID is a unique identifier that can be used to correlate this event with a KDC event.\n\t- Transited services indicate which intermediate services have participated in this logon request.\n\t- Package name indicates which sub-protocol was used among the NTLM protocols.\n\t- Key length indicates the length of the generated session key. This will be 0 if no session key was requested.",
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+          "event" => {
+           "action" => "Logon",
+             "kind" => "event",
+             "code" => "4624",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "created" => "2026-08-31T20:10:10.970Z",
+         "original" => "An account was successfully logged on.\n\nSubject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nLogon Information:\n\tLogon Type:\t\t5\n\tRestricted Admin Mode:\t-\n\tRemote Credential Guard:\t-\n\tVirtual Account:\t\tNo\n\tElevated Token:\t\tYes\n\nImpersonation Level:\t\tImpersonation\n\nNew Logon:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tSYSTEM\n\tAccount Domain:\t\tNT AUTHORITY\n\tLogon ID:\t\t0x3e7\n\tLinked Logon ID:\t\t0x0\n\tNetwork Account Name:\t-\n\tNetwork Account Domain:\t-\n\tLogon GUID:\t\t{00000000-0000-0000-0000-000000000000}\n\nProcess Information:\n\tProcess ID:\t\t0x330\n\tProcess Name:\t\tC:\\Windows\\System32\\services.exe\n\nNetwork Information:\n\tWorkstation Name:\t-\n\tSource Network Address:\t-\n\tSource Port:\t\t-\n\nDetailed Authentication Information:\n\tLogon Process:\t\tAdvapi  \n\tAuthentication Package:\tNegotiate\n\tTransited Services:\t-\n\tPackage Name (NTLM only):\t-\n\tKey Length:\t\t0\n\nThis event is generated when a logon session is created. It is generated on the computer that was accessed.\n\nThe subject fields indicate the account on the local system which requested the logon. This is most commonly a service such as the Server service, or a local process such as Winlogon.exe or Services.exe.\n\nThe logon type field indicates the kind of logon that occurred. The most common types are 2 (interactive) and 3 (network).\n\nThe New Logon fields indicate the account for whom the new logon was created, i.e. the account that was logged on.\n\nThe network fields indicate where a remote logon request originated. Workstation name is not always available and may be left blank in some cases.\n\nThe impersonation level field indicates the extent to which a process in the logon session can impersonate.\n\nThe authentication information fields provide detailed information about this specific logon request.\n\t- Logon GUID is a unique identifier that can be used to correlate this event with a KDC event.\n\t- Transited services indicate which intermediate services have participated in this logon request.\n\t- Package name indicates which sub-protocol was used among the NTLM protocols.\n\t- Key length indicates the length of the generated session key. This will be 0 if no session key was requested.",
+          "outcome" => "success"
+     },
+          "agent" => {
+                 "name" => "WinUser-01",
+              "version" => "9.5.2",
+         "ephemeral_id" => "c4a648fd-9f44-4157-8587-4227f511c143",
+                   "id" => "77455700-12e6-4e33-88e9-928006668ea8",
+                 "type" => "winlogbeat"
+     },
+       "@version" => "1",
+            "log" => {
+         "level" => "information"
+     },
+           "host" => {
+                 "name" => "winuser-01",
+                   "os" => {
+                 "name" => "Windows 11 Pro",
+               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+                "build" => "26200.9168",
+                 "type" => "windows",
+             "platform" => "windows",
+              "version" => "10.0",
+               "family" => "windows"
+         },
+                  "mac" => [
+             [0] "00-0C-29-F2-B9-0D"
+         ],
+                   "ip" => [
+             [0] "fe80::5f2d:2ebd:10a2:a5c2",
+             [1] "10.0.0.14"
+         ],
+                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
+             "hostname" => "WinUser-01",
+         "architecture" => "x86_64"
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+     "@timestamp" => 2026-08-31T20:10:09.446Z
+ }

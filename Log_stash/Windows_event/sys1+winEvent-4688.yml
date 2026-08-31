@@ -283,6 +283,22 @@ filter {
   }
 }
 
+
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+     [winlog][event_id] == "4624" {
+
+    }
+
+
+
+    
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+     [winlog][event_id] == "4625" {
+      }
+
+
 output {
   stdout {
     codec => rubydebug
