@@ -151,8 +151,8 @@ filter {
         "log",
         "tags",
         "message",
-        "@version",
-      ]
+        "@version"
+        ]
     }
   }
 }
@@ -160,16 +160,5 @@ filter {
 output {
   stdout {
     codec => rubydebug
-  }
-
-  opensearch {
-    hosts => ["https://localhost:9200"]
-
-    user => "logstash"
-    password => "YOUR_PASSWORD"
-
-    index => "ocsf-process-%{+YYYY.MM.dd}"
-
-    ssl_certificate_verification => false
   }
 }

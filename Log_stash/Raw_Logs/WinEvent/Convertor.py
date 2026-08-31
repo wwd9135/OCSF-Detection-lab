@@ -4,7 +4,7 @@ new = []
 with open("RawData.txt", "r") as file:
     lines = file.readlines()
 for i in lines:
-    i = i.replace("Aug 30 11:30:50 siem01 logstash[5423]:", "")
+    i = i.replace("Aug 30 13:00:48 siem01 logstash[6879]:", "")
     new.append(i)
 
 for i in new:

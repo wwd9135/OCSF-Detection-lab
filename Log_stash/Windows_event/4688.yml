@@ -5,7 +5,7 @@ input {
 }
 
 filter {
-    if [winlog][provider_name] == "Microsoft-Windows-Sysmon" and
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
      [winlog][event_id] == "4688" {
 
     mutate {
@@ -30,29 +30,83 @@ filter {
         "[device][type]"           => "Unknown"
 
         "[metadata][version]"              => "1.8.0"
-        "[metadata][product][name]"        => "Sysmon"
+        "[metadata][product][name]"        => "Windows_event"
         "[metadata][product][vendor_name]" => "Microsoft"
         "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
         "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
       }
     }
 
-}
+    mutate {
+      rename => {
+        "[winlog][event_id]"                          => "[metadata][event_code]"
+        "[winlog][provider_name]"                     => "[metadata][log_provider]"
+        "[winlog][version]"                           => "[metadata][log_version]"
+        "[event][original]"                           => "[raw_data]"
+        "[winlog][event_data][NewProcessId]"          => "[process][pid]"
+        "[winlog][event_data][CommandLine]"           => "[process][cmd_line]"
+        "@timestamp"                                  => "[process][created_time]"
+        "[winlog][event_data][NewProcessName]"        => "[process][file][path]"
+        "[winlog][event_data][SubjectUserName]"       => "[process][user][name]"
+        "[winlog][event_data][SubjectDomainName]"     => "[process][user][domain]"
+        "[winlog][event_data][ParentProcessName]"     => "[process][parent_process][path]"
+        "[winlog][event_data][ProcessId]"             => "[process][parent_process][pid]"
+        "[winlog][computer_name]"                     => "[device][hostname]"
+        "[host][ip][1]"                               => "[device][ip]"
+        "[host][mac][0]"                              => "[device][mac]"
+      }
+    }
 
+
+    ruby {
+      code => '
+        created_time = event.get("[process][created_time]")
+
+        if created_time
+          epoch_ms = (created_time.to_f * 1000).round
+
+          event.set("[time]", epoch_ms)
+          event.set("[metadata][original_time]", epoch_ms)
+          event.set("[process][created_time]", epoch_ms)
+        end
+
+        ["[process][pid]", "[process][parent_process][pid]"].each do |path|
+          value = event.get(path)
+          next if value.nil?
+
+          begin
+            event.set(path, Integer(value.to_s, 0))
+          rescue ArgumentError, TypeError
+            event.tag("_ocsf_pid_parse_failure")
+          end
+        end
+      '
+    }
+
+    mutate {
+      convert => {
+        "severity_id"                    => "integer"
+        "activity_id"                    => "integer"
+        "class_uid"                      => "integer"
+        "type_uid"                       => "integer"
+        "category_uid"                   => "integer"
+        "[process][file][type_id]"       => "integer"
+        "[device][type_id]"              => "integer"
+        "[metadata][log_version]"        => "string"
+      }
+    }
+
+
+    mutate {
+      remove_field => [
+        "message"
+        ]
+    }
+  }
+}
 
 output {
   stdout {
     codec => rubydebug
-  }
-
-  opensearch {
-    hosts => ["https://localhost:9200"]
-
-    user => "logstash"
-    password => "YOUR_PASSWORD"
-
-    index => "ocsf-process-%{+YYYY.MM.dd}"
-
-    ssl_certificate_verification => false
   }
 }
