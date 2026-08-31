@@ -1,0 +1,62 @@
+ {
+          "metadata" => {
+                    "product" => {
+                    "name" => "Windows_event",
+             "vendor_name" => "Microsoft"
+         },
+                 "event_code" => "4688",
+         "original_event_uid" => "WinUser-01.Local.lab:Security:39969",
+                 "log_source" => "WinUser-01.Local.lab:Security",
+                    "version" => "1.8.0",
+              "original_time" => 1788206390299,
+                "log_version" => "2",
+               "log_provider" => "Microsoft-Windows-Security-Auditing"
+     },
+          "@version" => "1",
+            "status" => "success",
+          "type_uid" => 100701,
+           "time_dt" => 2026-08-31T19:59:50.299Z,
+     "category_name" => "System Activity",
+       "severity_id" => 1,
+       "activity_id" => 1,
+            "device" => {
+          "type_id" => 0,
+              "mac" => "00-0C-29-F2-B9-0D",
+               "ip" => "10.0.0.14",
+         "hostname" => "WinUser-01.Local.lab",
+             "type" => "Unknown"
+     },
+               "log" => {
+         "level" => "information"
+     },
+        "@timestamp" => 2026-08-31T19:59:50.299Z,
+         "class_uid" => 1007,
+              "time" => 1788206390299,
+         "type_name" => "Process Activity Launch",
+     "activity_name" => "Launch",
+           "process" => {
+                   "file" => {
+             "type_id" => 8,
+                "name" => "CalculatorApp",
+                 "ext" => "exe",
+                "type" => "Executable File",
+                "path" => "C:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe"
+         },
+         "parent_process" => {
+              "pid" => 4112,
+             "path" => "C:\\Windows\\System32\\sihost.exe"
+         },
+                    "pid" => 6540,
+                   "user" => {
+                "uid" => "S-1-5-18",
+               "name" => "WINUSER-01$",
+             "domain" => "LOCAL"
+         },
+           "created_time" => 1788206390299
+     },
+        "class_name" => "Process Activity",
+          "raw_data" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x9626d\n\nProcess Information:\n\tNew Process ID:\t\t0x198c\n\tNew Process Name:\tC:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-4096\n\tCreator Process ID:\t0x1010\n\tCreator Process Name:\tC:\\Windows\\System32\\sihost.exe\n\tProcess Command Line:\t\"C:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe\"\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
+              "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ]
+ }

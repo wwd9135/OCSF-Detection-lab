@@ -1,0 +1,290 @@
+input {
+  beats {
+    port => 5044
+  }
+}
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Sysmon" and
+     [winlog][event_id] == "1" {
+
+    mutate {
+      add_field => {
+        "category_uid"  => "1"
+        "category_name" => "System Activity"
+
+        "class_uid"     => "1007"
+        "class_name"    => "Process Activity"
+
+        "activity_id"   => "1"
+        "activity_name" => "Launch"
+
+        "type_uid"      => "100701"
+        "type_name"     => "Process Activity Launch"
+
+        "severity_id"   => "1"
+
+        "[process][file][type_id]" => "8"
+        "[process][file][type]"    => "Executable File"
+        "[device][type_id]"        => "0"
+        "[device][type]"           => "Unknown"
+
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Sysmon"
+        "[metadata][product][vendor_name]" => "Microsoft"
+        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+    mutate {
+      convert => {
+        "severity_id"   => "integer"
+        "activity_id"   => "integer"
+        "class_uid"      => "integer"
+        "type_uid"       => "integer"
+        "category_uid"   => "integer"
+        "[process][file][type_id]" => "integer"
+        "[device][type_id]"        => "integer"
+      }
+    }
+    mutate {
+      rename => {
+        "[winlog][event_id]"                          => "[metadata][event_code]"
+        "[winlog][provider_name]"                     => "[metadata][log_provider]"
+        "[winlog][version]"                           => "[metadata][log_version]"
+        "[event][original]"                           => "[raw_data]"
+        "[winlog][event_data][ProcessId]"             => "[process][pid]"
+        "[winlog][event_data][ProcessGuid]"           => "[process][uid]"
+        "[winlog][event_data][CommandLine]"           => "[process][cmd_line]"
+        "[winlog][event_data][UtcTime]"               => "[process][created_time]"
+        "[winlog][event_data][Image]"                 => "[process][file][path]"
+        "[winlog][event_data][CurrentDirectory]"      => "[process][working_directory]"
+        "[winlog][event_data][OriginalFileName]"      => "[process][file][name]"
+        "[winlog][event_data][User]"                  => "[process][user]"
+        "[winlog][event_data][ParentProcessId]"       => "[process][parent_process][pid]"
+        "[winlog][event_data][ParentImage]"           => "[process][parent_process][path]"
+        "[winlog][event_data][ParentCommandLine]"     => "[process][parent_process][cmd_line]"
+        "[winlog][event_data][Hashes]"                => "[process][file][hashes]"
+        "[host][hostname]"                            => "[device][hostname]"
+        "[host][ip][1]"                               => "[device][ip]"
+        "[host][mac][0]"                              => "[device][mac]"
+      }
+    }
+    mutate {
+      convert => {
+        "[process][pid]"                 => "integer"
+        "[process][parent_process][pid]" => "integer"
+        "[metadata][log_version]"        => "string"
+      }
+    }
+    date {
+      match => [
+        "[process][created_time]",
+        "yyyy-MM-dd HH:mm:ss.SSS"
+      ]
+      timezone => "UTC"
+      target => "[@metadata][parsed_process_time]"
+      tag_on_failure => ["_ocsf_time_parse_failure"]
+    }
+    ruby {
+      code => '
+        parsed_time = event.get("[@metadata][parsed_process_time]")
+
+        if parsed_time
+          epoch_ms = (parsed_time.to_f * 1000).round
+
+          event.set("[time]", epoch_ms)
+          event.set("[metadata][original_time]", epoch_ms)
+          event.set("[process][created_time]", epoch_ms)
+        end
+      '
+    }
+    ruby {
+      code => '
+        raw_hashes = event.get("[process][file][hashes]")
+
+        if raw_hashes
+          algorithm_ids = {
+            "MD5"     => 1,
+            "SHA1"    => 2,
+            "SHA256"  => 3,
+            "SHA512"  => 4,
+            "IMPHASH" => 18
+          }
+
+          algorithm_names = {
+            "MD5"     => "MD5",
+            "SHA1"    => "SHA-1",
+            "SHA256"  => "SHA-256",
+            "SHA512"  => "SHA-512",
+            "IMPHASH" => "Imphash"
+          }
+
+          parsed_hashes = []
+
+          raw_hashes.to_s.split(",").each do |pair|
+            algorithm, value = pair.split("=", 2)
+            next if algorithm.nil? || value.nil?
+
+            key = algorithm.upcase
+
+            parsed_hashes << {
+              "algorithm"    => algorithm_names.fetch(key, key),
+              "algorithm_id" => algorithm_ids.fetch(key, 99),
+              "value"        => value
+            }
+          end
+
+          event.set("[process][file][hashes]", parsed_hashes)
+        end
+      ' 
+    }
+    mutate {
+      remove_field => [
+        "winlog",
+        "host",
+        "event",
+        "agent",
+        "ecs",
+        "log",
+        "tags",
+        "message",
+        "@version"
+        ]
+    }
+  }
+}
+
+
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+     [winlog][event_id] == "4688" {
+
+    mutate {
+      add_field => {
+        "category_uid"  => "1"
+        "category_name" => "System Activity"
+
+        "class_uid"     => "1007"
+        "class_name"    => "Process Activity"
+
+        "activity_id"   => "1"
+        "activity_name" => "Launch"
+
+        "type_uid"      => "100701"
+        "type_name"     => "Process Activity Launch"
+
+        "severity_id"   => "1"
+
+        "[process][file][type_id]" => "8"
+        "[process][file][type]"    => "Executable File"
+        "[device][type_id]"        => "0"
+        "[device][type]"           => "Unknown"
+
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Windows_event"
+        "[metadata][product][vendor_name]" => "Microsoft"
+        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+    mutate{ 
+      copy => {
+        "@timestamp" => "[time_dt]"
+      }
+    }
+    ruby {
+      code => '
+        event_time = event.get("@timestamp")
+
+        if event_time
+          epoch_ms = (event_time.to_f * 1000).round
+
+          event.set("[time]", epoch_ms)
+          event.set("[metadata][original_time]", epoch_ms)
+          event.set("[process][created_time]", epoch_ms)
+        end
+      '
+    }
+
+    mutate {
+      rename => {
+        "[winlog][event_id]"                      => "[metadata][event_code]"
+        "[winlog][provider_name]"                 => "[metadata][log_provider]"
+        "[winlog][version]"                       => "[metadata][log_version]"
+
+        "[event][original]"                       => "[raw_data]"
+
+        "[winlog][event_data][NewProcessId]"      => "[process][pid]"
+        "[winlog][event_data][ProcessCommandLine]" => "[process][cmd_line]"
+        "[winlog][event_data][NewProcessName]"    => "[process][file][path]"
+
+        "[winlog][event_data][SubjectUserName]"   => "[process][user][name]"
+        "[winlog][event_data][SubjectDomainName]" => "[process][user][domain]"
+        "[winlog][event_data][SubjectUserSid]"    => "[process][user][uid]"
+
+        "[winlog][event_data][ParentProcessName]" => "[process][parent_process][path]"
+        "[winlog][event_data][ProcessId]"         => "[process][parent_process][pid]"
+
+        "[winlog][computer_name]"                 => "[device][hostname]"
+        "[host][ip][1]"                           => "[device][ip]"
+        "[host][mac][0]"                          => "[device][mac]"
+
+        "[event][outcome]"                        => "[status]"
+      
+      }
+    }
+    grok {
+      match => {
+        "[process][file][path]" => "^.*\\(?<[process][file][name]>[^\\]+)\.(?<[process][file][ext]>[^.\\]+)$"
+      }
+    }
+    
+    mutate {
+      convert => {
+        "severity_id"                    => "integer"
+        "activity_id"                    => "integer"
+        "class_uid"                      => "integer"
+        "type_uid"                       => "integer"
+        "category_uid"                   => "integer"
+        "[process][file][type_id]"       => "integer"
+        "[device][type_id]"              => "integer"
+        "[metadata][log_version]"        => "string"
+      }
+    }
+    
+    ruby {
+      code => '
+        ["[process][pid]", "[process][parent_process][pid]"].each do |field|
+          value = event.get(field)
+
+          if value
+            begin
+              event.set(field, Integer(value, 0))
+            rescue ArgumentError, TypeError
+              event.tag("_pid_conversion_failure")
+            end
+          end
+        end
+      '
+    }
+
+    mutate {
+      remove_field => [
+        "message",
+        "winlog", 
+        "event",
+        "category_uid",
+        "host",
+        "agent",
+        "ecs"
+        "@timestamp"
+        ]
+    }
+  }
+}
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+}

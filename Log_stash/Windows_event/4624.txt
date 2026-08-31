@@ -1,0 +1,103 @@
+Aug 31 13:10:18 siem01 logstash[5568]: {
+Aug 31 13:10:18 siem01 logstash[5568]:         "winlog" => {
+Aug 31 13:10:18 siem01 logstash[5568]:           "activity_id" => "{0288D24E-396A-0000-5CD6-88026A39DD01}",
+Aug 31 13:10:18 siem01 logstash[5568]:             "record_id" => 40095,
+Aug 31 13:10:18 siem01 logstash[5568]:         "provider_name" => "Microsoft-Windows-Security-Auditing",
+Aug 31 13:10:18 siem01 logstash[5568]:              "event_id" => "4624",
+Aug 31 13:10:18 siem01 logstash[5568]:            "event_data" => {
+Aug 31 13:10:18 siem01 logstash[5568]:                             "LogonGuid" => "{00000000-0000-0000-0000-000000000000}",
+Aug 31 13:10:18 siem01 logstash[5568]:                         "LmPackageName" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                         "ElevatedToken" => "Yes",
+Aug 31 13:10:18 siem01 logstash[5568]:                             "ProcessId" => "0x330",
+Aug 31 13:10:18 siem01 logstash[5568]:                 "RemoteCredentialGuard" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                        "TargetUserName" => "SYSTEM",
+Aug 31 13:10:18 siem01 logstash[5568]:                           "ProcessName" => "C:\\Windows\\System32\\services.exe",
+Aug 31 13:10:18 siem01 logstash[5568]:                "TargetOutboundUserName" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                      "LogonProcessName" => "Advapi  ",
+Aug 31 13:10:18 siem01 logstash[5568]:                   "TransmittedServices" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                                "IpPort" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                       "WorkstationName" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                             "KeyLength" => "0",
+Aug 31 13:10:18 siem01 logstash[5568]:                             "IpAddress" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                   "RestrictedAdminMode" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                             "LogonType" => "5",
+Aug 31 13:10:18 siem01 logstash[5568]:                       "SubjectUserName" => "WINUSER-01$",
+Aug 31 13:10:18 siem01 logstash[5568]:                         "TargetUserSid" => "S-1-5-18",
+Aug 31 13:10:18 siem01 logstash[5568]:                         "TargetLogonId" => "0x3e7",
+Aug 31 13:10:18 siem01 logstash[5568]:                        "VirtualAccount" => "No",
+Aug 31 13:10:18 siem01 logstash[5568]:                        "SubjectUserSid" => "S-1-5-18",
+Aug 31 13:10:18 siem01 logstash[5568]:                        "SubjectLogonId" => "0x3e7",
+Aug 31 13:10:18 siem01 logstash[5568]:                      "TargetDomainName" => "NT AUTHORITY",
+Aug 31 13:10:18 siem01 logstash[5568]:                     "SubjectDomainName" => "LOCAL",
+Aug 31 13:10:18 siem01 logstash[5568]:             "AuthenticationPackageName" => "Negotiate",
+Aug 31 13:10:18 siem01 logstash[5568]:                    "ImpersonationLevel" => "Impersonation",
+Aug 31 13:10:18 siem01 logstash[5568]:              "TargetOutboundDomainName" => "-",
+Aug 31 13:10:18 siem01 logstash[5568]:                   "TargetLinkedLogonId" => "0x0"
+Aug 31 13:10:18 siem01 logstash[5568]:         },
+Aug 31 13:10:18 siem01 logstash[5568]:         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+Aug 31 13:10:18 siem01 logstash[5568]:               "version" => 3,
+Aug 31 13:10:18 siem01 logstash[5568]:               "channel" => "Security",
+Aug 31 13:10:18 siem01 logstash[5568]:         "computer_name" => "WinUser-01.Local.lab",
+Aug 31 13:10:18 siem01 logstash[5568]:               "process" => {
+Aug 31 13:10:18 siem01 logstash[5568]:                "pid" => 836,
+Aug 31 13:10:18 siem01 logstash[5568]:             "thread" => {
+Aug 31 13:10:18 siem01 logstash[5568]:                 "id" => 7684
+Aug 31 13:10:18 siem01 logstash[5568]:             }
+Aug 31 13:10:18 siem01 logstash[5568]:         },
+Aug 31 13:10:18 siem01 logstash[5568]:              "keywords" => [
+Aug 31 13:10:18 siem01 logstash[5568]:             [0] "Audit Success"
+Aug 31 13:10:18 siem01 logstash[5568]:         ],
+Aug 31 13:10:18 siem01 logstash[5568]:                  "task" => "Logon",
+Aug 31 13:10:18 siem01 logstash[5568]:                "opcode" => "Info"
+Aug 31 13:10:18 siem01 logstash[5568]:     },
+Aug 31 13:10:18 siem01 logstash[5568]:        "message" => "An account was successfully logged on.\n\nSubject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nLogon Information:\n\tLogon Type:\t\t5\n\tRestricted Admin Mode:\t-\n\tRemote Credential Guard:\t-\n\tVirtual Account:\t\tNo\n\tElevated Token:\t\tYes\n\nImpersonation Level:\t\tImpersonation\n\nNew Logon:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tSYSTEM\n\tAccount Domain:\t\tNT AUTHORITY\n\tLogon ID:\t\t0x3e7\n\tLinked Logon ID:\t\t0x0\n\tNetwork Account Name:\t-\n\tNetwork Account Domain:\t-\n\tLogon GUID:\t\t{00000000-0000-0000-0000-000000000000}\n\nProcess Information:\n\tProcess ID:\t\t0x330\n\tProcess Name:\t\tC:\\Windows\\System32\\services.exe\n\nNetwork Information:\n\tWorkstation Name:\t-\n\tSource Network Address:\t-\n\tSource Port:\t\t-\n\nDetailed Authentication Information:\n\tLogon Process:\t\tAdvapi  \n\tAuthentication Package:\tNegotiate\n\tTransited Services:\t-\n\tPackage Name (NTLM only):\t-\n\tKey Length:\t\t0\n\nThis event is generated when a logon session is created. It is generated on the computer that was accessed.\n\nThe subject fields indicate the account on the local system which requested the logon. This is most commonly a service such as the Server service, or a local process such as Winlogon.exe or Services.exe.\n\nThe logon type field indicates the kind of logon that occurred. The most common types are 2 (interactive) and 3 (network).\n\nThe New Logon fields indicate the account for whom the new logon was created, i.e. the account that was logged on.\n\nThe network fields indicate where a remote logon request originated. Workstation name is not always available and may be left blank in some cases.\n\nThe impersonation level field indicates the extent to which a process in the logon session can impersonate.\n\nThe authentication information fields provide detailed information about this specific logon request.\n\t- Logon GUID is a unique identifier that can be used to correlate this event with a KDC event.\n\t- Transited services indicate which intermediate services have participated in this logon request.\n\t- Package name indicates which sub-protocol was used among the NTLM protocols.\n\t- Key length indicates the length of the generated session key. This will be 0 if no session key was requested.",
+Aug 31 13:10:18 siem01 logstash[5568]:            "ecs" => {
+Aug 31 13:10:18 siem01 logstash[5568]:         "version" => "8.0.0"
+Aug 31 13:10:18 siem01 logstash[5568]:     },
+Aug 31 13:10:18 siem01 logstash[5568]:          "event" => {
+Aug 31 13:10:18 siem01 logstash[5568]:           "action" => "Logon",
+Aug 31 13:10:18 siem01 logstash[5568]:             "kind" => "event",
+Aug 31 13:10:18 siem01 logstash[5568]:             "code" => "4624",
+Aug 31 13:10:18 siem01 logstash[5568]:         "provider" => "Microsoft-Windows-Security-Auditing",
+Aug 31 13:10:18 siem01 logstash[5568]:          "created" => "2026-08-31T20:10:10.970Z",
+Aug 31 13:10:18 siem01 logstash[5568]:         "original" => "An account was successfully logged on.\n\nSubject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nLogon Information:\n\tLogon Type:\t\t5\n\tRestricted Admin Mode:\t-\n\tRemote Credential Guard:\t-\n\tVirtual Account:\t\tNo\n\tElevated Token:\t\tYes\n\nImpersonation Level:\t\tImpersonation\n\nNew Logon:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tSYSTEM\n\tAccount Domain:\t\tNT AUTHORITY\n\tLogon ID:\t\t0x3e7\n\tLinked Logon ID:\t\t0x0\n\tNetwork Account Name:\t-\n\tNetwork Account Domain:\t-\n\tLogon GUID:\t\t{00000000-0000-0000-0000-000000000000}\n\nProcess Information:\n\tProcess ID:\t\t0x330\n\tProcess Name:\t\tC:\\Windows\\System32\\services.exe\n\nNetwork Information:\n\tWorkstation Name:\t-\n\tSource Network Address:\t-\n\tSource Port:\t\t-\n\nDetailed Authentication Information:\n\tLogon Process:\t\tAdvapi  \n\tAuthentication Package:\tNegotiate\n\tTransited Services:\t-\n\tPackage Name (NTLM only):\t-\n\tKey Length:\t\t0\n\nThis event is generated when a logon session is created. It is generated on the computer that was accessed.\n\nThe subject fields indicate the account on the local system which requested the logon. This is most commonly a service such as the Server service, or a local process such as Winlogon.exe or Services.exe.\n\nThe logon type field indicates the kind of logon that occurred. The most common types are 2 (interactive) and 3 (network).\n\nThe New Logon fields indicate the account for whom the new logon was created, i.e. the account that was logged on.\n\nThe network fields indicate where a remote logon request originated. Workstation name is not always available and may be left blank in some cases.\n\nThe impersonation level field indicates the extent to which a process in the logon session can impersonate.\n\nThe authentication information fields provide detailed information about this specific logon request.\n\t- Logon GUID is a unique identifier that can be used to correlate this event with a KDC event.\n\t- Transited services indicate which intermediate services have participated in this logon request.\n\t- Package name indicates which sub-protocol was used among the NTLM protocols.\n\t- Key length indicates the length of the generated session key. This will be 0 if no session key was requested.",
+Aug 31 13:10:18 siem01 logstash[5568]:          "outcome" => "success"
+Aug 31 13:10:18 siem01 logstash[5568]:     },
+Aug 31 13:10:18 siem01 logstash[5568]:          "agent" => {
+Aug 31 13:10:18 siem01 logstash[5568]:                 "name" => "WinUser-01",
+Aug 31 13:10:18 siem01 logstash[5568]:              "version" => "9.5.2",
+Aug 31 13:10:18 siem01 logstash[5568]:         "ephemeral_id" => "c4a648fd-9f44-4157-8587-4227f511c143",
+Aug 31 13:10:18 siem01 logstash[5568]:                   "id" => "77455700-12e6-4e33-88e9-928006668ea8",
+Aug 31 13:10:18 siem01 logstash[5568]:                 "type" => "winlogbeat"
+Aug 31 13:10:18 siem01 logstash[5568]:     },
+Aug 31 13:10:18 siem01 logstash[5568]:       "@version" => "1",
+Aug 31 13:10:18 siem01 logstash[5568]:            "log" => {
+Aug 31 13:10:18 siem01 logstash[5568]:         "level" => "information"
+Aug 31 13:10:18 siem01 logstash[5568]:     },
+Aug 31 13:10:18 siem01 logstash[5568]:           "host" => {
+Aug 31 13:10:18 siem01 logstash[5568]:                 "name" => "winuser-01",
+Aug 31 13:10:18 siem01 logstash[5568]:                   "os" => {
+Aug 31 13:10:18 siem01 logstash[5568]:                 "name" => "Windows 11 Pro",
+Aug 31 13:10:18 siem01 logstash[5568]:               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+Aug 31 13:10:18 siem01 logstash[5568]:                "build" => "26200.9168",
+Aug 31 13:10:18 siem01 logstash[5568]:                 "type" => "windows",
+Aug 31 13:10:18 siem01 logstash[5568]:             "platform" => "windows",
+Aug 31 13:10:18 siem01 logstash[5568]:              "version" => "10.0",
+Aug 31 13:10:18 siem01 logstash[5568]:               "family" => "windows"
+Aug 31 13:10:18 siem01 logstash[5568]:         },
+Aug 31 13:10:18 siem01 logstash[5568]:                  "mac" => [
+Aug 31 13:10:18 siem01 logstash[5568]:             [0] "00-0C-29-F2-B9-0D"
+Aug 31 13:10:18 siem01 logstash[5568]:         ],
+Aug 31 13:10:18 siem01 logstash[5568]:                   "ip" => [
+Aug 31 13:10:18 siem01 logstash[5568]:             [0] "fe80::5f2d:2ebd:10a2:a5c2",
+Aug 31 13:10:18 siem01 logstash[5568]:             [1] "10.0.0.14"
+Aug 31 13:10:18 siem01 logstash[5568]:         ],
+Aug 31 13:10:18 siem01 logstash[5568]:                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
+Aug 31 13:10:18 siem01 logstash[5568]:             "hostname" => "WinUser-01",
+Aug 31 13:10:18 siem01 logstash[5568]:         "architecture" => "x86_64"
+Aug 31 13:10:18 siem01 logstash[5568]:     },
+Aug 31 13:10:18 siem01 logstash[5568]:           "tags" => [
+Aug 31 13:10:18 siem01 logstash[5568]:         [0] "beats_input_codec_plain_applied"
+Aug 31 13:10:18 siem01 logstash[5568]:     ],
+Aug 31 13:10:18 siem01 logstash[5568]:     "@timestamp" => 2026-08-31T20:10:09.446Z
+Aug 31 13:10:18 siem01 logstash[5568]: }

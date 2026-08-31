@@ -1,90 +1,83 @@
-{
-           "host" => {
-                   "ip" => [
-             [0] "fe80::5f2d:2ebd:10a2:a5c2",
-             [1] "10.0.0.14"
-         ],
-                   "os" => {
-                 "name" => "Windows 11 Pro",
-               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
-                 "type" => "windows",
-              "version" => "10.0",
-                "build" => "26200.9168",
-             "platform" => "windows",
-               "family" => "windows"
-         },
-                 "name" => "winuser-01",
-                  "mac" => [
-             [0] "00-0C-29-F2-B9-0D"
-         ],
-                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
-             "hostname" => "WinUser-01",
-         "architecture" => "x86_64"
-     },
-            "ecs" => {
-         "version" => "8.0.0"
-     },
-        "message" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0xbfabb\n\nProcess Information:\n\tNew Process ID:\t\t0x27e4\n\tNew Process Name:\tC:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-4096\n\tCreator Process ID:\t0x948\n\tCreator Process Name:\tC:\\Windows\\System32\\sihost.exe\n\tProcess Command Line:\t\"C:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe\"\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
-          "agent" => {
-         "ephemeral_id" => "01b649c2-8546-4d8b-97c2-121c53d75c5b",
-                 "name" => "WinUser-01",
-              "version" => "9.5.2",
-                   "id" => "77455700-12e6-4e33-88e9-928006668ea8",
-                 "type" => "winlogbeat"
-     },
-       "@version" => "1",
-           "tags" => [
-         [0] "beats_input_codec_plain_applied"
-     ],
-     "@timestamp" => 2026-08-30T20:00:36.752Z,
-          "event" => {
-             "code" => "4688",
-          "outcome" => "success",
-           "action" => "Process Creation",
-             "kind" => "event",
-         "provider" => "Microsoft-Windows-Security-Auditing",
-          "created" => "2026-08-30T20:00:38.180Z",
-         "original" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0xbfabb\n\nProcess Information:\n\tNew Process ID:\t\t0x27e4\n\tNew Process Name:\tC:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-4096\n\tCreator Process ID:\t0x948\n\tCreator Process Name:\tC:\\Windows\\System32\\sihost.exe\n\tProcess Command Line:\t\"C:\\Program Files\\WindowsApps\\Microsoft.WindowsCalculator_11.2606.0.0_x64__8wekyb3d8bbwe\\CalculatorApp.exe\"\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator."
-     },
-         "winlog" => {
-         "provider_name" => "Microsoft-Windows-Security-Auditing",
-            ""provider_name" => "Microsoft-Windows-Security-Auditing",
-Aug 30 13:00:48 siem01 logstash[6879]:            "event_data" => {
-Aug 30 13:00:48 siem01 logstash[6879]:              "SubjectDomainName" => "LOCAL",
-Aug 30 13:00:48 siem01 logstash[6879]:                  "TargetUserSid" => "S-1-0-0",
-Aug 30 13:00:48 siem01 logstash[6879]:                 "MandatoryLabel" => "S-1-16-12288",
-Aug 30 13:00:48 siem01 logstash[6879]:                      "ProcessId" => "0x638",
-Aug 30 13:00:48 siem01 logstash[6879]:                 "SubjectLogonId" => "0xbfabb",
-Aug 30 13:00:48 siem01 logstash[6879]:                  "TargetLogonId" => "0x0",
-Aug 30 13:00:48 siem01 logstash[6879]:                 "NewProcessName" => "C:\\Windows\\System32\\calc.exe",
-Aug 30 13:00:48 siem01 logstash[6879]:               "TargetDomainName" => "-",
-Aug 30 13:00:48 siem01 logstash[6879]:                 "TargetUserName" => "-",
-Aug 30 13:00:48 siem01 logstash[6879]:                   "NewProcessId" => "0xa38",
-Aug 30 13:00:48 siem01 logstash[6879]:             "TokenElevationType" => "TokenElevationTypeDefault (1)",
-Aug 30 13:00:48 siem01 logstash[6879]:                    "CommandLine" => "\"C:\\WINDOWS\\system32\\calc.exe\" +2/2",
-Aug 30 13:00:48 siem01 logstash[6879]:                 "SubjectUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
-Aug 30 13:00:48 siem01 logstash[6879]:              "ParentProcessName" => "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-Aug 30 13:00:48 siem01 logstash[6879]:                "SubjectUserName" => "Administrator"
-         },
-               "channel" => "Security",
-              "event_id" => "4688",
-             "record_id" => 38323,
-         "computer_name" => "WinUser-01.Local.lab",
-               "version" => 2,
+ {
+            "winlog" => {
                 "opcode" => "Info",
+             "record_id" => 39590,
+                  "task" => "Process Creation",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+            "event_data" => {
+                  "TargetLogonId" => "0x0",
+                 "SubjectLogonId" => "0x9626d",
+                 "MandatoryLabel" => "S-1-16-12288",
+                 "SubjectUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+             "TokenElevationType" => "TokenElevationTypeDefault (1)",
+                 "TargetUserName" => "-",
+                  "TargetUserSid" => "S-1-0-0",
+               "TargetDomainName" => "-"
+         },
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+               "channel" => "Security",
                "process" => {
                 "pid" => 4,
              "thread" => {
-                 "id" => 124
+                 "id" => 6052
              }
-         },
-         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
-                  "task" => "Process Creation",
-              "keywords" => [
-             [0] "Audit Success"
-         ]
+         }
      },
-            "log" => {
+         "type_name" => "Process Activity Launch",
+              "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+          "@version" => "1",
+       "activity_id" => 1,
+          "type_uid" => 100701,
+          "raw_data" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x9626d\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-0-0\n\tAccount Name:\t\t-\n\tAccount Domain:\t\t-\n\tLogon ID:\t\t0x0\n\nProcess Information:\n\tNew Process ID:\t\t0x70c\n\tNew Process Name:\tC:\\Windows\\System32\\calc.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0xba0\n\tCreator Process Name:\tC:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\n\tProcess Command Line:\t\"C:\\WINDOWS\\system32\\calc.exe\" +2/2\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
+     "category_name" => "System Activity",
+               "log" => {
          "level" => "information"
-     }
+     },
+     "activity_name" => "Launch",
+       "severity_id" => 1,
+          "metadata" => {
+                 "log_source" => "WinUser-01.Local.lab:Security",
+              "original_time" => 1788197640825,
+                    "product" => {
+                    "name" => "Windows_event",
+             "vendor_name" => "Microsoft"
+         },
+                 "event_code" => "4688",
+                    "version" => "1.8.0",
+               "log_provider" => "Microsoft-Windows-Security-Auditing",
+                "log_version" => "2",
+         "original_event_uid" => "WinUser-01.Local.lab:Security:39590"
+     },
+              "time" => 1788197640825,
+        "class_name" => "Process Activity",
+            "device" => {
+              "mac" => "00-0C-29-F2-B9-0D",
+         "hostname" => "WinUser-01.Local.lab",
+               "ip" => "10.0.0.14",
+          "type_id" => 0,
+             "type" => "Unknown"
+     },
+           "process" => {
+                   "file" => {
+                "path" => "C:\\Windows\\System32\\calc.exe",
+             "type_id" => 8,
+                "type" => "Executable File"
+         },
+           "created_time" => 1788197640825,
+                   "user" => {
+             "domain" => "LOCAL",
+               "name" => "Administrator"
+         },
+         "parent_process" => {
+             "path" => "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+              "pid" => 2976
+         },
+               "cmd_line" => "\"C:\\WINDOWS\\system32\\calc.exe\" +2/2",
+                    "pid" => 1804
+     },
+         "class_uid" => 1007
  }
