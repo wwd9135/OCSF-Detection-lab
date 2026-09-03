@@ -1,14 +1,374 @@
-winlogbeat.event_logs:
-  - name: Security
-    event_id: "4768, 4769, 4771"
-
-output.logstash:
-  hosts: ["10.0.0.30:5044"]
-
-processors:
-  - add_host_metadata: ~
-
-  Get-WinEvent -FilterHashtable @{
-    LogName='Security'
-    Id=4768,4769,4771
-} -MaxEvents 10
+inlogbeat.conf
+Using bundled JDK: /usr/share/logstash/jdk
+Sending Logstash logs to /var/log/logstash which is now configured via log4j2.properties
+[2026-09-03T13:09:36,215][INFO ][logstash.runner          ] Log4j configuration path used is: /etc/logstash/log4j2.properties
+[2026-09-03T13:09:36,222][INFO ][logstash.runner          ] Starting Logstash {"logstash.version" => "9.5.2", "jruby.version" => "jruby 10.0.6.0 (3.4.5) 2026-06-11 716ad51f54 OpenJDK 64-Bit Server VM 21.0.12+8-LTS on 21.0.12+8-LTS +indy +jit [x86_64-linux]"}
+[2026-09-03T13:09:36,225][INFO ][logstash.runner          ] JVM bootstrap flags: [-Xms1g, -Xmx1g, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -XX:+HeapDumpOnOutOfMemoryError, -Djava.security.egd=file:/dev/urandom, -Djruby.regexp.interruptible=true, -Djruby.compile.invokedynamic=true, -Djdk.io.File.enableADS=true, -Dlog4j2.isThreadContextMapInheritable=true, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.security=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.nio.channels=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.management/sun.management=ALL-UNNAMED, -Dio.netty.allocator.maxOrder=11]
+[2026-09-03T13:09:36,289][INFO ][org.logstash.jackson.StreamReadConstraintsUtil] Jackson default value override `logstash.jackson.stream-read-constraints.max-string-length` configured to `200000000` (logstash default)
+[2026-09-03T13:09:36,289][INFO ][org.logstash.jackson.StreamReadConstraintsUtil] Jackson default value override `logstash.jackson.stream-read-constraints.max-number-length` configured to `10000` (logstash default)
+[2026-09-03T13:09:36,289][INFO ][org.logstash.jackson.StreamReadConstraintsUtil] Jackson default value override `logstash.jackson.stream-read-constraints.max-nesting-depth` configured to `1000` (logstash default)
+[2026-09-03T13:09:36,544][WARN ][logstash.config.source.multilocal] Ignoring the 'pipelines.yml' file because command line options are specified
+[2026-09-03T13:09:40,304][WARN ][org.logstash.instrument.metrics.UserMetric][main] UserMetric type mismatch for lifetime_histogram (expected: interface org.logstash.instrument.metrics.histogram.HistogramMetric, received: void); a null implementation will be substituted
+[2026-09-03T13:09:40,305][WARN ][org.logstash.instrument.metrics.UserMetric][main] UserMetric type mismatch for lifetime_histogram (expected: interface org.logstash.instrument.metrics.histogram.HistogramMetric, received: void); a null implementation will be substituted
+[2026-09-03T13:09:40,312][INFO ][logstash.javapipeline    ][main] Pipeline `main` is configured with `pipeline.ecs_compatibility: v8` setting. All plugins in this pipeline will default to `ecs_compatibility => v8` unless explicitly configured otherwise.
+Configuration OK
+[2026-09-03T13:09:40,314][INFO ][logstash.runner          ] Using config.test_and_exit mode. Config Validation Result: OK. Exiting Logstash
+willr2005@siem01:/etc/logstash/conf.d$ sudo systemctl restart logstash
+willr2005@siem01:/etc/logstash/conf.d$ sudo journalctl -u logstash -f
+Sep 03 13:12:05 siem01 logstash[12021]:                 "id" => 3028
+Sep 03 13:12:05 siem01 logstash[12021]:             }
+Sep 03 13:12:05 siem01 logstash[12021]:         },
+Sep 03 13:12:05 siem01 logstash[12021]:               "channel" => "Security",
+Sep 03 13:12:05 siem01 logstash[12021]:         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+Sep 03 13:12:05 siem01 logstash[12021]:              "keywords" => [
+Sep 03 13:12:05 siem01 logstash[12021]:             [0] "Audit Success"
+Sep 03 13:12:05 siem01 logstash[12021]:         ]
+Sep 03 13:12:05 siem01 logstash[12021]:     }
+Sep 03 13:12:05 siem01 logstash[12021]: }
+Sep 03 13:12:13 siem01 logstash[12021]: {
+Sep 03 13:12:13 siem01 logstash[12021]:           "tags" => [
+Sep 03 13:12:13 siem01 logstash[12021]:         [0] "beats_input_codec_plain_applied"
+Sep 03 13:12:13 siem01 logstash[12021]:     ],
+Sep 03 13:12:13 siem01 logstash[12021]:        "message" => "Registry value set:\nRuleName: Suspicious,ImageBeginWithBackslash\nEventType: SetValue\nUtcTime: 2026-09-03 20:12:03.971\nProcessGuid: {CBCB36EB-D493-6A99-D706-000000000C00}\nProcessId: 6980\nImage: \\\\?\\C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe\nTargetObject: HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Notifications\\Data\\418A073AA3BC1C75\nDetails: Binary Data\nUser: LOCAL\\Administrator",
+Sep 03 13:12:13 siem01 logstash[12021]:           "host" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                  "mac" => [
+Sep 03 13:12:13 siem01 logstash[12021]:             [0] "00-0C-29-F2-B9-0D"
+Sep 03 13:12:13 siem01 logstash[12021]:         ],
+Sep 03 13:12:13 siem01 logstash[12021]:                 "name" => "winuser-01",
+Sep 03 13:12:13 siem01 logstash[12021]:         "architecture" => "x86_64",
+Sep 03 13:12:13 siem01 logstash[12021]:                   "id" => "cbcb36eb-b868-4d65-9970-a346c4527f87",
+Sep 03 13:12:13 siem01 logstash[12021]:                   "ip" => [
+Sep 03 13:12:13 siem01 logstash[12021]:             [0] "fe80::5f2d:2ebd:10a2:a5c2",
+Sep 03 13:12:13 siem01 logstash[12021]:             [1] "10.0.0.14"
+Sep 03 13:12:13 siem01 logstash[12021]:         ],
+Sep 03 13:12:13 siem01 logstash[12021]:             "hostname" => "WinUser-01",
+Sep 03 13:12:13 siem01 logstash[12021]:                   "os" => {
+Sep 03 13:12:13 siem01 logstash[12021]:             "platform" => "windows",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "name" => "Windows 11 Pro",
+Sep 03 13:12:13 siem01 logstash[12021]:               "kernel" => "10.0.26100.9168 (WinBuild.160101.0800)",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "type" => "windows",
+Sep 03 13:12:13 siem01 logstash[12021]:                "build" => "26200.9168",
+Sep 03 13:12:13 siem01 logstash[12021]:              "version" => "10.0",
+Sep 03 13:12:13 siem01 logstash[12021]:               "family" => "windows"
+Sep 03 13:12:13 siem01 logstash[12021]:         }
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:          "event" => {
+Sep 03 13:12:13 siem01 logstash[12021]:          "created" => "2026-09-03T20:12:04.989Z",
+Sep 03 13:12:13 siem01 logstash[12021]:             "kind" => "event",
+Sep 03 13:12:13 siem01 logstash[12021]:             "code" => "13",
+Sep 03 13:12:13 siem01 logstash[12021]:         "original" => "Registry value set:\nRuleName: Suspicious,ImageBeginWithBackslash\nEventType: SetValue\nUtcTime: 2026-09-03 20:12:03.971\nProcessGuid: {CBCB36EB-D493-6A99-D706-000000000C00}\nProcessId: 6980\nImage: \\\\?\\C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe\nTargetObject: HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Notifications\\Data\\418A073AA3BC1C75\nDetails: Binary Data\nUser: LOCAL\\Administrator",
+Sep 03 13:12:13 siem01 logstash[12021]:         "provider" => "Microsoft-Windows-Sysmon",
+Sep 03 13:12:13 siem01 logstash[12021]:           "action" => "Registry value set (rule: RegistryEvent)"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:       "@version" => "1",
+Sep 03 13:12:13 siem01 logstash[12021]:            "log" => {
+Sep 03 13:12:13 siem01 logstash[12021]:         "level" => "information"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:     "@timestamp" => 2026-09-03T20:12:03.971Z,
+Sep 03 13:12:13 siem01 logstash[12021]:            "ecs" => {
+Sep 03 13:12:13 siem01 logstash[12021]:         "version" => "8.0.0"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:          "agent" => {
+Sep 03 13:12:13 siem01 logstash[12021]:              "version" => "9.5.2",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "name" => "WinUser-01",
+Sep 03 13:12:13 siem01 logstash[12021]:                   "id" => "77455700-12e6-4e33-88e9-928006668ea8",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "type" => "winlogbeat",
+Sep 03 13:12:13 siem01 logstash[12021]:         "ephemeral_id" => "c4a648fd-9f44-4157-8587-4227f511c143"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:         "winlog" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                  "task" => "Registry value set (rule: RegistryEvent)",
+Sep 03 13:12:13 siem01 logstash[12021]:                "opcode" => "Info",
+Sep 03 13:12:13 siem01 logstash[12021]:            "event_data" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                "EventType" => "SetValue",
+Sep 03 13:12:13 siem01 logstash[12021]:                     "User" => "LOCAL\\Administrator",
+Sep 03 13:12:13 siem01 logstash[12021]:              "ProcessGuid" => "{CBCB36EB-D493-6A99-D706-000000000C00}",
+Sep 03 13:12:13 siem01 logstash[12021]:                    "Image" => "\\\\?\\C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe",
+Sep 03 13:12:13 siem01 logstash[12021]:                "ProcessId" => "6980",
+Sep 03 13:12:13 siem01 logstash[12021]:                  "UtcTime" => "2026-09-03 20:12:03.971",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "RuleName" => "Suspicious,ImageBeginWithBackslash",
+Sep 03 13:12:13 siem01 logstash[12021]:                  "Details" => "Binary Data",
+Sep 03 13:12:13 siem01 logstash[12021]:             "TargetObject" => "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Notifications\\Data\\418A073AA3BC1C75"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:                  "user" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                 "domain" => "NT AUTHORITY",
+Sep 03 13:12:13 siem01 logstash[12021]:                   "name" => "SYSTEM",
+Sep 03 13:12:13 siem01 logstash[12021]:                   "type" => "User",
+Sep 03 13:12:13 siem01 logstash[12021]:             "identifier" => "S-1-5-18"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:         "computer_name" => "WinUser-01.Local.lab",
+Sep 03 13:12:13 siem01 logstash[12021]:         "provider_name" => "Microsoft-Windows-Sysmon",
+Sep 03 13:12:13 siem01 logstash[12021]:             "record_id" => 21628,
+Sep 03 13:12:13 siem01 logstash[12021]:               "version" => 2,
+Sep 03 13:12:13 siem01 logstash[12021]:              "event_id" => "13",
+Sep 03 13:12:13 siem01 logstash[12021]:               "process" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                "pid" => 3340,
+Sep 03 13:12:13 siem01 logstash[12021]:             "thread" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                 "id" => 3492
+Sep 03 13:12:13 siem01 logstash[12021]:             }
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:         "provider_guid" => "{5770385F-C22A-43E0-BF4C-06F5698FFBD9}",
+Sep 03 13:12:13 siem01 logstash[12021]:               "channel" => "Microsoft-Windows-Sysmon/Operational"
+Sep 03 13:12:13 siem01 logstash[12021]:     }
+Sep 03 13:12:13 siem01 logstash[12021]: }
+Sep 03 13:12:13 siem01 logstash[12021]: {
+Sep 03 13:12:13 siem01 logstash[12021]:          "raw_data" => "Process Create:\nRuleName: -\nUtcTime: 2026-09-03 20:12:03.924\nProcessGuid: {CBCB36EB-D493-6A99-D706-000000000C00}\nProcessId: 6980\nImage: C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe\nFileVersion: 10.0.29628.1000 (WinBuild.160101.0800)\nDescription: Windows Security Health Host\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: SecurityHealthHost.exe\nCommandLine: \\\\?\\C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe {08728914-3F57-4D52-9E31-49DAECA5A80A} -Embedding\nCurrentDirectory: C:\\WINDOWS\\system32\\\nUser: LOCAL\\Administrator\nLogonGuid: {CBCB36EB-DF9F-6A95-6569-7E0000000000}\nLogonId: 0x7e6965\nTerminalSessionId: 2\nIntegrityLevel: High\nHashes: MD5=2B7AA09812B50668D6AF17C23EFBD848,SHA256=41393D3517A7AF600617F5A247CD08AF84D9C66DFC0604DDCBAF0F274042E2A6,IMPHASH=39FDBDB91931E454955C00A202FA0A33\nParentProcessGuid: {00000000-0000-0000-0000-000000000000}\nParentProcessId: 956\nParentImage: -\nParentCommandLine: -\nParentUser: -",
+Sep 03 13:12:13 siem01 logstash[12021]:         "type_name" => "Process Activity Launch",
+Sep 03 13:12:13 siem01 logstash[12021]:     "category_name" => "System Activity",
+Sep 03 13:12:13 siem01 logstash[12021]:              "time" => 1788466323924,
+Sep 03 13:12:13 siem01 logstash[12021]:          "metadata" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                 "log_source" => "WinUser-01.Local.lab:Microsoft-Windows-Sysmon/Operational",
+Sep 03 13:12:13 siem01 logstash[12021]:                    "product" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                    "name" => "Sysmon",
+Sep 03 13:12:13 siem01 logstash[12021]:             "vendor_name" => "Microsoft"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:              "original_time" => 1788466323924,
+Sep 03 13:12:13 siem01 logstash[12021]:         "original_event_uid" => "WinUser-01.Local.lab:Microsoft-Windows-Sysmon/Operational:21627",
+Sep 03 13:12:13 siem01 logstash[12021]:               "log_provider" => "Microsoft-Windows-Sysmon",
+Sep 03 13:12:13 siem01 logstash[12021]:                    "version" => "1.8.0",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "event_code" => "1",
+Sep 03 13:12:13 siem01 logstash[12021]:                "log_version" => "5"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:         "class_uid" => 1007,
+Sep 03 13:12:13 siem01 logstash[12021]:     "activity_name" => "Launch",
+Sep 03 13:12:13 siem01 logstash[12021]:      "category_uid" => 1,
+Sep 03 13:12:13 siem01 logstash[12021]:       "severity_id" => 1,
+Sep 03 13:12:13 siem01 logstash[12021]:        "class_name" => "Process Activity",
+Sep 03 13:12:13 siem01 logstash[12021]:            "device" => {
+Sep 03 13:12:13 siem01 logstash[12021]:              "mac" => "00-0C-29-F2-B9-0D",
+Sep 03 13:12:13 siem01 logstash[12021]:          "type_id" => 0,
+Sep 03 13:12:13 siem01 logstash[12021]:               "ip" => "10.0.0.14",
+Sep 03 13:12:13 siem01 logstash[12021]:             "type" => "Unknown",
+Sep 03 13:12:13 siem01 logstash[12021]:         "hostname" => "WinUser-01"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:        "@timestamp" => 2026-09-03T20:12:03.927Z,
+Sep 03 13:12:13 siem01 logstash[12021]:           "process" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                       "uid" => "{CBCB36EB-D493-6A99-D706-000000000C00}",
+Sep 03 13:12:13 siem01 logstash[12021]:                      "user" => "LOCAL\\Administrator",
+Sep 03 13:12:13 siem01 logstash[12021]:            "parent_process" => {
+Sep 03 13:12:13 siem01 logstash[12021]:             "cmd_line" => "-",
+Sep 03 13:12:13 siem01 logstash[12021]:                  "pid" => 956,
+Sep 03 13:12:13 siem01 logstash[12021]:                 "path" => "-"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:         "working_directory" => "C:\\WINDOWS\\system32\\",
+Sep 03 13:12:13 siem01 logstash[12021]:                      "file" => {
+Sep 03 13:12:13 siem01 logstash[12021]:              "hashes" => [
+Sep 03 13:12:13 siem01 logstash[12021]:                 [0] {
+Sep 03 13:12:13 siem01 logstash[12021]:                     "algorithm_id" => 1,
+Sep 03 13:12:13 siem01 logstash[12021]:                        "algorithm" => "MD5",
+Sep 03 13:12:13 siem01 logstash[12021]:                            "value" => "2B7AA09812B50668D6AF17C23EFBD848"
+Sep 03 13:12:13 siem01 logstash[12021]:                 },
+Sep 03 13:12:13 siem01 logstash[12021]:                 [1] {
+Sep 03 13:12:13 siem01 logstash[12021]:                     "algorithm_id" => 3,
+Sep 03 13:12:13 siem01 logstash[12021]:                        "algorithm" => "SHA-256",
+Sep 03 13:12:13 siem01 logstash[12021]:                            "value" => "41393D3517A7AF600617F5A247CD08AF84D9C66DFC0604DDCBAF0F274042E2A6"
+Sep 03 13:12:13 siem01 logstash[12021]:                 },
+Sep 03 13:12:13 siem01 logstash[12021]:                 [2] {
+Sep 03 13:12:13 siem01 logstash[12021]:                     "algorithm_id" => 18,
+Sep 03 13:12:13 siem01 logstash[12021]:                        "algorithm" => "Imphash",
+Sep 03 13:12:13 siem01 logstash[12021]:                            "value" => "39FDBDB91931E454955C00A202FA0A33"
+Sep 03 13:12:13 siem01 logstash[12021]:                 }
+Sep 03 13:12:13 siem01 logstash[12021]:             ],
+Sep 03 13:12:13 siem01 logstash[12021]:             "type_id" => 8,
+Sep 03 13:12:13 siem01 logstash[12021]:                "name" => "SecurityHealthHost.exe",
+Sep 03 13:12:13 siem01 logstash[12021]:                "path" => "C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe",
+Sep 03 13:12:13 siem01 logstash[12021]:                "type" => "Executable File"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:                       "pid" => 6980,
+Sep 03 13:12:13 siem01 logstash[12021]:              "created_time" => 1788466323924,
+Sep 03 13:12:13 siem01 logstash[12021]:                  "cmd_line" => "\\\\?\\C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe {08728914-3F57-4D52-9E31-49DAECA5A80A} -Embedding"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:          "type_uid" => 100701,
+Sep 03 13:12:13 siem01 logstash[12021]:       "activity_id" => 1
+Sep 03 13:12:13 siem01 logstash[12021]: }
+Sep 03 13:12:13 siem01 logstash[12021]: {
+Sep 03 13:12:13 siem01 logstash[12021]:          "raw_data" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x7e6965\n\nProcess Information:\n\tNew Process ID:\t\t0x1b44\n\tNew Process Name:\tC:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0x3bc\n\tCreator Process Name:\tC:\\Windows\\System32\\svchost.exe\n\tProcess Command Line:\t\\\\?\\C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe {08728914-3F57-4D52-9E31-49DAECA5A80A} -Embedding\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
+Sep 03 13:12:13 siem01 logstash[12021]:         "type_name" => "Process Activity Launch",
+Sep 03 13:12:13 siem01 logstash[12021]:               "log" => {
+Sep 03 13:12:13 siem01 logstash[12021]:         "level" => "information"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:     "category_name" => "System Activity",
+Sep 03 13:12:13 siem01 logstash[12021]:              "time" => 1788466323924,
+Sep 03 13:12:13 siem01 logstash[12021]:          "metadata" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                 "log_source" => "WinUser-01.Local.lab:Security",
+Sep 03 13:12:13 siem01 logstash[12021]:                    "product" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                    "name" => "Windows_event",
+Sep 03 13:12:13 siem01 logstash[12021]:             "vendor_name" => "Microsoft"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:              "original_time" => 1788466323924,
+Sep 03 13:12:13 siem01 logstash[12021]:         "original_event_uid" => "WinUser-01.Local.lab:Security:41746",
+Sep 03 13:12:13 siem01 logstash[12021]:               "log_provider" => "Microsoft-Windows-Security-Auditing",
+Sep 03 13:12:13 siem01 logstash[12021]:                    "version" => "1.8.0",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "event_code" => "4688",
+Sep 03 13:12:13 siem01 logstash[12021]:                "log_version" => "2"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:         "class_uid" => 1007,
+Sep 03 13:12:13 siem01 logstash[12021]:     "activity_name" => "Launch",
+Sep 03 13:12:13 siem01 logstash[12021]:            "status" => "success",
+Sep 03 13:12:13 siem01 logstash[12021]:       "severity_id" => 1,
+Sep 03 13:12:13 siem01 logstash[12021]:           "time_dt" => 2026-09-03T20:12:03.924Z,
+Sep 03 13:12:13 siem01 logstash[12021]:        "class_name" => "Process Activity",
+Sep 03 13:12:13 siem01 logstash[12021]:            "device" => {
+Sep 03 13:12:13 siem01 logstash[12021]:         "hostname" => "WinUser-01.Local.lab",
+Sep 03 13:12:13 siem01 logstash[12021]:          "type_id" => 0,
+Sep 03 13:12:13 siem01 logstash[12021]:               "ip" => "10.0.0.14",
+Sep 03 13:12:13 siem01 logstash[12021]:             "type" => "Unknown",
+Sep 03 13:12:13 siem01 logstash[12021]:              "mac" => "00-0C-29-F2-B9-0D"
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:        "@timestamp" => 2026-09-03T20:12:03.924Z,
+Sep 03 13:12:13 siem01 logstash[12021]:           "process" => {
+Sep 03 13:12:13 siem01 logstash[12021]:           "created_time" => 1788466323924,
+Sep 03 13:12:13 siem01 logstash[12021]:                   "file" => {
+Sep 03 13:12:13 siem01 logstash[12021]:             "type_id" => 8,
+Sep 03 13:12:13 siem01 logstash[12021]:                "name" => "SecurityHealthHost",
+Sep 03 13:12:13 siem01 logstash[12021]:                 "ext" => "exe",
+Sep 03 13:12:13 siem01 logstash[12021]:                "path" => "C:\\Windows\\System32\\SecurityHealth\\10.0.29628.1000-0\\SecurityHealthHost.exe",
+Sep 03 13:12:13 siem01 logstash[12021]:                "type" => "Executable File"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:                    "pid" => 6980,
+Sep 03 13:12:13 siem01 logstash[12021]:                   "user" => {
+Sep 03 13:12:13 siem01 logstash[12021]:                "uid" => "S-1-5-18",
+Sep 03 13:12:13 siem01 logstash[12021]:               "name" => "WINUSER-01$",
+Sep 03 13:12:13 siem01 logstash[12021]:             "domain" => "LOCAL"
+Sep 03 13:12:13 siem01 logstash[12021]:         },
+Sep 03 13:12:13 siem01 logstash[12021]:         "parent_process" => {
+Sep 03 13:12:13 siem01 logstash[12021]:              "pid" => 956,
+Sep 03 13:12:13 siem01 logstash[12021]:             "path" => "C:\\Windows\\System32\\svchost.exe"
+Sep 03 13:12:13 siem01 logstash[12021]:         }
+Sep 03 13:12:13 siem01 logstash[12021]:     },
+Sep 03 13:12:13 siem01 logstash[12021]:              "tags" => [
+Sep 03 13:12:13 siem01 logstash[12021]:         [0] "beats_input_codec_plain_applied"
+Sep 03 13:12:13 siem01 logstash[12021]:     ],
+Sep 03 13:12:13 siem01 logstash[12021]:          "type_uid" => 100701,
+Sep 03 13:12:13 siem01 logstash[12021]:       "activity_id" => 1,
+Sep 03 13:12:13 siem01 logstash[12021]:          "@version" => "1"
+Sep 03 13:12:13 siem01 logstash[12021]: }
+Sep 03 13:12:34 siem01 logstash[12021]: {
+Sep 03 13:12:34 siem01 logstash[12021]:          "raw_data" => "Process Create:\nRuleName: -\nUtcTime: 2026-09-03 20:12:24.474\nProcessGuid: {CBCB36EB-D4A8-6A99-D806-000000000C00}\nProcessId: 5692\nImage: C:\\Windows\\System32\\taskhostw.exe\nFileVersion: 10.0.26100.8328 (WinBuild.160101.0800)\nDescription: Host Process for Windows Tasks\nProduct: Microsoft® Windows® Operating System\nCompany: Microsoft Corporation\nOriginalFileName: taskhostw.exe\nCommandLine: taskhostw.exe -flow showtoast -checkup recoverability\nCurrentDirectory: C:\\WINDOWS\\system32\\\nUser: LOCAL\\Administrator\nLogonGuid: {CBCB36EB-DF9F-6A95-6569-7E0000000000}\nLogonId: 0x7e6965\nTerminalSessionId: 2\nIntegrityLevel: High\nHashes: MD5=9E9370331B9D14ABBA21091FFFCD1D1E,SHA256=EA8D441DF237FB3D3B7A27A95FDE186E19C94D58A618F5C29ED5FC13CB155E96,IMPHASH=2196268E7A2880E3ADC74481297D0C4B\nParentProcessGuid: {CBCB36EB-B2DA-6A95-3000-000000000C00}\nParentProcessId: 2328\nParentImage: C:\\Windows\\System32\\svchost.exe\nParentCommandLine: C:\\WINDOWS\\system32\\svchost.exe -k netsvcs -p -s Schedule\nParentUser: NT AUTHORITY\\SYSTEM",
+Sep 03 13:12:34 siem01 logstash[12021]:         "type_name" => "Process Activity Launch",
+Sep 03 13:12:34 siem01 logstash[12021]:     "category_name" => "System Activity",
+Sep 03 13:12:34 siem01 logstash[12021]:              "time" => 1788466344474,
+Sep 03 13:12:34 siem01 logstash[12021]:          "metadata" => {
+Sep 03 13:12:34 siem01 logstash[12021]:                 "log_source" => "WinUser-01.Local.lab:Microsoft-Windows-Sysmon/Operational",
+Sep 03 13:12:34 siem01 logstash[12021]:                    "product" => {
+Sep 03 13:12:34 siem01 logstash[12021]:                    "name" => "Sysmon",
+Sep 03 13:12:34 siem01 logstash[12021]:             "vendor_name" => "Microsoft"
+Sep 03 13:12:34 siem01 logstash[12021]:         },
+Sep 03 13:12:34 siem01 logstash[12021]:              "original_time" => 1788466344474,
+Sep 03 13:12:34 siem01 logstash[12021]:         "original_event_uid" => "WinUser-01.Local.lab:Microsoft-Windows-Sysmon/Operational:21629",
+Sep 03 13:12:34 siem01 logstash[12021]:               "log_provider" => "Microsoft-Windows-Sysmon",
+Sep 03 13:12:34 siem01 logstash[12021]:                    "version" => "1.8.0",
+Sep 03 13:12:34 siem01 logstash[12021]:                 "event_code" => "1",
+Sep 03 13:12:34 siem01 logstash[12021]:                "log_version" => "5"
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:         "class_uid" => 1007,
+Sep 03 13:12:34 siem01 logstash[12021]:     "activity_name" => "Launch",
+Sep 03 13:12:34 siem01 logstash[12021]:      "category_uid" => 1,
+Sep 03 13:12:34 siem01 logstash[12021]:       "severity_id" => 1,
+Sep 03 13:12:34 siem01 logstash[12021]:        "class_name" => "Process Activity",
+Sep 03 13:12:34 siem01 logstash[12021]:            "device" => {
+Sep 03 13:12:34 siem01 logstash[12021]:              "mac" => "00-0C-29-F2-B9-0D",
+Sep 03 13:12:34 siem01 logstash[12021]:          "type_id" => 0,
+Sep 03 13:12:34 siem01 logstash[12021]:               "ip" => "10.0.0.14",
+Sep 03 13:12:34 siem01 logstash[12021]:             "type" => "Unknown",
+Sep 03 13:12:34 siem01 logstash[12021]:         "hostname" => "WinUser-01"
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:        "@timestamp" => 2026-09-03T20:12:24.477Z,
+Sep 03 13:12:34 siem01 logstash[12021]:           "process" => {
+Sep 03 13:12:34 siem01 logstash[12021]:                       "uid" => "{CBCB36EB-D4A8-6A99-D806-000000000C00}",
+Sep 03 13:12:34 siem01 logstash[12021]:                      "user" => "LOCAL\\Administrator",
+Sep 03 13:12:34 siem01 logstash[12021]:            "parent_process" => {
+Sep 03 13:12:34 siem01 logstash[12021]:             "cmd_line" => "C:\\WINDOWS\\system32\\svchost.exe -k netsvcs -p -s Schedule",
+Sep 03 13:12:34 siem01 logstash[12021]:                  "pid" => 2328,
+Sep 03 13:12:34 siem01 logstash[12021]:                 "path" => "C:\\Windows\\System32\\svchost.exe"
+Sep 03 13:12:34 siem01 logstash[12021]:         },
+Sep 03 13:12:34 siem01 logstash[12021]:         "working_directory" => "C:\\WINDOWS\\system32\\",
+Sep 03 13:12:34 siem01 logstash[12021]:                      "file" => {
+Sep 03 13:12:34 siem01 logstash[12021]:              "hashes" => [
+Sep 03 13:12:34 siem01 logstash[12021]:                 [0] {
+Sep 03 13:12:34 siem01 logstash[12021]:                     "algorithm_id" => 1,
+Sep 03 13:12:34 siem01 logstash[12021]:                        "algorithm" => "MD5",
+Sep 03 13:12:34 siem01 logstash[12021]:                            "value" => "9E9370331B9D14ABBA21091FFFCD1D1E"
+Sep 03 13:12:34 siem01 logstash[12021]:                 },
+Sep 03 13:12:34 siem01 logstash[12021]:                 [1] {
+Sep 03 13:12:34 siem01 logstash[12021]:                     "algorithm_id" => 3,
+Sep 03 13:12:34 siem01 logstash[12021]:                        "algorithm" => "SHA-256",
+Sep 03 13:12:34 siem01 logstash[12021]:                            "value" => "EA8D441DF237FB3D3B7A27A95FDE186E19C94D58A618F5C29ED5FC13CB155E96"
+Sep 03 13:12:34 siem01 logstash[12021]:                 },
+Sep 03 13:12:34 siem01 logstash[12021]:                 [2] {
+Sep 03 13:12:34 siem01 logstash[12021]:                     "algorithm_id" => 18,
+Sep 03 13:12:34 siem01 logstash[12021]:                        "algorithm" => "Imphash",
+Sep 03 13:12:34 siem01 logstash[12021]:                            "value" => "2196268E7A2880E3ADC74481297D0C4B"
+Sep 03 13:12:34 siem01 logstash[12021]:                 }
+Sep 03 13:12:34 siem01 logstash[12021]:             ],
+Sep 03 13:12:34 siem01 logstash[12021]:             "type_id" => 8,
+Sep 03 13:12:34 siem01 logstash[12021]:                "name" => "taskhostw.exe",
+Sep 03 13:12:34 siem01 logstash[12021]:                "path" => "C:\\Windows\\System32\\taskhostw.exe",
+Sep 03 13:12:34 siem01 logstash[12021]:                "type" => "Executable File"
+Sep 03 13:12:34 siem01 logstash[12021]:         },
+Sep 03 13:12:34 siem01 logstash[12021]:                       "pid" => 5692,
+Sep 03 13:12:34 siem01 logstash[12021]:              "created_time" => 1788466344474,
+Sep 03 13:12:34 siem01 logstash[12021]:                  "cmd_line" => "taskhostw.exe -flow showtoast -checkup recoverability"
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:          "type_uid" => 100701,
+Sep 03 13:12:34 siem01 logstash[12021]:       "activity_id" => 1
+Sep 03 13:12:34 siem01 logstash[12021]: }
+Sep 03 13:12:34 siem01 logstash[12021]: {
+Sep 03 13:12:34 siem01 logstash[12021]:          "raw_data" => "A new process has been created.\n\nCreator Subject:\n\tSecurity ID:\t\tS-1-5-18\n\tAccount Name:\t\tWINUSER-01$\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x3e7\n\nTarget Subject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x7e6965\n\nProcess Information:\n\tNew Process ID:\t\t0x163c\n\tNew Process Name:\tC:\\Windows\\System32\\taskhostw.exe\n\tToken Elevation Type:\tTokenElevationTypeDefault (1)\n\tMandatory Label:\t\tS-1-16-12288\n\tCreator Process ID:\t0x918\n\tCreator Process Name:\tC:\\Windows\\System32\\svchost.exe\n\tProcess Command Line:\ttaskhostw.exe -flow showtoast -checkup recoverability\n\nToken Elevation Type indicates the type of token that was assigned to the new process in accordance with User Account Control policy.\n\nType 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User Account Control is disabled or if the user is the built-in Administrator account or a service account.\n\nType 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used when User Account Control is enabled and the user chooses to start the program using Run as administrator.  An elevated token is also used when an application is configured to always require administrative privilege or to always require maximum privilege, and the user is a member of the Administrators group.\n\nType 3 is a limited token with administrative privileges removed and administrative groups disabled.  The limited token is used when User Account Control is enabled, the application does not require administrative privilege, and the user does not choose to start the program using Run as administrator.",
+Sep 03 13:12:34 siem01 logstash[12021]:         "type_name" => "Process Activity Launch",
+Sep 03 13:12:34 siem01 logstash[12021]:               "log" => {
+Sep 03 13:12:34 siem01 logstash[12021]:         "level" => "information"
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:     "category_name" => "System Activity",
+Sep 03 13:12:34 siem01 logstash[12021]:              "time" => 1788466344474,
+Sep 03 13:12:34 siem01 logstash[12021]:          "metadata" => {
+Sep 03 13:12:34 siem01 logstash[12021]:                 "log_source" => "WinUser-01.Local.lab:Security",
+Sep 03 13:12:34 siem01 logstash[12021]:                    "product" => {
+Sep 03 13:12:34 siem01 logstash[12021]:                    "name" => "Windows_event",
+Sep 03 13:12:34 siem01 logstash[12021]:             "vendor_name" => "Microsoft"
+Sep 03 13:12:34 siem01 logstash[12021]:         },
+Sep 03 13:12:34 siem01 logstash[12021]:              "original_time" => 1788466344474,
+Sep 03 13:12:34 siem01 logstash[12021]:         "original_event_uid" => "WinUser-01.Local.lab:Security:41747",
+Sep 03 13:12:34 siem01 logstash[12021]:               "log_provider" => "Microsoft-Windows-Security-Auditing",
+Sep 03 13:12:34 siem01 logstash[12021]:                    "version" => "1.8.0",
+Sep 03 13:12:34 siem01 logstash[12021]:                 "event_code" => "4688",
+Sep 03 13:12:34 siem01 logstash[12021]:                "log_version" => "2"
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:         "class_uid" => 1007,
+Sep 03 13:12:34 siem01 logstash[12021]:     "activity_name" => "Launch",
+Sep 03 13:12:34 siem01 logstash[12021]:            "status" => "success",
+Sep 03 13:12:34 siem01 logstash[12021]:       "severity_id" => 1,
+Sep 03 13:12:34 siem01 logstash[12021]:           "time_dt" => 2026-09-03T20:12:24.474Z,
+Sep 03 13:12:34 siem01 logstash[12021]:        "class_name" => "Process Activity",
+Sep 03 13:12:34 siem01 logstash[12021]:            "device" => {
+Sep 03 13:12:34 siem01 logstash[12021]:         "hostname" => "WinUser-01.Local.lab",
+Sep 03 13:12:34 siem01 logstash[12021]:          "type_id" => 0,
+Sep 03 13:12:34 siem01 logstash[12021]:               "ip" => "10.0.0.14",
+Sep 03 13:12:34 siem01 logstash[12021]:             "type" => "Unknown",
+Sep 03 13:12:34 siem01 logstash[12021]:              "mac" => "00-0C-29-F2-B9-0D"
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:        "@timestamp" => 2026-09-03T20:12:24.474Z,
+Sep 03 13:12:34 siem01 logstash[12021]:           "process" => {
+Sep 03 13:12:34 siem01 logstash[12021]:           "created_time" => 1788466344474,
+Sep 03 13:12:34 siem01 logstash[12021]:                   "file" => {
+Sep 03 13:12:34 siem01 logstash[12021]:             "type_id" => 8,
+Sep 03 13:12:34 siem01 logstash[12021]:                "name" => "taskhostw",
+Sep 03 13:12:34 siem01 logstash[12021]:                 "ext" => "exe",
+Sep 03 13:12:34 siem01 logstash[12021]:                "path" => "C:\\Windows\\System32\\taskhostw.exe",
+Sep 03 13:12:34 siem01 logstash[12021]:                "type" => "Executable File"
+Sep 03 13:12:34 siem01 logstash[12021]:         },
+Sep 03 13:12:34 siem01 logstash[12021]:                    "pid" => 5692,
+Sep 03 13:12:34 siem01 logstash[12021]:                   "user" => {
+Sep 03 13:12:34 siem01 logstash[12021]:                "uid" => "S-1-5-18",
+Sep 03 13:12:34 siem01 logstash[12021]:               "name" => "WINUSER-01$",
+Sep 03 13:12:34 siem01 logstash[12021]:             "domain" => "LOCAL"
+Sep 03 13:12:34 siem01 logstash[12021]:         },
+Sep 03 13:12:34 siem01 logstash[12021]:         "parent_process" => {
+Sep 03 13:12:34 siem01 logstash[12021]:              "pid" => 2328,
+Sep 03 13:12:34 siem01 logstash[12021]:             "path" => "C:\\Windows\\System32\\svchost.exe"
+Sep 03 13:12:34 siem01 logstash[12021]:         }
+Sep 03 13:12:34 siem01 logstash[12021]:     },
+Sep 03 13:12:34 siem01 logstash[12021]:              "tags" => [
+Sep 03 13:12:34 siem01 logstash[12021]:         [0] "beats_input_codec_plain_applied"
+Sep 03 13:12:34 siem01 logstash[12021]:     ],
+Sep 03 13:12:34 siem01 logstash[12021]:          "type_uid" => 100701,
+Sep 03 13:12:34 siem01 logstash[12021]:       "activity_id" => 1,

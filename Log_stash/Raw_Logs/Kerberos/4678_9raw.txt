@@ -1,0 +1,166 @@
+Sep 03 13:19:38 siem01 logstash[12021]: {
+Sep 03 13:19:38 siem01 logstash[12021]:           "tags" => [
+Sep 03 13:19:38 siem01 logstash[12021]:         [0] "beats_input_codec_plain_applied"
+Sep 03 13:19:38 siem01 logstash[12021]:     ],
+Sep 03 13:19:38 siem01 logstash[12021]:        "message" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+Sep 03 13:19:38 siem01 logstash[12021]:           "host" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                   "os" => {
+Sep 03 13:19:38 siem01 logstash[12021]:             "platform" => "windows",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "name" => "Windows Server 2022 Standard Evaluation",
+Sep 03 13:19:38 siem01 logstash[12021]:               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "type" => "windows",
+Sep 03 13:19:38 siem01 logstash[12021]:                "build" => "20348.587",
+Sep 03 13:19:38 siem01 logstash[12021]:              "version" => "10.0",
+Sep 03 13:19:38 siem01 logstash[12021]:               "family" => "windows"
+Sep 03 13:19:38 siem01 logstash[12021]:         },
+Sep 03 13:19:38 siem01 logstash[12021]:                 "name" => "win-fvt9al589oi",
+Sep 03 13:19:38 siem01 logstash[12021]:         "architecture" => "x86_64",
+Sep 03 13:19:38 siem01 logstash[12021]:                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+Sep 03 13:19:38 siem01 logstash[12021]:                   "ip" => [
+Sep 03 13:19:38 siem01 logstash[12021]:             [0] "10.0.0.10"
+Sep 03 13:19:38 siem01 logstash[12021]:         ],
+Sep 03 13:19:38 siem01 logstash[12021]:             "hostname" => "WIN-FVT9AL589OI",
+Sep 03 13:19:38 siem01 logstash[12021]:                  "mac" => [
+Sep 03 13:19:38 siem01 logstash[12021]:             [0] "00-0C-29-CF-45-91"
+Sep 03 13:19:38 siem01 logstash[12021]:         ]
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:          "event" => {
+Sep 03 13:19:38 siem01 logstash[12021]:          "created" => "2026-09-03T20:19:29.677Z",
+Sep 03 13:19:38 siem01 logstash[12021]:             "kind" => "event",
+Sep 03 13:19:38 siem01 logstash[12021]:             "code" => "4768",
+Sep 03 13:19:38 siem01 logstash[12021]:         "original" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+Sep 03 13:19:38 siem01 logstash[12021]:          "outcome" => "success",
+Sep 03 13:19:38 siem01 logstash[12021]:         "provider" => "Microsoft-Windows-Security-Auditing",
+Sep 03 13:19:38 siem01 logstash[12021]:           "action" => "Kerberos Authentication Service"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:       "@version" => "1",
+Sep 03 13:19:38 siem01 logstash[12021]:            "log" => {
+Sep 03 13:19:38 siem01 logstash[12021]:         "level" => "information"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:     "@timestamp" => 2026-09-03T20:19:28.448Z,
+Sep 03 13:19:38 siem01 logstash[12021]:            "ecs" => {
+Sep 03 13:19:38 siem01 logstash[12021]:         "version" => "8.0.0"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:          "agent" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                 "name" => "WIN-FVT9AL589OI",
+Sep 03 13:19:38 siem01 logstash[12021]:              "version" => "9.5.2",
+Sep 03 13:19:38 siem01 logstash[12021]:                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+Sep 03 13:19:38 siem01 logstash[12021]:         "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "type" => "winlogbeat"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:         "winlog" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                "opcode" => "Info",
+Sep 03 13:19:38 siem01 logstash[12021]:                  "task" => "Kerberos Authentication Service",
+Sep 03 13:19:38 siem01 logstash[12021]:            "event_data" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                   "TargetUserName" => "Administrator",
+Sep 03 13:19:38 siem01 logstash[12021]:                        "TargetSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+Sep 03 13:19:38 siem01 logstash[12021]:                           "IpPort" => "0",
+Sep 03 13:19:38 siem01 logstash[12021]:                      "PreAuthType" => "2",
+Sep 03 13:19:38 siem01 logstash[12021]:             "TicketEncryptionType" => "0x12",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "TargetDomainName" => "LOCAL",
+Sep 03 13:19:38 siem01 logstash[12021]:                           "Status" => "0x0",
+Sep 03 13:19:38 siem01 logstash[12021]:                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-502",
+Sep 03 13:19:38 siem01 logstash[12021]:                    "TicketOptions" => "0x40810010",
+Sep 03 13:19:38 siem01 logstash[12021]:                      "ServiceName" => "krbtgt",
+Sep 03 13:19:38 siem01 logstash[12021]:                        "IpAddress" => "::1"
+Sep 03 13:19:38 siem01 logstash[12021]:         },
+Sep 03 13:19:38 siem01 logstash[12021]:         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+Sep 03 13:19:38 siem01 logstash[12021]:         "provider_name" => "Microsoft-Windows-Security-Auditing",
+Sep 03 13:19:38 siem01 logstash[12021]:             "record_id" => 64317,
+Sep 03 13:19:38 siem01 logstash[12021]:              "event_id" => "4768",
+Sep 03 13:19:38 siem01 logstash[12021]:               "process" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                "pid" => 652,
+Sep 03 13:19:38 siem01 logstash[12021]:             "thread" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                 "id" => 2280
+Sep 03 13:19:38 siem01 logstash[12021]:             }
+Sep 03 13:19:38 siem01 logstash[12021]:         },
+Sep 03 13:19:38 siem01 logstash[12021]:               "channel" => "Security",
+Sep 03 13:19:38 siem01 logstash[12021]:         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+Sep 03 13:19:38 siem01 logstash[12021]:              "keywords" => [
+Sep 03 13:19:38 siem01 logstash[12021]:             [0] "Audit Success"
+Sep 03 13:19:38 siem01 logstash[12021]:         ]
+Sep 03 13:19:38 siem01 logstash[12021]:     }
+Sep 03 13:19:38 siem01 logstash[12021]: }
+Sep 03 13:19:38 siem01 logstash[12021]: {
+Sep 03 13:19:38 siem01 logstash[12021]:           "tags" => [
+Sep 03 13:19:38 siem01 logstash[12021]:         [0] "beats_input_codec_plain_applied"
+Sep 03 13:19:38 siem01 logstash[12021]:     ],
+Sep 03 13:19:38 siem01 logstash[12021]:        "message" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{4B71DFC1-3B0A-2096-F0E2-1948BD93DF39}\n\nService Information:\n\tService Name:\t\tWIN-FVT9AL589OI$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1000\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+Sep 03 13:19:38 siem01 logstash[12021]:           "host" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                   "os" => {
+Sep 03 13:19:38 siem01 logstash[12021]:             "platform" => "windows",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "name" => "Windows Server 2022 Standard Evaluation",
+Sep 03 13:19:38 siem01 logstash[12021]:               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "type" => "windows",
+Sep 03 13:19:38 siem01 logstash[12021]:                "build" => "20348.587",
+Sep 03 13:19:38 siem01 logstash[12021]:              "version" => "10.0",
+Sep 03 13:19:38 siem01 logstash[12021]:               "family" => "windows"
+Sep 03 13:19:38 siem01 logstash[12021]:         },
+Sep 03 13:19:38 siem01 logstash[12021]:                 "name" => "win-fvt9al589oi",
+Sep 03 13:19:38 siem01 logstash[12021]:         "architecture" => "x86_64",
+Sep 03 13:19:38 siem01 logstash[12021]:                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+Sep 03 13:19:38 siem01 logstash[12021]:                   "ip" => [
+Sep 03 13:19:38 siem01 logstash[12021]:             [0] "10.0.0.10"
+Sep 03 13:19:38 siem01 logstash[12021]:         ],
+Sep 03 13:19:38 siem01 logstash[12021]:             "hostname" => "WIN-FVT9AL589OI",
+Sep 03 13:19:38 siem01 logstash[12021]:                  "mac" => [
+Sep 03 13:19:38 siem01 logstash[12021]:             [0] "00-0C-29-CF-45-91"
+Sep 03 13:19:38 siem01 logstash[12021]:         ]
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:          "event" => {
+Sep 03 13:19:38 siem01 logstash[12021]:          "created" => "2026-09-03T20:19:29.677Z",
+Sep 03 13:19:38 siem01 logstash[12021]:             "kind" => "event",
+Sep 03 13:19:38 siem01 logstash[12021]:             "code" => "4769",
+Sep 03 13:19:38 siem01 logstash[12021]:         "original" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{4B71DFC1-3B0A-2096-F0E2-1948BD93DF39}\n\nService Information:\n\tService Name:\t\tWIN-FVT9AL589OI$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1000\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+Sep 03 13:19:38 siem01 logstash[12021]:          "outcome" => "success",
+Sep 03 13:19:38 siem01 logstash[12021]:         "provider" => "Microsoft-Windows-Security-Auditing",
+Sep 03 13:19:38 siem01 logstash[12021]:           "action" => "Kerberos Service Ticket Operations"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:       "@version" => "1",
+Sep 03 13:19:38 siem01 logstash[12021]:            "log" => {
+Sep 03 13:19:38 siem01 logstash[12021]:         "level" => "information"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:     "@timestamp" => 2026-09-03T20:19:28.449Z,
+Sep 03 13:19:38 siem01 logstash[12021]:            "ecs" => {
+Sep 03 13:19:38 siem01 logstash[12021]:         "version" => "8.0.0"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:          "agent" => {
+Sep 03 13:19:38 siem01 logstash[12021]:              "version" => "9.5.2",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "name" => "WIN-FVT9AL589OI",
+Sep 03 13:19:38 siem01 logstash[12021]:                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "type" => "winlogbeat",
+Sep 03 13:19:38 siem01 logstash[12021]:         "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6"
+Sep 03 13:19:38 siem01 logstash[12021]:     },
+Sep 03 13:19:38 siem01 logstash[12021]:         "winlog" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                  "task" => "Kerberos Service Ticket Operations",
+Sep 03 13:19:38 siem01 logstash[12021]:                "opcode" => "Info",
+Sep 03 13:19:38 siem01 logstash[12021]:            "event_data" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                   "TargetUserName" => "Administrator@LOCAL.LAB",
+Sep 03 13:19:38 siem01 logstash[12021]:                           "IpPort" => "0",
+Sep 03 13:19:38 siem01 logstash[12021]:             "TicketEncryptionType" => "0x12",
+Sep 03 13:19:38 siem01 logstash[12021]:                 "TargetDomainName" => "LOCAL.LAB",
+Sep 03 13:19:38 siem01 logstash[12021]:                           "Status" => "0x0",
+Sep 03 13:19:38 siem01 logstash[12021]:                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-1000",
+Sep 03 13:19:38 siem01 logstash[12021]:                    "TicketOptions" => "0x40810000",
+Sep 03 13:19:38 siem01 logstash[12021]:                      "ServiceName" => "WIN-FVT9AL589OI$",
+Sep 03 13:19:38 siem01 logstash[12021]:                        "LogonGuid" => "{4B71DFC1-3B0A-2096-F0E2-1948BD93DF39}",
+Sep 03 13:19:38 siem01 logstash[12021]:              "TransmittedServices" => "-",
+Sep 03 13:19:38 siem01 logstash[12021]:                        "IpAddress" => "::1"
+Sep 03 13:19:38 siem01 logstash[12021]:         },
+Sep 03 13:19:38 siem01 logstash[12021]:         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+Sep 03 13:19:38 siem01 logstash[12021]:         "provider_name" => "Microsoft-Windows-Security-Auditing",
+Sep 03 13:19:38 siem01 logstash[12021]:             "record_id" => 64318,
+Sep 03 13:19:38 siem01 logstash[12021]:              "event_id" => "4769",
+Sep 03 13:19:38 siem01 logstash[12021]:               "process" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                "pid" => 652,
+Sep 03 13:19:38 siem01 logstash[12021]:             "thread" => {
+Sep 03 13:19:38 siem01 logstash[12021]:                 "id" => 2280
+Sep 03 13:19:38 siem01 logstash[12021]:             }
+Sep 03 13:19:38 siem01 logstash[12021]:         },
+Sep 03 13:19:38 siem01 logstash[12021]:         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+Sep 03 13:19:38 siem01 logstash[12021]:               "channel" => "Security",
+Sep 03 13:19:38 siem01 logstash[12021]:              "keywords" => [
+Sep 03 13:19:38 siem01 logstash[12021]:             [0] "Audit Success"
+Sep 03 13:19:38 siem01 logstash[12021]:         ]
+Sep 03 13:19:38 siem01 logstash[12021]:     }
+Sep 03 13:19:38 siem01 logstash[12021]: }

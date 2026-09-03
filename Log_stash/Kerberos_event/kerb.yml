@@ -1,0 +1,72 @@
+input {
+  beats {
+    port => 5044
+  }
+}
+
+
+Status for success is 0x0, status id -1/success,
+anything else is failure.
+Make status a ruby clause dependant on input. (if not directly given)
+Just make it defensible basically.
+
+Focus on telemetry related to certs, passwords, smart cards, 
+Auth proving telem, anything that provides insight into
+whether or not the connection attempt is legit.
+
+Check types on borrowed conversions.
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+     [winlog][event_id] in ["4768"] {
+
+    mutate {
+      add_field => {
+        category_uid  = 3
+        category_name = Identity & Access Management
+
+        class_uid     = 3002
+        class_name    = Authentication
+
+        auth_protocol_id = 2
+        auth_protocol    = Kerberos
+
+        4768 → type_uid = 300203
+        "type_name" => "Authentication: Logon"
+
+        "severity_id" => "1"
+
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Windows Security Auditing"
+        "[metadata][product][vendor_name]" => "Microsoft"
+        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+
+    mutate {
+      rename => {
+        "[winlog][event_data][TargetUserName]"    => "[user][name]"
+        "[winlog][event_data][TargetDomainName]"   => "[user][domain]"
+        "[winlog][event_data][TargetSid]"           => "[user][pid]"
+
+`       "[winlog][event_data][IpAddress]"            => [src_endpoint][ip]"
+        "[winlog][event_data][IpPort]"               => [src_endpoint][port]"
+
+        "[winlog][event_data][ServiceName]          → service.name   
+ServiceSid           → service.uid
+
+Status               → status_code
+TicketEncryptionType → useful Kerberos crypto context
+PreAuthType          → useful authentication context
+      }
+    }
+  }
+}
+
+
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+}
