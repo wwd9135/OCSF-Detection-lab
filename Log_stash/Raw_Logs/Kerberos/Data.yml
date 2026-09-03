@@ -1,0 +1,9 @@
+winlogbeat.event_logs:
+  - name: Security
+    event_id: "4768, 4769, 4771"
+
+output.logstash:
+  hosts: ["10.0.0.30:5044"]
+
+processors:
+  - add_host_metadata: ~

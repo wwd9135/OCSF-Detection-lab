@@ -6,7 +6,7 @@ input {
 
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] == "4624" {
+     [winlog][event_id] in ["4624", "4625"] {
 
     mutate {
       add_field => {
@@ -23,8 +23,6 @@ filter {
         "type_name" => "Authentication: Logon"
 
         "severity_id" => "1"
-        "status_id"   => "1"
-        "status"      => "Success"
 
         "[metadata][version]"              => "1.8.0"
         "[metadata][product][name]"        => "Windows Security Auditing"
@@ -76,6 +74,25 @@ filter {
           value.nil? || value.to_s.strip.empty? || value.to_s.strip == "-"
         end
 
+        event_code = event.get("[metadata][event_code]").to_s
+        is_success = event_code == "4624"
+
+        event.set("[status_id]", is_success ? 1 : 2)
+        event.set("[status]", is_success ? "Success" : "Failure")
+        event.set("[message]", is_success ? "An account was successfully logged on." : "An account failed to log on.")
+
+        unless is_success
+          event_data = event.get("[winlog][event_data]") || {}
+          failure_status = event_data["Status"]
+          failure_sub_status = event_data["SubStatus"]
+          failure_reason = event_data["FailureReason"]
+
+          event.set("[status_code]", failure_status.to_s) unless missing.call(failure_status)
+          event.set("[status_detail]", failure_reason.to_s) unless missing.call(failure_reason)
+          event.set("[unmapped][windows][sub_status]", failure_sub_status.to_s) unless missing.call(failure_sub_status)
+          event.set("[unmapped][windows][failure_reason]", failure_reason.to_s) unless missing.call(failure_reason)
+        end
+
         event_time = event.get("@timestamp")
         if event_time
           epoch_ms = (event_time.to_f * 1000).round
@@ -86,8 +103,11 @@ filter {
           event.set("[timezone_offset]", 0)
           event.set("[metadata][original_time]", iso_time)
           event.set("[metadata][profiles]", ["datetime"])
-          event.set("[session][created_time]", epoch_ms)
-          event.set("[session][created_time_dt]", iso_time)
+
+          if is_success
+            event.set("[session][created_time]", epoch_ms)
+            event.set("[session][created_time_dt]", iso_time)
+          end
         end
 
         logged_time = event.get("[@metadata][event_created]")
@@ -122,14 +142,24 @@ filter {
         event.set("[session][uuid]", session_uuid.to_s.delete("{}").downcase) unless missing.call(session_uuid)
 
         process_path = event.get("[actor][process][file][path]")
-        unless missing.call(process_path)
+        if missing.call(process_path)
+          event.remove("[actor][process][file][path]")
+        else
           process_name = File.basename(process_path.to_s.tr("\\", "/"))
           event.set("[actor][process][file][name]", process_name)
           event.set("[actor][process][name]", process_name)
         end
 
         logon_process_name = event.get("[logon_process][name]")
-        event.set("[logon_process][name]", logon_process_name.to_s.strip) unless missing.call(logon_process_name)
+        if missing.call(logon_process_name)
+          event.remove("[logon_process][name]")
+        else
+          event.set("[logon_process][name]", logon_process_name.to_s.strip)
+        end
+
+        ["[user][name]", "[user][domain]", "[user][uid]", "[actor][user][name]", "[actor][user][domain]", "[actor][user][uid]"].each do |path|
+          event.remove(path) if missing.call(event.get(path))
+        end
 
         ["[src_endpoint][ip]", "[src_endpoint][hostname]"].each do |path|
           event.remove(path) if missing.call(event.get(path))
@@ -165,14 +195,14 @@ filter {
             12 => [12, "Cached Remote Interactive"],
             13 => [13, "Cached Unlock"]
           }
-          normalized = logon_types.fetch(source_id, [99, "Windows Logon Type 
+          normalized = logon_types.fetch(source_id, [99, "Windows Logon Type " + source_id.to_s])
           is_remote = [3, 8, 10, 12].include?(source_id)
 
           event.set("[logon_type_id]", normalized[0])
           event.set("[logon_type]", normalized[1])
           event.set("[is_remote]", is_remote)
           event.set("[is_cleartext]", source_id == 8)
-          event.set("[session][is_remote]", is_remote)
+          event.set("[session][is_remote]", is_remote) if is_success
         end
 
         auth_package = event_data["AuthenticationPackageName"]
@@ -202,6 +232,8 @@ filter {
         classify_user = lambda do |prefix|
           name = event.get("#{prefix}[name]").to_s
           uid = event.get("#{prefix}[uid]").to_s
+
+          next if name.empty? && uid.empty?
 
           if ["S-1-5-18", "S-1-5-19", "S-1-5-20"].include?(uid) || name.end_with?("$") || ["SYSTEM", "LOCAL SERVICE", "NETWORK SERVICE"].include?(name.upcase)
             event.set("#{prefix}[type_id]", 3)
@@ -286,9 +318,6 @@ filter {
     }
 
     mutate {
-      replace => {
-        "message" => "An account was successfully logged on."
-      }
       convert => {
         "category_uid"            => "integer"
         "class_uid"               => "integer"
@@ -308,7 +337,6 @@ filter {
         "agent",
         "ecs",
         "log",
-        "tags",
         "@version",
         "@timestamp"
       ]
