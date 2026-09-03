@@ -7,3 +7,8 @@ output.logstash:
 
 processors:
   - add_host_metadata: ~
+
+  Get-WinEvent -FilterHashtable @{
+    LogName='Security'
+    Id=4768,4769,4771
+} -MaxEvents 10
