@@ -5,14 +5,35 @@ input {
 }
 
 
-Status for success is 0x0, status id -1/success,
-anything else is failure.
-Make status a ruby clause dependant on input. (if not directly given)
-Just make it defensible basically.
+Focus on making defensible telemetry,
+Taking inputs into correct categories via the rename clause ->
+From there go through the following categories
+to ensure data remains defensible regardless or schema changes etc
 
-Focus on telemetry related to certs, passwords, smart cards, 
-Auth proving telem, anything that provides insight into
-whether or not the connection attempt is legit.
+1. Placeholder values, failure/ success handling, handling 
+what comes through and parsing values. 
+
+2. Type conversion- I want everything converted to offical OCSF.
+Is this genuinely a string, integer, IP, timestamp or enum?
+
+3. Missing values, redo rename so: - **Missing fields**
+    
+    Don’t assume every event version has every attribute. 
+    Before transforming something important, check it exists.
+
+What happens if:
+- this field is missing?
+- it's "-"?
+- Microsoft changes the value?
+- it's the wrong datatype?
+- my conversion fails?
+
+1. Take one event
+2. Do minimum initial mapping
+3. Generate several real examples
+4. Compare values
+5. Decide how each important field should behave
+6. Make the mapping resilient
 
 Check types on borrowed conversions.
 filter {
@@ -42,7 +63,11 @@ filter {
         "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
       }
     }
-
+    date {
+      match => ["[event][created]", "ISO8601"]
+      target => "[@metadata][event_created]"
+      tag_on_failure => ["_ocsf_logged_time_parse_failure"]
+    }
     mutate {
       rename => {
         "[winlog][event_data][TargetUserName]"    => "[user][name]"
@@ -52,12 +77,14 @@ filter {
 `       "[winlog][event_data][IpAddress]"            => [src_endpoint][ip]"
         "[winlog][event_data][IpPort]"               => [src_endpoint][port]"
 
-        "[winlog][event_data][ServiceName]          → service.name   
-ServiceSid           → service.uid
+        "[winlog][event_data][ServiceName]"          => "[service][name]"   
+        "[winlog][event_data][ServiceSid]"           => "[service][uid]"
 
-Status               → status_code
-TicketEncryptionType → useful Kerberos crypto context
-PreAuthType          → useful authentication context
+        "[winlog][event_data][Status]"                          =>  "[status_code]"
+        "[winlog][event_data][TicketEncryptionType]"  => []
+        "[winlog][event_id]"                          => "[metadata][event_code]"
+        "[winlog][provider_name]"                     => "[metadata][log_provider]"
+        "[winlog][version]"                           => "[metadata][log_version]"
       }
     }
   }
