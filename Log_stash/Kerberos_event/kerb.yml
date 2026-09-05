@@ -1,60 +1,56 @@
+I want to work with the following traffic to ensure its defensible and wont fail
+
+Time field- I need to keep the time field, add it to the three required fields, normalised to epoch/OCSF.
+
+"windows" => {
+             "ticket_encryption_type" => "0x12"
+
+
+"status_code" => "0x0",
+Status == 0x0
+→ status_id = 1
+→ status = Success
+
+anything else
+→ status_id = 2
+→ status = Failure
+→ status_code = original hex
+
+
+
+         "src_endpoint" => {
+         "port" => "0",
+           "ip" => "::1"
+           
 input {
   beats {
     port => 5044
   }
 }
 
-
-Focus on making defensible telemetry,
-Taking inputs into correct categories via the rename clause ->
-From there go through the following categories
-to ensure data remains defensible regardless or schema changes etc
-
-1. Placeholder values, failure/ success handling, handling 
-what comes through and parsing values. 
-
-2. Type conversion- I want everything converted to offical OCSF.
-Is this genuinely a string, integer, IP, timestamp or enum?
-
-3. Missing values, redo rename so: - **Missing fields**
-    
-    Don’t assume every event version has every attribute. 
-    Before transforming something important, check it exists.
-
-What happens if:
-- this field is missing?
-- it's "-"?
-- Microsoft changes the value?
-- it's the wrong datatype?
-- my conversion fails?
-
-1. Take one event
-2. Do minimum initial mapping
-3. Generate several real examples
-4. Compare values
-5. Decide how each important field should behave
-6. Make the mapping resilient
-
-Check types on borrowed conversions.
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] in ["4768"] {
+     [winlog][event_id] == "4768" {
 
     mutate {
       add_field => {
-        category_uid  = 3
-        category_name = Identity & Access Management
+        "category_uid"  => "3"
+        "category_name" => "Identity & Access Management"
 
-        class_uid     = 3002
-        class_name    = Authentication
+        "class_uid"  => "3002"
+        "class_name" => "Authentication"
 
-        auth_protocol_id = 2
-        auth_protocol    = Kerberos
+        "activity_id"   => "3"
+        "activity_name" => "Authentication Ticket"
 
-        4768 → type_uid = 300203
-        "type_name" => "Authentication: Logon"
+        "type_uid"  => "300203"
+        "type_name" => "Authentication: Authentication Ticket"
+
+        "auth_protocol_id" => "2"
+        "auth_protocol"    => "Kerberos"
 
         "severity_id" => "1"
+        "severity"    => "Informational"
 
         "[metadata][version]"              => "1.8.0"
         "[metadata][product][name]"        => "Windows Security Auditing"
@@ -63,34 +59,58 @@ filter {
         "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
       }
     }
-    date {
-      match => ["[event][created]", "ISO8601"]
-      target => "[@metadata][event_created]"
-      tag_on_failure => ["_ocsf_logged_time_parse_failure"]
-    }
+
     mutate {
       rename => {
-        "[winlog][event_data][TargetUserName]"    => "[user][name]"
-        "[winlog][event_data][TargetDomainName]"   => "[user][domain]"
-        "[winlog][event_data][TargetSid]"           => "[user][pid]"
+        "[event][original]"                           => "[raw_data]"
+        "[winlog][event_data][TargetUserName]"        => "[user][name]"
+        "[winlog][event_data][TargetDomainName]"      => "[user][domain]"
+        "[winlog][event_data][TargetSid]"             => "[user][uid]"
 
-`       "[winlog][event_data][IpAddress]"            => [src_endpoint][ip]"
-        "[winlog][event_data][IpPort]"               => [src_endpoint][port]"
+        "[winlog][event_data][IpAddress]"             => "[src_endpoint][ip]"
+        "[winlog][event_data][IpPort]"                => "[src_endpoint][port]"
 
-        "[winlog][event_data][ServiceName]"          => "[service][name]"   
-        "[winlog][event_data][ServiceSid]"           => "[service][uid]"
+        "[winlog][event_data][ServiceName]"           => "[service][name]"
+        "[winlog][event_data][ServiceSid]"            => "[service][uid]"
 
-        "[winlog][event_data][Status]"                          =>  "[status_code]"
-        "[winlog][event_data][TicketEncryptionType]"  => []
+        "[winlog][event_data][Status]"                => "[status_code]"
+        "[winlog][event_data][TicketEncryptionType]"  => "[unmapped][windows][ticket_encryption_type]"
+
         "[winlog][event_id]"                          => "[metadata][event_code]"
         "[winlog][provider_name]"                     => "[metadata][log_provider]"
         "[winlog][version]"                           => "[metadata][log_version]"
       }
     }
+
+    
+    mutate {
+      convert => {
+        "category_uid"            => "integer"
+        "class_uid"               => "integer"
+        "activity_id"             => "integer"
+        "type_uid"                 => "integer"
+        "auth_protocol_id"        => "integer"
+        "severity_id"             => "integer"
+        "[metadata][log_version]" => "string"
+      }
+    }
+
+    mutate {
+      remove_field => [
+        "winlog",
+        "host",
+        "event",
+        "agent",
+        "ecs",
+        "log",
+        "@timestamp",
+        "@version",
+        "message",
+        "tags"
+      ]
+    }
   }
 }
-
-
 
 output {
   stdout {

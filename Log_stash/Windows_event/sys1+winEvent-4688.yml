@@ -3,141 +3,448 @@ input {
     port => 5044
   }
 }
+
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Sysmon" and
      [winlog][event_id] == "1" {
 
     mutate {
       add_field => {
-        "category_uid"  => "1"
-        "category_name" => "System Activity"
-
-        "class_uid"     => "1007"
-        "class_name"    => "Process Activity"
-
-        "activity_id"   => "1"
-        "activity_name" => "Launch"
-
-        "type_uid"      => "100701"
-        "type_name"     => "Process Activity Launch"
-
-        "severity_id"   => "1"
-
-        "[process][file][type_id]" => "8"
-        "[process][file][type]"    => "Executable File"
-        "[device][type_id]"        => "0"
-        "[device][type]"           => "Unknown"
-
-        "[metadata][version]"              => "1.8.0"
-        "[metadata][product][name]"        => "Sysmon"
-        "[metadata][product][vendor_name]" => "Microsoft"
-        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
-        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+        "[@metadata][ocsf_process_event]" => "true"
+        "[@metadata][source_kind]"        => "sysmon"
+        "[metadata][product][name]"       => "Sysmon"
       }
     }
-    mutate {
-      convert => {
-        "severity_id"   => "integer"
-        "activity_id"   => "integer"
-        "class_uid"      => "integer"
-        "type_uid"       => "integer"
-        "category_uid"   => "integer"
-        "[process][file][type_id]" => "integer"
-        "[device][type_id]"        => "integer"
-      }
-    }
+
     mutate {
       rename => {
+        "[event][original]"                           => "[raw_data]"
         "[winlog][event_id]"                          => "[metadata][event_code]"
         "[winlog][provider_name]"                     => "[metadata][log_provider]"
         "[winlog][version]"                           => "[metadata][log_version]"
-        "[event][original]"                           => "[raw_data]"
+
         "[winlog][event_data][ProcessId]"             => "[process][pid]"
         "[winlog][event_data][ProcessGuid]"           => "[process][uid]"
         "[winlog][event_data][CommandLine]"           => "[process][cmd_line]"
         "[winlog][event_data][UtcTime]"               => "[process][created_time]"
         "[winlog][event_data][Image]"                 => "[process][file][path]"
         "[winlog][event_data][CurrentDirectory]"      => "[process][working_directory]"
-        "[winlog][event_data][OriginalFileName]"      => "[process][file][name]"
-        "[winlog][event_data][User]"                  => "[process][user]"
-        "[winlog][event_data][ParentProcessId]"       => "[process][parent_process][pid]"
-        "[winlog][event_data][ParentImage]"           => "[process][parent_process][path]"
-        "[winlog][event_data][ParentCommandLine]"     => "[process][parent_process][cmd_line]"
+        "[winlog][event_data][OriginalFileName]"      => "[process][file][internal_name]"
+        "[winlog][event_data][FileVersion]"           => "[process][file][version]"
+        "[winlog][event_data][Description]"           => "[process][file][desc]"
+        "[winlog][event_data][Product]"               => "[process][file][product][name]"
+        "[winlog][event_data][Company]"               => "[process][file][company_name]"
         "[winlog][event_data][Hashes]"                => "[process][file][hashes]"
-        "[host][hostname]"                            => "[device][hostname]"
-        "[host][ip][1]"                               => "[device][ip]"
-        "[host][mac][0]"                              => "[device][mac]"
+        "[winlog][event_data][User]"                  => "[@metadata][process_user]"
+        "[winlog][event_data][LogonGuid]"             => "[process][session][uuid]"
+        "[winlog][event_data][LogonId]"               => "[process][session][uid]"
+        "[winlog][event_data][TerminalSessionId]"     => "[unmapped][windows][terminal_session_id]"
+        "[winlog][event_data][IntegrityLevel]"        => "[@metadata][process_integrity]"
+
+        "[winlog][event_data][ParentProcessId]"       => "[actor][process][pid]"
+        "[winlog][event_data][ParentProcessGuid]"     => "[actor][process][uid]"
+        "[winlog][event_data][ParentImage]"           => "[actor][process][file][path]"
+        "[winlog][event_data][ParentCommandLine]"     => "[actor][process][cmd_line]"
+        "[winlog][event_data][ParentUser]"            => "[@metadata][actor_user]"
+        "[winlog][event_data][RuleName]"              => "[unmapped][sysmon][rule_name]"
       }
     }
-    mutate {
-      convert => {
-        "[process][pid]"                 => "integer"
-        "[process][parent_process][pid]" => "integer"
-        "[metadata][log_version]"        => "string"
-      }
-    }
+
     date {
-      match => [
-        "[process][created_time]",
-        "yyyy-MM-dd HH:mm:ss.SSS"
-      ]
+      match => ["[process][created_time]", "yyyy-MM-dd HH:mm:ss.SSS"]
       timezone => "UTC"
-      target => "[@metadata][parsed_process_time]"
-      tag_on_failure => ["_ocsf_time_parse_failure"]
+      target => "[@metadata][event_time]"
+      tag_on_failure => ["_ocsf_process_time_parse_failure"]
     }
+  } else if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+            [winlog][event_id] == "4688" {
+
+    mutate {
+      add_field => {
+        "[@metadata][ocsf_process_event]" => "true"
+        "[@metadata][source_kind]"        => "windows_security"
+        "[metadata][product][name]"       => "Windows Security Auditing"
+      }
+    }
+
+    mutate {
+      rename => {
+        "[event][original]"                               => "[raw_data]"
+        "[winlog][event_id]"                              => "[metadata][event_code]"
+        "[winlog][provider_name]"                         => "[metadata][log_provider]"
+        "[winlog][version]"                               => "[metadata][log_version]"
+
+        "[winlog][event_data][NewProcessId]"              => "[process][pid]"
+        "[winlog][event_data][NewProcessName]"            => "[process][file][path]"
+        "[winlog][event_data][ProcessCommandLine]"        => "[process][cmd_line]"
+        "[winlog][event_data][TargetUserName]"            => "[process][user][name]"
+        "[winlog][event_data][TargetDomainName]"          => "[process][user][domain]"
+        "[winlog][event_data][TargetUserSid]"             => "[process][user][uid]"
+        "[winlog][event_data][TargetLogonId]"             => "[process][session][uid]"
+        "[winlog][event_data][MandatoryLabel]"            => "[@metadata][process_integrity]"
+        "[winlog][event_data][TokenElevationType]"        => "[@metadata][token_elevation_type]"
+
+        "[winlog][event_data][ProcessId]"                 => "[actor][process][pid]"
+        "[winlog][event_data][ParentProcessName]"         => "[actor][process][file][path]"
+        "[winlog][event_data][SubjectUserName]"           => "[actor][user][name]"
+        "[winlog][event_data][SubjectDomainName]"         => "[actor][user][domain]"
+        "[winlog][event_data][SubjectUserSid]"            => "[actor][user][uid]"
+        "[winlog][event_data][SubjectLogonId]"            => "[actor][session][uid]"
+      }
+    }
+  }
+
+  if [@metadata][ocsf_process_event] == "true" {
+    mutate {
+      add_field => {
+        "category_uid"                           => "1"
+        "category_name"                          => "System Activity"
+        "class_uid"                              => "1007"
+        "class_name"                             => "Process Activity"
+        "activity_id"                            => "1"
+        "activity_name"                          => "Launch"
+        "type_uid"                               => "100701"
+        "type_name"                              => "Process Activity: Launch"
+        "severity_id"                            => "1"
+        "severity"                               => "Informational"
+        "status_id"                              => "1"
+        "status"                                 => "Success"
+        "launch_type_id"                         => "1"
+        "launch_type"                            => "Spawn"
+        "[device][type_id]"                      => "0"
+        "[device][type]"                         => "Unknown"
+        "[metadata][version]"                    => "1.8.0"
+        "[metadata][product][vendor_name]"       => "Microsoft"
+        "[metadata][log_name]"                   => "%{[winlog][channel]}"
+        "[metadata][log_source]"                 => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"         => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+
     ruby {
       code => '
-        parsed_time = event.get("[@metadata][parsed_process_time]")
+        require "time"
 
-        if parsed_time
-          epoch_ms = (parsed_time.to_f * 1000).round
-
-          event.set("[time]", epoch_ms)
-          event.set("[metadata][original_time]", epoch_ms)
-          event.set("[process][created_time]", epoch_ms)
+        missing = lambda do |value|
+          value.nil? || value.to_s.strip.empty? || value.to_s.strip == "-"
         end
-      '
-    }
-    ruby {
-      code => '
+
+        to_time = lambda do |value|
+          begin
+            if value.nil?
+              nil
+            elsif value.respond_to?(:time)
+              value.time.utc
+            elsif value.is_a?(Time)
+              value.utc
+            else
+              Time.parse(value.to_s).utc
+            end
+          rescue ArgumentError, TypeError
+            nil
+          end
+        end
+
+        source_kind = event.get("[@metadata][source_kind]")
+        source_time = event.get("[@metadata][event_time]") || event.get("@timestamp")
+        event_time = to_time.call(source_time)
+        original_time = source_kind == "sysmon" ? event.get("[process][created_time]") : source_time
+
+        unless missing.call(original_time)
+          event.set("[metadata][original_time]", original_time.to_s)
+        end
+
+        if event_time
+          epoch_ms = (event_time.to_f * 1000).round
+          iso_time = event_time.iso8601(3)
+          event.set("[time]", epoch_ms)
+          event.set("[time_dt]", iso_time)
+          event.set("[timezone_offset]", 0)
+          event.set("[process][created_time]", epoch_ms)
+          event.set("[process][created_time_dt]", iso_time)
+        else
+          event.tag("_ocsf_event_time_parse_failure")
+        end
+
+        logged_time = to_time.call(event.get("[event][created]"))
+        if logged_time
+          event.set("[metadata][logged_time]", (logged_time.to_f * 1000).round)
+          event.set("[metadata][logged_time_dt]", logged_time.iso8601(3))
+        end
+
+        event.set("[metadata][profiles]", ["datetime"])
+
+        numeric_fields = [
+          "[process][pid]",
+          "[actor][process][pid]",
+          "[unmapped][windows][terminal_session_id]"
+        ]
+
+        numeric_fields.each do |field|
+          value = event.get(field)
+          next if missing.call(value)
+
+          begin
+            text = value.to_s.strip
+            number = text.downcase.start_with?("0x") ? text[2..-1].to_i(16) : Integer(text, 10)
+            event.set(field, number)
+          rescue ArgumentError, TypeError
+            event.tag("_ocsf_numeric_parse_failure")
+          end
+        end
+
+        session_fields = ["[process][session][uid]", "[actor][session][uid]"]
+        session_fields.each do |field|
+          value = event.get(field)
+          if missing.call(value)
+            event.remove(field)
+            next
+          end
+
+          text = value.to_s.strip
+          if text.downcase.start_with?("0x")
+            event.set(field, text[2..-1].to_i(16).to_s)
+          elsif text.match?(/^\d+$/)
+            event.set(field, text.to_i.to_s)
+          else
+            event.set(field, text.sub(/^\{/, "").sub(/\}$/, "").downcase)
+          end
+        end
+
+        ["[process][uid]", "[actor][process][uid]", "[process][session][uuid]"].each do |field|
+          value = event.get(field)
+          next if missing.call(value)
+          event.set(field, value.to_s.strip.sub(/^\{/, "").sub(/\}$/, "").downcase)
+        end
+
+        parse_qualified_user = lambda do |path, raw_value|
+          next if missing.call(raw_value)
+
+          parts = raw_value.to_s.split(92.chr, 2)
+          if parts.length == 2
+            event.set(path + "[domain]", parts[0]) unless missing.call(parts[0])
+            event.set(path + "[name]", parts[1]) unless missing.call(parts[1])
+          else
+            event.set(path + "[name]", parts[0])
+          end
+        end
+
+        parse_qualified_user.call("[process][user]", event.get("[@metadata][process_user]"))
+        parse_qualified_user.call("[actor][user]", event.get("[@metadata][actor_user]"))
+
+        user_fields = ["name", "domain", "uid"]
+        ["[process][user]", "[actor][user]"].each do |path|
+          user_fields.each do |field|
+            field_path = path + "[" + field + "]"
+            event.remove(field_path) if missing.call(event.get(field_path))
+          end
+        end
+
+        if missing.call(event.get("[process][user][name]")) &&
+           missing.call(event.get("[process][user][uid]"))
+          user_fields.each do |field|
+            value = event.get("[actor][user][" + field + "]")
+            event.set("[process][user][" + field + "]", value) unless missing.call(value)
+          end
+        end
+
+        if missing.call(event.get("[process][session][uid]"))
+          actor_session = event.get("[actor][session][uid]")
+          event.set("[process][session][uid]", actor_session) unless missing.call(actor_session)
+        end
+
+        classify_user = lambda do |path|
+          name = event.get(path + "[name]")
+          uid = event.get(path + "[uid]")
+
+          if missing.call(name) && missing.call(uid)
+            event.remove(path)
+            next
+          end
+
+          name_text = name.to_s
+          uid_text = uid.to_s.upcase
+          if uid_text == "S-1-5-18" || name_text.upcase == "SYSTEM" ||
+             name_text.end_with?("$")
+            event.set(path + "[type_id]", 3)
+            event.set(path + "[type]", "System")
+          elsif ["S-1-5-19", "S-1-5-20"].include?(uid_text) ||
+                ["LOCAL SERVICE", "NETWORK SERVICE"].include?(name_text.upcase)
+            event.set(path + "[type_id]", 4)
+            event.set(path + "[type]", "Service")
+          elsif uid_text.end_with?("-500") || name_text.casecmp("Administrator").zero?
+            event.set(path + "[type_id]", 2)
+            event.set(path + "[type]", "Admin")
+          else
+            event.set(path + "[type_id]", 1)
+            event.set(path + "[type]", "User")
+          end
+        end
+
+        classify_user.call("[process][user]")
+        classify_user.call("[actor][user]")
+
+        set_file = lambda do |path|
+          file_path = event.get(path + "[path]")
+          if missing.call(file_path)
+            event.remove(path + "[path]")
+            next
+          end
+
+          normalized_path = file_path.to_s.tr(92.chr, "/")
+          file_name = normalized_path.split("/").last
+          event.set(path + "[name]", file_name)
+          if path == "[process][file]"
+            event.set("[process][name]", file_name)
+          elsif path == "[actor][process][file]"
+            event.set("[actor][process][name]", file_name)
+          end
+          dot_index = file_name.rindex(".")
+          if dot_index && dot_index > 0 && dot_index < file_name.length - 1
+            event.set(path + "[ext]", file_name[(dot_index + 1)..-1].downcase)
+          end
+          event.set(path + "[type_id]", 8)
+          event.set(path + "[type]", "Executable File")
+        end
+
+        set_file.call("[process][file]")
+        set_file.call("[actor][process][file]")
+
         raw_hashes = event.get("[process][file][hashes]")
-
-        if raw_hashes
-          algorithm_ids = {
-            "MD5"     => 1,
-            "SHA1"    => 2,
-            "SHA256"  => 3,
-            "SHA512"  => 4,
-            "IMPHASH" => 18
-          }
-
-          algorithm_names = {
-            "MD5"     => "MD5",
-            "SHA1"    => "SHA-1",
-            "SHA256"  => "SHA-256",
-            "SHA512"  => "SHA-512",
-            "IMPHASH" => "Imphash"
-          }
-
+        if raw_hashes.is_a?(String)
+          algorithm_ids = {"MD5" => 1, "SHA1" => 2, "SHA256" => 3, "SHA512" => 4, "IMPHASH" => 18}
+          algorithm_names = {"MD5" => "MD5", "SHA1" => "SHA-1", "SHA256" => "SHA-256", "SHA512" => "SHA-512", "IMPHASH" => "Imphash"}
           parsed_hashes = []
 
-          raw_hashes.to_s.split(",").each do |pair|
+          raw_hashes.split(",").each do |pair|
             algorithm, value = pair.split("=", 2)
-            next if algorithm.nil? || value.nil?
+            next if missing.call(algorithm) || missing.call(value)
 
-            key = algorithm.upcase
-
+            key = algorithm.to_s.strip.upcase.delete("-")
             parsed_hashes << {
-              "algorithm"    => algorithm_names.fetch(key, key),
               "algorithm_id" => algorithm_ids.fetch(key, 99),
-              "value"        => value
+              "algorithm" => algorithm_names.fetch(key, algorithm.to_s.strip),
+              "value" => value.to_s.strip
             }
           end
 
-          event.set("[process][file][hashes]", parsed_hashes)
+          if parsed_hashes.empty?
+            event.remove("[process][file][hashes]")
+          else
+            event.set("[process][file][hashes]", parsed_hashes)
+          end
         end
-      ' 
+
+        raw_integrity = event.get("[@metadata][process_integrity]")
+        unless missing.call(raw_integrity)
+          integrity_text = raw_integrity.to_s.strip
+          integrity_id = nil
+          integrity_name = nil
+
+          integrity_names = {
+            "UNTRUSTED" => [1, "Untrusted"],
+            "LOW" => [2, "Low"],
+            "MEDIUM" => [3, "Medium"],
+            "MEDIUM PLUS" => [3, "Medium"],
+            "HIGH" => [4, "High"],
+            "SYSTEM" => [5, "System"],
+            "PROTECTED" => [6, "Protected"]
+          }
+
+          mapped_integrity = integrity_names[integrity_text.upcase]
+          if mapped_integrity
+            integrity_id, integrity_name = mapped_integrity
+          elsif integrity_text =~ /^S-1-16-(\d+)$/i
+            rid = Regexp.last_match(1).to_i
+            integrity_id, integrity_name = case rid
+                                           when 0 then [1, "Untrusted"]
+                                           when 4096 then [2, "Low"]
+                                           when 8192, 8448 then [3, "Medium"]
+                                           when 12288 then [4, "High"]
+                                           when 16384 then [5, "System"]
+                                           when 20480 then [6, "Protected"]
+                                           else [99, integrity_text]
+                                           end
+            event.set("[unmapped][windows][mandatory_label]", integrity_text)
+          else
+            integrity_id, integrity_name = [99, integrity_text]
+          end
+
+          event.set("[process][integrity_id]", integrity_id)
+          event.set("[process][integrity]", integrity_name)
+        end
+
+        token_type = event.get("[@metadata][token_elevation_type]")
+        unless missing.call(token_type)
+          token_text = token_type.to_s.strip
+          token_map = {
+            "%%1936" => [1, "Default"],
+            "%%1937" => [2, "Full"],
+            "%%1938" => [3, "Limited"],
+            "1" => [1, "Default"],
+            "2" => [2, "Full"],
+            "3" => [3, "Limited"]
+          }
+          token_id, token_name = token_map.fetch(token_text, [99, token_text])
+          event.set("[unmapped][windows][token_elevation_type_id]", token_id)
+          event.set("[unmapped][windows][token_elevation_type]", token_name)
+        end
+
+        creator_path = event.get("[winlog][event_data][CreatorProcessName]")
+        actor_file_path = event.get("[actor][process][file][path]")
+        if missing.call(actor_file_path) && !missing.call(creator_path)
+          event.set("[actor][process][file][path]", creator_path)
+          set_file.call("[actor][process][file]")
+        end
+
+        fallback_cmd = event.get("[winlog][event_data][CommandLine]")
+        if missing.call(event.get("[process][cmd_line]")) && !missing.call(fallback_cmd)
+          event.set("[process][cmd_line]", fallback_cmd)
+        end
+
+        hostname = event.get("[winlog][computer_name]") || event.get("[host][hostname]") || event.get("[host][name]")
+        event.set("[device][hostname]", hostname) unless missing.call(hostname)
+
+        device_uid = event.get("[host][id]")
+        event.set("[device][uid]", device_uid.to_s) unless missing.call(device_uid)
+
+        ip_values = event.get("[host][ip]")
+        ip_values = [ip_values] unless ip_values.nil? || ip_values.is_a?(Array)
+        if ip_values.is_a?(Array)
+          selected_ip = ip_values.find { |ip| ip.to_s.include?(".") } || ip_values.first
+          event.set("[device][ip]", selected_ip) unless missing.call(selected_ip)
+        end
+
+        mac_values = event.get("[host][mac]")
+        mac_values = [mac_values] unless mac_values.nil? || mac_values.is_a?(Array)
+        event.set("[device][mac]", mac_values.first) if mac_values.is_a?(Array) && !missing.call(mac_values.first)
+
+        event.set("[metadata][event_code]", event.get("[metadata][event_code]").to_s)
+        event.set("[metadata][log_version]", event.get("[metadata][log_version]").to_s)
+        event.set("[metadata][original_event_uid]", event.get("[metadata][original_event_uid]").to_s)
+
+        if event.get("[unmapped][sysmon][rule_name]").to_s.strip == "-"
+          event.remove("[unmapped][sysmon][rule_name]")
+        end
+
+        message = source_kind == "sysmon" ? "Sysmon reported a process launch." : "Windows Security reported a process launch."
+        event.set("[message]", message)
+      '
     }
+
+    mutate {
+      convert => {
+        "category_uid"                  => "integer"
+        "class_uid"                     => "integer"
+        "activity_id"                   => "integer"
+        "type_uid"                      => "integer"
+        "severity_id"                   => "integer"
+        "status_id"                     => "integer"
+        "launch_type_id"                => "integer"
+        "[device][type_id]"             => "integer"
+      }
+    }
+
     mutate {
       remove_field => [
         "winlog",
@@ -146,174 +453,28 @@ filter {
         "agent",
         "ecs",
         "log",
-        "tags",
-        "message",
+        "@timestamp",
         "@version"
-        ]
+      ]
     }
   }
 }
-
-
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] == "4688" {
+     [winlog][event_id] in ["4768"] {
 
     mutate {
       add_field => {
-        "category_uid"  => "1"
-        "category_name" => "System Activity"
+        category_uid  = 3
+        category_name = Identity & Access Management
 
-        "class_uid"     => "1007"
-        "class_name"    => "Process Activity"
+        class_uid     = 3002
+        class_name    = Authentication
 
-        "activity_id"   => "1"
-        "activity_name" => "Launch"
+        auth_protocol_id = 2
+        auth_protocol    = Kerberos
 
-        "type_uid"      => "100701"
-        "type_name"     => "Process Activity Launch"
-
-        "severity_id"   => "1"
-
-        "[process][file][type_id]" => "8"
-        "[process][file][type]"    => "Executable File"
-        "[device][type_id]"        => "0"
-        "[device][type]"           => "Unknown"
-
-        "[metadata][version]"              => "1.8.0"
-        "[metadata][product][name]"        => "Windows_event"
-        "[metadata][product][vendor_name]" => "Microsoft"
-        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
-        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
-      }
-    }
-    mutate{ 
-      copy => {
-        "@timestamp" => "[time_dt]"
-      }
-    }
-    ruby {
-      code => '
-        event_time = event.get("@timestamp")
-
-        if event_time
-          epoch_ms = (event_time.to_f * 1000).round
-
-          event.set("[time]", epoch_ms)
-          event.set("[metadata][original_time]", epoch_ms)
-          event.set("[process][created_time]", epoch_ms)
-        end
-      '
-    }
-
-    mutate {
-      rename => {
-        "[winlog][event_id]"                      => "[metadata][event_code]"
-        "[winlog][provider_name]"                 => "[metadata][log_provider]"
-        "[winlog][version]"                       => "[metadata][log_version]"
-
-        "[event][original]"                       => "[raw_data]"
-
-        "[winlog][event_data][NewProcessId]"      => "[process][pid]"
-        "[winlog][event_data][ProcessCommandLine]" => "[process][cmd_line]"
-        "[winlog][event_data][NewProcessName]"    => "[process][file][path]"
-
-        "[winlog][event_data][SubjectUserName]"   => "[process][user][name]"
-        "[winlog][event_data][SubjectDomainName]" => "[process][user][domain]"
-        "[winlog][event_data][SubjectUserSid]"    => "[process][user][uid]"
-
-        "[winlog][event_data][ParentProcessName]" => "[process][parent_process][path]"
-        "[winlog][event_data][ProcessId]"         => "[process][parent_process][pid]"
-
-        "[winlog][computer_name]"                 => "[device][hostname]"
-        "[host][ip][1]"                           => "[device][ip]"
-        "[host][mac][0]"                          => "[device][mac]"
-
-        "[event][outcome]"                        => "[status]"
-      
-      }
-    }
-    grok {
-      match => {
-        "[process][file][path]" => "^.*\\(?<[process][file][name]>[^\\]+)\.(?<[process][file][ext]>[^.\\]+)$"
-      }
-    }
-    
-    mutate {
-      convert => {
-        "severity_id"                    => "integer"
-        "activity_id"                    => "integer"
-        "class_uid"                      => "integer"
-        "type_uid"                       => "integer"
-        "category_uid"                   => "integer"
-        "[process][file][type_id]"       => "integer"
-        "[device][type_id]"              => "integer"
-        "[metadata][log_version]"        => "string"
-      }
-    }
-    
-    ruby {
-      code => '
-        ["[process][pid]", "[process][parent_process][pid]"].each do |field|
-          value = event.get(field)
-
-          if value
-            begin
-              event.set(field, Integer(value, 0))
-            rescue ArgumentError, TypeError
-              event.tag("_pid_conversion_failure")
-            end
-          end
-        end
-      '
-    }
-
-    mutate {
-      remove_field => [
-        "message",
-        "winlog", 
-        "event",
-        "category_uid",
-        "host",
-        "agent",
-        "ecs"
-        "@timestamp"
-        ]
-    }
-  }
-}
-
-
-filter {
-  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] == "4624" {
-
-    }
-
-
-
-    
-filter {
-  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] == "4625" {
-      }
-
-filter {
-  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] in ["4624", "4625"] {
-
-    mutate {
-      add_field => {
-        "category_uid"  => "3"
-        "category_name" => "Identity & Access Management"
-
-        "class_uid"  => "3002"
-        "class_name" => "Authentication"
-
-        "activity_id"   => "1"
-        "activity_name" => "Logon"
-
-        "type_uid"  => "300201"
+        4768 → type_uid = 300203
         "type_name" => "Authentication: Logon"
 
         "severity_id" => "1"
@@ -325,318 +486,33 @@ filter {
         "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
       }
     }
-
     date {
       match => ["[event][created]", "ISO8601"]
       target => "[@metadata][event_created]"
       tag_on_failure => ["_ocsf_logged_time_parse_failure"]
     }
-
     mutate {
       rename => {
-        "[event][original]"                           => "[raw_data]"
-        "[winlog][event_id]"                          => "[metadata][event_code]"
-        "[winlog][provider_name]"                     => "[metadata][log_provider]"
-        "[winlog][version]"                           => "[metadata][log_version]"
-
         "[winlog][event_data][TargetUserName]"        => "[user][name]"
         "[winlog][event_data][TargetDomainName]"      => "[user][domain]"
-        "[winlog][event_data][TargetUserSid]"         => "[user][uid]"
-
-        "[winlog][event_data][SubjectUserName]"       => "[actor][user][name]"
-        "[winlog][event_data][SubjectDomainName]"     => "[actor][user][domain]"
-        "[winlog][event_data][SubjectUserSid]"        => "[actor][user][uid]"
-        "[winlog][event_data][SubjectLogonId]"        => "[actor][session][uid]"
-
-        "[winlog][event_data][ProcessId]"             => "[actor][process][pid]"
-        "[winlog][event_data][ProcessName]"           => "[actor][process][file][path]"
-
-        "[winlog][event_data][TargetLogonId]"         => "[session][uid]"
-        "[winlog][event_data][TargetLinkedLogonId]"   => "[session][uid_alt]"
-        "[winlog][event_data][LogonGuid]"             => "[session][uuid]"
+        "[winlog][event_data][TargetSid]"             => "[user][pid]"
 
         "[winlog][event_data][IpAddress]"             => "[src_endpoint][ip]"
         "[winlog][event_data][IpPort]"                => "[src_endpoint][port]"
-        "[winlog][event_data][WorkstationName]"       => "[src_endpoint][hostname]"
-        "[winlog][event_data][LogonProcessName]"      => "[logon_process][name]"
+
+        "[winlog][event_data][ServiceName]"           => "[service][name]"   
+        "[winlog][event_data][ServiceSid]"            => "[service][uid]"
+
+        "[winlog][event_data][Status]"                => "[status_code]"
+        "[winlog][event_data][TicketEncryptionType]"  => "[testing]"
+        "[winlog][event_id]"                          => "[metadata][event_code]"
+        "[winlog][provider_name]"                     => "[metadata][log_provider]"
+        "[winlog][version]"                           => "[metadata][log_version]"
       }
-    }
-
-    ruby {
-      code => '
-        missing = lambda do |value|
-          value.nil? || value.to_s.strip.empty? || value.to_s.strip == "-"
-        end
-
-        event_code = event.get("[metadata][event_code]").to_s
-        is_success = event_code == "4624"
-
-        event.set("[status_id]", is_success ? 1 : 2)
-        event.set("[status]", is_success ? "Success" : "Failure")
-        event.set("[message]", is_success ? "An account was successfully logged on." : "An account failed to log on.")
-
-        unless is_success
-          event_data = event.get("[winlog][event_data]") || {}
-          failure_status = event_data["Status"]
-          failure_sub_status = event_data["SubStatus"]
-          failure_reason = event_data["FailureReason"]
-
-          event.set("[status_code]", failure_status.to_s) unless missing.call(failure_status)
-          event.set("[status_detail]", failure_reason.to_s) unless missing.call(failure_reason)
-          event.set("[unmapped][windows][sub_status]", failure_sub_status.to_s) unless missing.call(failure_sub_status)
-          event.set("[unmapped][windows][failure_reason]", failure_reason.to_s) unless missing.call(failure_reason)
-        end
-
-        event_time = event.get("@timestamp")
-        if event_time
-          epoch_ms = (event_time.to_f * 1000).round
-          iso_time = event_time.respond_to?(:to_iso8601) ? event_time.to_iso8601 : event_time.to_s
-
-          event.set("[time]", epoch_ms)
-          event.set("[time_dt]", iso_time)
-          event.set("[timezone_offset]", 0)
-          event.set("[metadata][original_time]", iso_time)
-          event.set("[metadata][profiles]", ["datetime"])
-
-          if is_success
-            event.set("[session][created_time]", epoch_ms)
-            event.set("[session][created_time_dt]", iso_time)
-          end
-        end
-
-        logged_time = event.get("[@metadata][event_created]")
-        if logged_time
-          event.set("[metadata][logged_time]", (logged_time.to_f * 1000).round)
-          event.set("[metadata][logged_time_dt]", logged_time.respond_to?(:to_iso8601) ? logged_time.to_iso8601 : logged_time.to_s)
-        end
-
-        ["[actor][process][pid]"].each do |path|
-          value = event.get(path)
-          next if missing.call(value)
-
-          begin
-            event.set(path, Integer(value.to_s, 0))
-          rescue ArgumentError, TypeError
-            event.tag("_ocsf_hex_id_parse_failure")
-          end
-        end
-
-        ["[session][uid]", "[session][uid_alt]", "[actor][session][uid]"].each do |path|
-          value = event.get(path)
-          next if missing.call(value)
-
-          begin
-            event.set(path, Integer(value.to_s, 0).to_s)
-          rescue ArgumentError, TypeError
-            event.tag("_ocsf_hex_id_parse_failure")
-          end
-        end
-
-        session_uuid = event.get("[session][uuid]")
-        event.set("[session][uuid]", session_uuid.to_s.delete("{}").downcase) unless missing.call(session_uuid)
-
-        process_path = event.get("[actor][process][file][path]")
-        if missing.call(process_path)
-          event.remove("[actor][process][file][path]")
-        else
-          process_name = File.basename(process_path.to_s.tr("\\", "/"))
-          event.set("[actor][process][file][name]", process_name)
-          event.set("[actor][process][name]", process_name)
-        end
-
-        logon_process_name = event.get("[logon_process][name]")
-        if missing.call(logon_process_name)
-          event.remove("[logon_process][name]")
-        else
-          event.set("[logon_process][name]", logon_process_name.to_s.strip)
-        end
-
-        ["[user][name]", "[user][domain]", "[user][uid]", "[actor][user][name]", "[actor][user][domain]", "[actor][user][uid]"].each do |path|
-          event.remove(path) if missing.call(event.get(path))
-        end
-
-        ["[src_endpoint][ip]", "[src_endpoint][hostname]"].each do |path|
-          event.remove(path) if missing.call(event.get(path))
-        end
-
-        src_port = event.get("[src_endpoint][port]")
-        if missing.call(src_port)
-          event.remove("[src_endpoint][port]")
-        else
-          begin
-            event.set("[src_endpoint][port]", Integer(src_port.to_s, 10))
-          rescue ArgumentError, TypeError
-            event.tag("_ocsf_port_parse_failure")
-          end
-        end
-
-        event_data = event.get("[winlog][event_data]") || {}
-
-        logon_type_source = event_data["LogonType"]
-        unless missing.call(logon_type_source)
-          source_id = logon_type_source.to_i
-          logon_types = {
-            0 => [1, "System"],
-            2 => [2, "Interactive"],
-            3 => [3, "Network"],
-            4 => [4, "Batch"],
-            5 => [5, "OS Service"],
-            7 => [7, "Unlock"],
-            8 => [8, "Network Cleartext"],
-            9 => [9, "New Credentials"],
-            10 => [10, "Remote Interactive"],
-            11 => [11, "Cached Interactive"],
-            12 => [12, "Cached Remote Interactive"],
-            13 => [13, "Cached Unlock"]
-          }
-          normalized = logon_types.fetch(source_id, [99, "Windows Logon Type " + source_id.to_s])
-          is_remote = [3, 8, 10, 12].include?(source_id)
-
-          event.set("[logon_type_id]", normalized[0])
-          event.set("[logon_type]", normalized[1])
-          event.set("[is_remote]", is_remote)
-          event.set("[is_cleartext]", source_id == 8)
-          event.set("[session][is_remote]", is_remote) if is_success
-        end
-
-        auth_package = event_data["AuthenticationPackageName"]
-        lm_package = event_data["LmPackageName"]
-        unless missing.call(auth_package)
-          package_name = auth_package.to_s.strip
-          package_key = package_name.upcase
-
-          if package_key.start_with?("KERBEROS")
-            event.set("[auth_protocol_id]", 2)
-            event.set("[auth_protocol]", "Kerberos")
-          elsif package_key.start_with?("NTLM") || (!missing.call(lm_package) && lm_package.to_s.upcase.start_with?("NTLM", "LM"))
-            event.set("[auth_protocol_id]", 1)
-            event.set("[auth_protocol]", "NTLM")
-          elsif package_key.start_with?("DIGEST")
-            event.set("[auth_protocol_id]", 3)
-            event.set("[auth_protocol]", "Digest")
-          else
-            event.set("[auth_protocol_id]", 99)
-            event.set("[auth_protocol]", package_name)
-          end
-        else
-          event.set("[auth_protocol_id]", 0)
-          event.set("[auth_protocol]", "Unknown")
-        end
-
-        classify_user = lambda do |prefix|
-          name = event.get("#{prefix}[name]").to_s
-          uid = event.get("#{prefix}[uid]").to_s
-
-          next if name.empty? && uid.empty?
-
-          if ["S-1-5-18", "S-1-5-19", "S-1-5-20"].include?(uid) || name.end_with?("$") || ["SYSTEM", "LOCAL SERVICE", "NETWORK SERVICE"].include?(name.upcase)
-            event.set("#{prefix}[type_id]", 3)
-            event.set("#{prefix}[type]", "System")
-          elsif uid.end_with?("-500") || name.casecmp("Administrator") == 0
-            event.set("#{prefix}[type_id]", 2)
-            event.set("#{prefix}[type]", "Admin")
-          else
-            event.set("#{prefix}[type_id]", 1)
-            event.set("#{prefix}[type]", "User")
-          end
-        end
-
-        classify_user.call("[user]")
-        classify_user.call("[actor][user]")
-
-        computer_name = event.get("[winlog][computer_name]")
-        unless missing.call(computer_name)
-          endpoint_name = computer_name.to_s
-          endpoint_parts = endpoint_name.split(".", 2)
-          event.set("[dst_endpoint][name]", endpoint_name)
-          event.set("[dst_endpoint][hostname]", endpoint_parts[0])
-          event.set("[dst_endpoint][domain]", endpoint_parts[1]) if endpoint_parts.length == 2
-        end
-
-        host_uid = event.get("[host][id]")
-        event.set("[dst_endpoint][uid]", host_uid) unless missing.call(host_uid)
-
-        host_ips = event.get("[host][ip]")
-        if host_ips.is_a?(Array)
-          preferred_ip = host_ips.find { |ip| ip.to_s.match?(/\A\d{1,3}(?:\.\d{1,3}){3}\z/) } || host_ips.first
-          event.set("[dst_endpoint][ip]", preferred_ip) unless missing.call(preferred_ip)
-        elsif !missing.call(host_ips)
-          event.set("[dst_endpoint][ip]", host_ips)
-        end
-
-        host_macs = event.get("[host][mac]")
-        host_mac = host_macs.is_a?(Array) ? host_macs.first : host_macs
-        event.set("[dst_endpoint][mac]", host_mac) unless missing.call(host_mac)
-
-        boolean_value = lambda do |value|
-          case value.to_s.strip.downcase
-          when "yes", "true", "1"
-            true
-          when "no", "false", "0"
-            false
-          else
-            value
-          end
-        end
-
-        passthrough = {
-          "LmPackageName" => "lm_package_name",
-          "ElevatedToken" => "elevated_token",
-          "RemoteCredentialGuard" => "remote_credential_guard",
-          "TargetOutboundUserName" => "target_outbound_user_name",
-          "TargetOutboundDomainName" => "target_outbound_domain_name",
-          "TransmittedServices" => "transmitted_services",
-          "KeyLength" => "key_length",
-          "RestrictedAdminMode" => "restricted_admin_mode",
-          "VirtualAccount" => "virtual_account",
-          "ImpersonationLevel" => "impersonation_level"
-        }
-
-        passthrough.each do |source, target|
-          value = event_data[source]
-          next if missing.call(value)
-
-          if ["ElevatedToken", "RemoteCredentialGuard", "RestrictedAdminMode", "VirtualAccount"].include?(source)
-            value = boolean_value.call(value)
-          elsif source == "KeyLength"
-            begin
-              value = Integer(value.to_s, 10)
-            rescue ArgumentError, TypeError
-              event.tag("_ocsf_key_length_parse_failure")
-            end
-          end
-
-          event.set("[unmapped][windows][#{target}]", value)
-        end
-      '
-    }
-
-    mutate {
-      convert => {
-        "category_uid"            => "integer"
-        "class_uid"               => "integer"
-        "activity_id"             => "integer"
-        "type_uid"                => "integer"
-        "severity_id"             => "integer"
-        "status_id"               => "integer"
-        "[metadata][log_version]" => "string"
-      }
-    }
-
-    mutate {
-      remove_field => [
-        "winlog",
-        "event",
-        "host",
-        "agent",
-        "ecs",
-        "log",
-        "@version",
-        "@timestamp"
-      ]
     }
   }
 }
+
 
 output {
   stdout {

@@ -1,166 +1,166 @@
  {
-           "tags" => [
-         [0] "beats_input_codec_plain_applied"
-     ],
-        "message" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
-           "host" => {
-                   "os" => {
-             "platform" => "windows",
-                 "name" => "Windows Server 2022 Standard Evaluation",
-               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
-                 "type" => "windows",
-                "build" => "20348.587",
-              "version" => "10.0",
-               "family" => "windows"
-         },
-                 "name" => "win-fvt9al589oi",
-         "architecture" => "x86_64",
-                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
-                   "ip" => [
-             [0] "10.0.0.10"
-         ],
-             "hostname" => "WIN-FVT9AL589OI",
-                  "mac" => [
-             [0] "00-0C-29-CF-45-91"
-         ]
-     },
-          "event" => {
-          "created" => "2026-09-03T20:19:29.677Z",
-             "kind" => "event",
-             "code" => "4768",
-         "original" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
-          "outcome" => "success",
-         "provider" => "Microsoft-Windows-Security-Auditing",
-           "action" => "Kerberos Authentication Service"
-     },
-       "@version" => "1",
-            "log" => {
-         "level" => "information"
-     },
-     "@timestamp" => 2026-09-03T20:19:28.448Z,
-            "ecs" => {
-         "version" => "8.0.0"
-     },
+     "@timestamp" => 2026-09-04T22:03:25.838Z,
           "agent" => {
-                 "name" => "WIN-FVT9AL589OI",
-              "version" => "9.5.2",
                    "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
-         "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6",
-                 "type" => "winlogbeat"
-     },
-         "winlog" => {
-                "opcode" => "Info",
-                  "task" => "Kerberos Authentication Service",
-            "event_data" => {
-                   "TargetUserName" => "Administrator",
-                        "TargetSid" => "S-1-5-21-149735389-2596996033-189346583-500",
-                           "IpPort" => "0",
-                      "PreAuthType" => "2",
-             "TicketEncryptionType" => "0x12",
-                 "TargetDomainName" => "LOCAL",
-                           "Status" => "0x0",
-                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-502",
-                    "TicketOptions" => "0x40810010",
-                      "ServiceName" => "krbtgt",
-                        "IpAddress" => "::1"
-         },
-         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
-         "provider_name" => "Microsoft-Windows-Security-Auditing",
-             "record_id" => 64317,
-              "event_id" => "4768",
-               "process" => {
-                "pid" => 652,
-             "thread" => {
-                 "id" => 2280
-             }
-         },
-               "channel" => "Security",
-         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
-              "keywords" => [
-             [0] "Audit Success"
-         ]
-     }
- }
- {
-           "tags" => [
-         [0] "beats_input_codec_plain_applied"
-     ],
-        "message" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{4B71DFC1-3B0A-2096-F0E2-1948BD93DF39}\n\nService Information:\n\tService Name:\t\tWIN-FVT9AL589OI$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1000\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
-           "host" => {
-                   "os" => {
-             "platform" => "windows",
-                 "name" => "Windows Server 2022 Standard Evaluation",
-               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
-                 "type" => "windows",
-                "build" => "20348.587",
-              "version" => "10.0",
-               "family" => "windows"
-         },
-                 "name" => "win-fvt9al589oi",
-         "architecture" => "x86_64",
-                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
-                   "ip" => [
-             [0] "10.0.0.10"
-         ],
-             "hostname" => "WIN-FVT9AL589OI",
-                  "mac" => [
-             [0] "00-0C-29-CF-45-91"
-         ]
-     },
-          "event" => {
-          "created" => "2026-09-03T20:19:29.677Z",
-             "kind" => "event",
-             "code" => "4769",
-         "original" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{4B71DFC1-3B0A-2096-F0E2-1948BD93DF39}\n\nService Information:\n\tService Name:\t\tWIN-FVT9AL589OI$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1000\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
-          "outcome" => "success",
-         "provider" => "Microsoft-Windows-Security-Auditing",
-           "action" => "Kerberos Service Ticket Operations"
-     },
-       "@version" => "1",
-            "log" => {
-         "level" => "information"
-     },
-     "@timestamp" => 2026-09-03T20:19:28.449Z,
-            "ecs" => {
-         "version" => "8.0.0"
-     },
-          "agent" => {
               "version" => "9.5.2",
                  "name" => "WIN-FVT9AL589OI",
-                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
                  "type" => "winlogbeat",
          "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6"
      },
+        "message" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL.LAB\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t58698\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+           "host" => {
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+                 "name" => "win-fvt9al589oi",
+             "hostname" => "WIN-FVT9AL589OI",
+                   "ip" => [
+             [0] "10.0.0.10"
+         ],
+         "architecture" => "x86_64",
+                   "os" => {
+               "family" => "windows",
+                "build" => "20348.587",
+                 "name" => "Windows Server 2022 Standard Evaluation",
+                 "type" => "windows",
+             "platform" => "windows",
+              "version" => "10.0",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)"
+         },
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     },
          "winlog" => {
-                  "task" => "Kerberos Service Ticket Operations",
-                "opcode" => "Info",
+               "channel" => "Security",
+              "event_id" => "4768",
+             "record_id" => 66263,
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
             "event_data" => {
-                   "TargetUserName" => "Administrator@LOCAL.LAB",
-                           "IpPort" => "0",
+                           "IpPort" => "58698",
              "TicketEncryptionType" => "0x12",
                  "TargetDomainName" => "LOCAL.LAB",
+                      "PreAuthType" => "2",
+                      "ServiceName" => "krbtgt",
+                        "TargetSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-502",
+                    "TicketOptions" => "0x40810010",
                            "Status" => "0x0",
-                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-1000",
-                    "TicketOptions" => "0x40810000",
-                      "ServiceName" => "WIN-FVT9AL589OI$",
-                        "LogonGuid" => "{4B71DFC1-3B0A-2096-F0E2-1948BD93DF39}",
-              "TransmittedServices" => "-",
-                        "IpAddress" => "::1"
+                        "IpAddress" => "::ffff:10.0.0.14",
+                   "TargetUserName" => "Administrator"
          },
          "computer_name" => "WIN-FVT9AL589OI.Local.lab",
-         "provider_name" => "Microsoft-Windows-Security-Auditing",
-             "record_id" => 64318,
-              "event_id" => "4769",
+                "opcode" => "Info",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+                  "task" => "Kerberos Authentication Service",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
                "process" => {
                 "pid" => 652,
              "thread" => {
-                 "id" => 2280
+                 "id" => 2092
              }
+         }
+     },
+            "log" => {
+         "level" => "information"
+     },
+       "@version" => "1",
+          "event" => {
+         "original" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL.LAB\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t58698\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+             "kind" => "event",
+          "outcome" => "success",
+           "action" => "Kerberos Authentication Service",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+             "code" => "4768",
+          "created" => "2026-09-04T22:03:26.656Z"
+     }
+ }
+ {
+     "@timestamp" => 2026-09-04T22:03:25.379Z,
+          "agent" => {
+                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+                 "name" => "WIN-FVT9AL589OI",
+              "version" => "9.5.2",
+                 "type" => "winlogbeat",
+         "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6"
+     },
+        "message" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{8D8F5E23-0BA9-5067-2418-9A9D9C51A8A9}\n\nService Information:\n\tService Name:\t\tWINUSER-01$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1105\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t58694\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+           "host" => {
+                 "name" => "win-fvt9al589oi",
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+                   "os" => {
+               "family" => "windows",
+                "build" => "20348.587",
+                 "name" => "Windows Server 2022 Standard Evaluation",
+             "platform" => "windows",
+                 "type" => "windows",
+              "version" => "10.0",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)"
          },
-         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+                   "ip" => [
+             [0] "10.0.0.10"
+         ],
+             "hostname" => "WIN-FVT9AL589OI",
+         "architecture" => "x86_64",
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+         "winlog" => {
                "channel" => "Security",
+              "event_id" => "4769",
+             "record_id" => 66262,
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+            "event_data" => {
+              "TransmittedServices" => "-",
+                        "LogonGuid" => "{8D8F5E23-0BA9-5067-2418-9A9D9C51A8A9}",
+                           "IpPort" => "58694",
+             "TicketEncryptionType" => "0x12",
+                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-1105",
+                           "Status" => "0x0",
+                      "ServiceName" => "WINUSER-01$",
+                 "TargetDomainName" => "LOCAL.LAB",
+                    "TicketOptions" => "0x40810000",
+                        "IpAddress" => "::ffff:10.0.0.14",
+                   "TargetUserName" => "Administrator@LOCAL.LAB"
+         },
+         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+                "opcode" => "Info",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+                  "task" => "Kerberos Service Ticket Operations",
               "keywords" => [
              [0] "Audit Success"
-         ]
+         ],
+               "process" => {
+                "pid" => 652,
+             "thread" => {
+                 "id" => 3028
+             }
+         }
+     },
+            "log" => {
+         "level" => "information"
+     },
+       "@version" => "1",
+          "event" => {
+         "original" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{8D8F5E23-0BA9-5067-2418-9A9D9C51A8A9}\n\nService Information:\n\tService Name:\t\tWINUSER-01$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1105\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t58694\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+             "kind" => "event",
+          "outcome" => "success",
+           "action" => "Kerberos Service Ticket Operations",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+             "code" => "4769",
+          "created" => "2026-09-04T22:03:26.654Z"
      }
  }

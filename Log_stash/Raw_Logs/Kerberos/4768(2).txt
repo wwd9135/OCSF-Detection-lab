@@ -1,0 +1,48 @@
+Sep 04 15:36:15 siem01 logstash[13739]: {
+Sep 04 15:36:15 siem01 logstash[13739]:         "category_uid" => 3,
+Sep 04 15:36:15 siem01 logstash[13739]:          "severity_id" => 1,
+Sep 04 15:36:15 siem01 logstash[13739]:             "severity" => "Informational",
+Sep 04 15:36:15 siem01 logstash[13739]:             "type_uid" => 300203,
+Sep 04 15:36:15 siem01 logstash[13739]:             "metadata" => {
+Sep 04 15:36:15 siem01 logstash[13739]:                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security",
+Sep 04 15:36:15 siem01 logstash[13739]:                    "version" => "1.8.0",
+Sep 04 15:36:15 siem01 logstash[13739]:                 "event_code" => "4768",
+Sep 04 15:36:15 siem01 logstash[13739]:                    "product" => {
+Sep 04 15:36:15 siem01 logstash[13739]:             "vendor_name" => "Microsoft",
+Sep 04 15:36:15 siem01 logstash[13739]:                    "name" => "Windows Security Auditing"
+Sep 04 15:36:15 siem01 logstash[13739]:         },
+Sep 04 15:36:15 siem01 logstash[13739]:         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:66592",
+Sep 04 15:36:15 siem01 logstash[13739]:               "log_provider" => "Microsoft-Windows-Security-Auditing"
+Sep 04 15:36:15 siem01 logstash[13739]:     },
+Sep 04 15:36:15 siem01 logstash[13739]:            "type_name" => "Authentication: Authentication Ticket",
+Sep 04 15:36:15 siem01 logstash[13739]:                 "user" => {
+Sep 04 15:36:15 siem01 logstash[13739]:            "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
+Sep 04 15:36:15 siem01 logstash[13739]:           "name" => "Administrator",
+Sep 04 15:36:15 siem01 logstash[13739]:         "domain" => "LOCAL"
+Sep 04 15:36:15 siem01 logstash[13739]:     },
+Sep 04 15:36:15 siem01 logstash[13739]:           "class_name" => "Authentication",
+Sep 04 15:36:15 siem01 logstash[13739]:        "auth_protocol" => "Kerberos",
+Sep 04 15:36:15 siem01 logstash[13739]:            "class_uid" => 3002,
+Sep 04 15:36:15 siem01 logstash[13739]:     "auth_protocol_id" => 2,
+Sep 04 15:36:15 siem01 logstash[13739]:          "activity_id" => 3,
+Sep 04 15:36:15 siem01 logstash[13739]:              "message" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+Sep 04 15:36:15 siem01 logstash[13739]:                 "tags" => [
+Sep 04 15:36:15 siem01 logstash[13739]:         [0] "beats_input_codec_plain_applied"
+Sep 04 15:36:15 siem01 logstash[13739]:     ],
+Sep 04 15:36:15 siem01 logstash[13739]:             "raw_data" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::1\n\tClient Port:\t\t0\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+Sep 04 15:36:15 siem01 logstash[13739]:          "status_code" => "0x0",
+Sep 04 15:36:15 siem01 logstash[13739]:         "src_endpoint" => {
+Sep 04 15:36:15 siem01 logstash[13739]:         "port" => "0",
+Sep 04 15:36:15 siem01 logstash[13739]:           "ip" => "::1"
+Sep 04 15:36:15 siem01 logstash[13739]:     },
+Sep 04 15:36:15 siem01 logstash[13739]:        "category_name" => "Identity & Access Management",
+Sep 04 15:36:15 siem01 logstash[13739]:        "activity_name" => "Authentication Ticket",
+Sep 04 15:36:15 siem01 logstash[13739]:              "service" => {
+Sep 04 15:36:15 siem01 logstash[13739]:          "uid" => "S-1-5-21-149735389-2596996033-189346583-502",
+Sep 04 15:36:15 siem01 logstash[13739]:         "name" => "krbtgt"
+Sep 04 15:36:15 siem01 logstash[13739]:     },
+Sep 04 15:36:15 siem01 logstash[13739]:             "unmapped" => {
+Sep 04 15:36:15 siem01 logstash[13739]:         "windows" => {
+Sep 04 15:36:15 siem01 logstash[13739]:             "ticket_encryption_type" => "0x12"
+Sep 04 15:36:15 siem01 logstash[13739]:         }
+Sep 04 15:36:15 siem01 logstash[13739]:     }
