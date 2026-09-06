@@ -1,26 +1,3 @@
-  GNU nano 8.7.1                                                                  winlogbeat.conf                                                                           I want to work with the following traffic to ensure its defensible and wont fail
-
-Time field- I need to keep the time field, add it to the three required fields, normalised to epoch/OCSF.
-
-"windows" => {
-             "ticket_encryption_type" => "0x12"
-
-
-"status_code" => "0x0",
-Status == 0x0
-→ status_id = 1
-→ status = Success
-
-anything else
-→ status_id = 2
-→ status = Failure
-→ status_code = original hex
-
-
-
-         "src_endpoint" => {
-         "port" => "0",
-
 input {
   beats {
     port => 5044
@@ -72,8 +49,6 @@ filter {
         "[winlog][event_data][ServiceName]"           => "[service][name]"
         "[winlog][event_data][ServiceSid]"            => "[service][uid]"
 
-        
-        "[winlog][event_data][TicketEncryptionType]"  => "[unmapped][windows][ticket_encryption_type]"
 
         "[winlog][event_data][Status]"                => "[status_code]"
         "[winlog][event_id]"                          => "[metadata][event_code]"
@@ -123,9 +98,13 @@ filter {
     }
 
     if  "[status_code]" == "0x0" {
-
+      add_field => {
+        status_id   => 1
+        status      => "Success"
+      }
     } else {
-      
+      status_id     => 0
+      status        => "Failure"
     }
 
 
@@ -138,9 +117,32 @@ filter {
         "auth_protocol_id"        => "integer"
         "severity_id"             => "integer"
         "[metadata][log_version]" => "string"
+        "[src_endpoint][port]"    => "integer"
+
       }
     }
 
+    mutate {
+      gsub => [
+        "[src_endpoint][ip]", "^::ffff:", ""
+      ]
+    }
+
+    filter {
+      translate {
+        source => "[winlog][event_data][TicketEncryptionType]"
+        target => "[unmapped][windows][ticket_encryption_type]"
+        dictionary => {
+          "0x1"  => "DES-CBS"
+          "0x3"  => "DES-CBS-MD5"
+          "0x12" => "AES-256"
+          "0x17" => "RC4-HMAC"
+          "0x18" => "RC4-HMAC-EXP"
+          "0xffffffff"
+                    }
+        fallback => "Unmapped encrpytion protocol"
+      }
+    }
     mutate {
       remove_field => [
         "winlog",
