@@ -97,14 +97,20 @@ filter {
       '
     }
 
-    if  "[status_code]" == "0x0" {
-      add_field => {
-        status_id   => 1
-        status      => "Success"
+    if [status_code] == "0x0" {
+      mutate {
+        add_field => {
+          "status_id" => "1"
+          "status"    => "Success"
+        }
       }
     } else {
-      status_id     => 0
-      status        => "Failure"
+      mutate {
+        add_field => {
+          "status_id" => "2"
+          "status"    => "Failure"
+        }
+      }
     }
 
 
@@ -116,6 +122,7 @@ filter {
         "type_uid"                => "integer"
         "auth_protocol_id"        => "integer"
         "severity_id"             => "integer"
+        "status_id"               => "integer"
         "[metadata][log_version]" => "string"
         "[src_endpoint][port]"    => "integer"
 
@@ -128,20 +135,17 @@ filter {
       ]
     }
 
-    filter {
-      translate {
-        source => "[winlog][event_data][TicketEncryptionType]"
-        target => "[unmapped][windows][ticket_encryption_type]"
-        dictionary => {
-          "0x1"  => "DES-CBS"
-          "0x3"  => "DES-CBS-MD5"
-          "0x12" => "AES-256"
-          "0x17" => "RC4-HMAC"
-          "0x18" => "RC4-HMAC-EXP"
-          "0xffffffff"
-                    }
-        fallback => "Unmapped encrpytion protocol"
+    translate {
+      source => "[winlog][event_data][TicketEncryptionType]"
+      target => "[unmapped][windows][ticket_encryption_type]"
+      dictionary => {
+        "0x1"  => "DES-CBS"
+        "0x3"  => "DES-CBS-MD5"
+        "0x12" => "AES-256"
+        "0x17" => "RC4-HMAC"
+        "0x18" => "RC4-HMAC-EXP"
       }
+      fallback => "Unmapped encrpytion protocol"
     }
     mutate {
       remove_field => [

@@ -1,0 +1,51 @@
+ {
+             "type_uid" => 300203,
+             "raw_data" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t54172\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+     "auth_protocol_id" => 2,
+          "severity_id" => 1,
+                 "user" => {
+           "name" => "Administrator",
+            "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
+         "domain" => "LOCAL"
+     },
+          "status_code" => "0x0",
+      "timezone_offset" => 0,
+            "class_uid" => 3002,
+         "category_uid" => 3,
+        "category_name" => "Identity & Access Management",
+            "status_id" => 1,
+             "metadata" => {
+              "original_time" => "2026-09-06T22:21:57.178Z",
+                 "event_code" => "4768",
+                    "product" => {
+                    "name" => "Windows Security Auditing",
+             "vendor_name" => "Microsoft"
+         },
+               "log_provider" => "Microsoft-Windows-Security-Auditing",
+                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security",
+                    "version" => "1.8.0",
+         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:73421"
+     },
+                 "time" => 1788733317178,
+               "status" => "Success",
+        "auth_protocol" => "Kerberos",
+             "unmapped" => {
+         "windows" => {
+             "ticket_encryption_type" => "AES-256"
+         }
+     },
+        "activity_name" => "Authentication Ticket",
+            "type_name" => "Authentication: Authentication Ticket",
+              "service" => {
+          "uid" => "S-1-5-21-149735389-2596996033-189346583-502",
+         "name" => "krbtgt"
+     },
+              "time_dt" => "2026-09-06T22:21:57.178Z",
+         "src_endpoint" => {
+         "port" => 54172,
+           "ip" => "10.0.0.14"
+     },
+             "severity" => "Informational",
+          "activity_id" => 3,
+           "class_name" => "Authentication"
+ }

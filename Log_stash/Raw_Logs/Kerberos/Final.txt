@@ -1,0 +1,51 @@
+Sep 06 15:22:09 siem01 logstash[30528]: {
+Sep 06 15:22:09 siem01 logstash[30528]:             "type_uid" => 300203,
+Sep 06 15:22:09 siem01 logstash[30528]:             "raw_data" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t54172\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+Sep 06 15:22:09 siem01 logstash[30528]:     "auth_protocol_id" => 2,
+Sep 06 15:22:09 siem01 logstash[30528]:          "severity_id" => 1,
+Sep 06 15:22:09 siem01 logstash[30528]:                 "user" => {
+Sep 06 15:22:09 siem01 logstash[30528]:           "name" => "Administrator",
+Sep 06 15:22:09 siem01 logstash[30528]:            "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
+Sep 06 15:22:09 siem01 logstash[30528]:         "domain" => "LOCAL"
+Sep 06 15:22:09 siem01 logstash[30528]:     },
+Sep 06 15:22:09 siem01 logstash[30528]:          "status_code" => "0x0",
+Sep 06 15:22:09 siem01 logstash[30528]:      "timezone_offset" => 0,
+Sep 06 15:22:09 siem01 logstash[30528]:            "class_uid" => 3002,
+Sep 06 15:22:09 siem01 logstash[30528]:         "category_uid" => 3,
+Sep 06 15:22:09 siem01 logstash[30528]:        "category_name" => "Identity & Access Management",
+Sep 06 15:22:09 siem01 logstash[30528]:            "status_id" => 1,
+Sep 06 15:22:09 siem01 logstash[30528]:             "metadata" => {
+Sep 06 15:22:09 siem01 logstash[30528]:              "original_time" => "2026-09-06T22:21:57.178Z",
+Sep 06 15:22:09 siem01 logstash[30528]:                 "event_code" => "4768",
+Sep 06 15:22:09 siem01 logstash[30528]:                    "product" => {
+Sep 06 15:22:09 siem01 logstash[30528]:                    "name" => "Windows Security Auditing",
+Sep 06 15:22:09 siem01 logstash[30528]:             "vendor_name" => "Microsoft"
+Sep 06 15:22:09 siem01 logstash[30528]:         },
+Sep 06 15:22:09 siem01 logstash[30528]:               "log_provider" => "Microsoft-Windows-Security-Auditing",
+Sep 06 15:22:09 siem01 logstash[30528]:                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security",
+Sep 06 15:22:09 siem01 logstash[30528]:                    "version" => "1.8.0",
+Sep 06 15:22:09 siem01 logstash[30528]:         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:73421"
+Sep 06 15:22:09 siem01 logstash[30528]:     },
+Sep 06 15:22:09 siem01 logstash[30528]:                 "time" => 1788733317178,
+Sep 06 15:22:09 siem01 logstash[30528]:               "status" => "Success",
+Sep 06 15:22:09 siem01 logstash[30528]:        "auth_protocol" => "Kerberos",
+Sep 06 15:22:09 siem01 logstash[30528]:             "unmapped" => {
+Sep 06 15:22:09 siem01 logstash[30528]:         "windows" => {
+Sep 06 15:22:09 siem01 logstash[30528]:             "ticket_encryption_type" => "AES-256"
+Sep 06 15:22:09 siem01 logstash[30528]:         }
+Sep 06 15:22:09 siem01 logstash[30528]:     },
+Sep 06 15:22:09 siem01 logstash[30528]:        "activity_name" => "Authentication Ticket",
+Sep 06 15:22:09 siem01 logstash[30528]:            "type_name" => "Authentication: Authentication Ticket",
+Sep 06 15:22:09 siem01 logstash[30528]:              "service" => {
+Sep 06 15:22:09 siem01 logstash[30528]:          "uid" => "S-1-5-21-149735389-2596996033-189346583-502",
+Sep 06 15:22:09 siem01 logstash[30528]:         "name" => "krbtgt"
+Sep 06 15:22:09 siem01 logstash[30528]:     },
+Sep 06 15:22:09 siem01 logstash[30528]:              "time_dt" => "2026-09-06T22:21:57.178Z",
+Sep 06 15:22:09 siem01 logstash[30528]:         "src_endpoint" => {
+Sep 06 15:22:09 siem01 logstash[30528]:         "port" => 54172,
+Sep 06 15:22:09 siem01 logstash[30528]:           "ip" => "10.0.0.14"
+Sep 06 15:22:09 siem01 logstash[30528]:     },
+Sep 06 15:22:09 siem01 logstash[30528]:             "severity" => "Informational",
+Sep 06 15:22:09 siem01 logstash[30528]:          "activity_id" => 3,
+Sep 06 15:22:09 siem01 logstash[30528]:           "class_name" => "Authentication"
+Sep 06 15:22:09 siem01 logstash[30528]: }
