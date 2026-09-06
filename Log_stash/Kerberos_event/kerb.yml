@@ -1,4 +1,4 @@
-I want to work with the following traffic to ensure its defensible and wont fail
+  GNU nano 8.7.1                                                                  winlogbeat.conf                                                                           I want to work with the following traffic to ensure its defensible and wont fail
 
 Time field- I need to keep the time field, add it to the three required fields, normalised to epoch/OCSF.
 
@@ -20,8 +20,7 @@ anything else
 
          "src_endpoint" => {
          "port" => "0",
-           "ip" => "::1"
-           
+
 input {
   beats {
     port => 5044
@@ -73,22 +72,69 @@ filter {
         "[winlog][event_data][ServiceName]"           => "[service][name]"
         "[winlog][event_data][ServiceSid]"            => "[service][uid]"
 
-        "[winlog][event_data][Status]"                => "[status_code]"
+        
         "[winlog][event_data][TicketEncryptionType]"  => "[unmapped][windows][ticket_encryption_type]"
 
+        "[winlog][event_data][Status]"                => "[status_code]"
         "[winlog][event_id]"                          => "[metadata][event_code]"
         "[winlog][provider_name]"                     => "[metadata][log_provider]"
         "[winlog][version]"                           => "[metadata][log_version]"
       }
     }
 
-    
+    ruby {
+      code => '
+        require "time"
+
+        to_time = lambda do |value|
+          begin
+            if value.nil?
+              nil
+            elsif value.respond_to?(:time)
+              value.time.utc
+            elsif value.is_a?(Time)
+              value.utc
+            else
+              Time.parse(value.to_s).utc
+            end
+          rescue ArgumentError, TypeError
+            nil
+          end
+        end
+
+        source_time = event.get("[@metadata][event_time]") || event.get("@timestamp")
+        event_time = to_time.call(source_time)
+        original_time = source_time
+
+        if original_time
+          event.set("[metadata][original_time]", original_time.to_s)
+        end
+
+        if event_time
+          epoch_ms = (event_time.to_f * 1000).round
+          iso_time = event_time.iso8601(3)
+          event.set("[time]", epoch_ms)
+          event.set("[time_dt]", iso_time)
+          event.set("[timezone_offset]", 0)
+        else
+          event.tag("_ocsf_event_time_parse_failure")
+        end
+      '
+    }
+
+    if  "[status_code]" == "0x0" {
+
+    } else {
+      
+    }
+
+
     mutate {
       convert => {
         "category_uid"            => "integer"
         "class_uid"               => "integer"
         "activity_id"             => "integer"
-        "type_uid"                 => "integer"
+        "type_uid"                => "integer"
         "auth_protocol_id"        => "integer"
         "severity_id"             => "integer"
         "[metadata][log_version]" => "string"

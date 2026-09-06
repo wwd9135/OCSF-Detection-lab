@@ -4,7 +4,7 @@ new = []
 with open("4768(2).txt", "r") as file:
     lines = file.readlines()
 for i in lines:
-    i = i.replace("Sep 04 15:36:15 siem01 logstash[13739]:", "")
+    i = i.replace("Sep 05 13:43:22 siem01 logstash[28779]:", "")
     new.append(i)
 
 for i in new:
