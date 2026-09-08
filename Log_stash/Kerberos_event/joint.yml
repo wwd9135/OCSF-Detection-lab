@@ -1,19 +1,11 @@
-Get-WinEvent -FilterHashtable @{
-    LogName='Security'
-    Id=4771
-} -MaxEvents 20
-# Reviewed from joint.yml, the attachment in OCSF Detection Lab Setup.
-# This is Logstash pipeline syntax, despite the original .yml extension.
-# Standalone lab pipeline; when merging, include the filter only if Beats already exists.
+
 input {
   beats { port => 5044 }
 }
 
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] in ["4768", "4769", 4768, 4769] {
-
-    # Shared classification. replace avoids arrays if a field already exists.
+     [winlog][event_id] in ["4768", "4769", "4771", 4771, 4768, 4769] {
     mutate {
       replace => {
         "category_uid" => "3"
@@ -29,9 +21,6 @@ filter {
         "[metadata][product][vendor_name]" => "Microsoft"
       }
     }
-
-    # Preserve source fields, including newer Windows event versions and PKINIT
-    # certificate fields. No rename of event_id before the branches below.
     mutate {
       copy => {
         "[event][original]" => "[raw_data]"
@@ -46,8 +35,6 @@ filter {
         "[winlog][version]" => "[metadata][log_version]"
       }
     }
-
-    # Ruby is used for validation/arithmetic; fixed descriptions stay in translate.
     ruby {
       id => "kerberos_shared_validation"
       init => 'require "time"; require "date"; require "ipaddr"'
@@ -58,8 +45,6 @@ filter {
         unavailable = lambda do |v|
           v.nil? || (v.is_a?(String) && ["", "-", "n/a"].include?(v.strip.downcase))
         end
-        # Decimal without a prefix, hexadecimal only with 0x; never use to_i
-        # alone: to_i turns garbage into zero and accepts trailing garbage.
         uint32 = lambda do |v|
           s = scalar.call(v)
           n = nil
@@ -83,10 +68,6 @@ filter {
             event.set("[metadata][original_event_uid]", "#{computer}:#{channel}:#{record}")
           end
         end
-
-        # The override must contain SOURCE time. An invalid explicit override is
-        # tagged, never silently replaced with ingestion time. Beats @timestamp
-        # is the default event-time source; retain it for Logstash outputs.
         source_time = event.get("[@metadata][event_time]")
         source_time = event.get("@timestamp") if source_time.nil?
         ["time", "time_dt", "timezone_offset"].each { |f| event.remove(f) }
@@ -114,8 +95,6 @@ filter {
           event.tag("_ocsf_event_time_parse_failure")
         end
 
-        # Windows XML calls this Status for BOTH events. FailureCode is a
-        # compatibility fallback for collectors which expose that field name.
         primary = event.get("[winlog][event_data][Status]")
         alternate = event.get("[winlog][event_data][FailureCode]")
         use_alternate = unavailable.call(primary) && !unavailable.call(alternate)
@@ -149,8 +128,7 @@ filter {
           event.set("[@metadata][kerberos_status_key]", "0x#{code.to_s(16)}")
         end
 
-        # IPAddr validates literal addresses and converts all IPv4-mapped forms,
-        # including ::ffff:a00:e. Reject CIDRs and scoped addresses for ip fields.
+
         raw_ip = event.get("[winlog][event_data][IpAddress]")
         event.remove("[src_endpoint][ip]")
         s = scalar.call(raw_ip)
@@ -174,17 +152,16 @@ filter {
         event.set("[unmapped][windows][ip_port_raw]", s) if s
         unless unavailable.call(raw_port)
           if s && s.strip.match?(/\A[0-9]{1,5}\z/) && s.strip.to_i(10) <= 65535
-            # Port 0 is documented for local Kerberos requests; preserve it.
             event.set("[src_endpoint][port]", s.strip.to_i(10))
           else
             event.tag("_kerberos_invalid_source_port")
           end
         end
 
-        # Keep raw evidence separate from normalized dictionary keys. Signed -1
-        # and unsigned 0xffffffff represent the unavailable sentinel here.
         lookup_fields = [["TicketEncryptionType", "ticket_encryption_type_code", "kerberos_etype_key"]]
-        if event.get("[winlog][event_id]").to_s == "4768"
+        
+        
+        if event.get("[winlog][event_id]").to_s in ["4771",4771,4768,"4768"]
           lookup_fields << ["PreAuthType", "preauth_type_code", "kerberos_preauth_key"]
         end
         lookup_fields.each do |source, raw_target, key_target|
@@ -255,9 +232,8 @@ filter {
       }
       fallback => "Unknown ticket encryption type - Numeric code is not in this dictionary"
     }
-
-    if [metadata][event_code] in ["4768", 4768] {
-      mutate {
+    if [metadata][event_code] in ["4768", 4768, 4771, "4771"] {
+      mutate { GPT TO FIX IF 4771 needs its own
         replace => {
           "activity_id" => "3"
           "activity_name" => "Authentication Ticket"
@@ -307,7 +283,6 @@ filter {
             guid = raw.strip
             guid = guid[1...-1] if guid.start_with?("{") && guid.end_with?("}")
             if guid.match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i)
-              # An all-zero GUID means unavailable, not a shared session.
               event.set("[session][uid]", guid.downcase) unless guid == "00000000-0000-0000-0000-000000000000"
             elsif !["", "-"].include?(guid)
               event.tag("_kerberos_invalid_logon_guid")
@@ -318,8 +293,6 @@ filter {
         '
       }
     }
-
-    # convert performs type conversion, never field mapping. Run AFTER copies.
     mutate {
       convert => {
         "category_uid" => "integer"
@@ -332,9 +305,6 @@ filter {
         "[metadata][log_version]" => "string"
       }
     }
-    # Keep tags: parse failures are useful telemetry, not clutter to delete.
-    # This retains Beats/source fields for lab debugging; strict OCSF export is
-    # a separate projection/validation step, not achieved by setting version.
   }
 }
 
