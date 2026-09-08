@@ -1,0 +1,203 @@
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+  if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
+     [winlog][event_id] in ["4769","4768"] {
+
+    mutate {
+      add_field => {
+        "category_uid"  => "3"
+        "category_name" => "Identity & Access Management"
+
+        "class_uid"  => "3002"
+        "class_name" => "Authentication"
+
+        "activity_id"   => "3"
+        "activity_name" => "Authentication Ticket"
+
+        "type_uid"  => "300203"
+        "type_name" => "Authentication: Authentication Ticket"
+
+        "auth_protocol_id" => "2"
+        "auth_protocol"    => "Kerberos"
+
+        "severity_id" => "1"
+        "severity"    => "Informational"
+
+        "[metadata][version]"              => "1.8.0"
+        "[metadata][product][name]"        => "Windows Security Auditing"
+        "[metadata][product][vendor_name]" => "Microsoft"
+        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
+        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
+      }
+    }
+
+    mutate {
+      rename => {
+        "[event][original]"                           => "[raw_data]"
+        "[winlog][event_data][TargetUserName]"        => "[user][name]"
+        "[winlog][event_data][TargetDomainName]"      => "[user][domain]"
+        "[winlog][event_data][TargetSid]"             => "[user][uid]"
+
+        "[winlog][event_data][IpAddress]"             => "[src_endpoint][ip]"
+        "[winlog][event_data][IpPort]"                => "[src_endpoint][port]"
+
+        "[winlog][event_data][ServiceName]"           => "[service][name]"
+        "[winlog][event_data][ServiceSid]"            => "[service][uid]"
+
+
+        "[winlog][event_data][Status]"                => "[status_code]"
+        "[winlog][event_id]"                          => "[metadata][event_code]"
+        "[winlog][provider_name]"                     => "[metadata][log_provider]"
+        "[winlog][version]"                           => "[metadata][log_version]"
+      }
+    }
+
+    ruby {
+      code => '
+        require "time"
+
+        to_time = lambda do |value|
+          begin
+            if value.nil?
+              nil
+            elsif value.respond_to?(:time)
+              value.time.utc
+            elsif value.is_a?(Time)
+              value.utc
+            else
+              Time.parse(value.to_s).utc
+            end
+          rescue ArgumentError, TypeError
+            nil
+          end
+        end
+
+        source_time = event.get("[@metadata][event_time]") || event.get("@timestamp")
+        event_time = to_time.call(source_time)
+        original_time = source_time
+
+        if original_time
+          event.set("[metadata][original_time]", original_time.to_s)
+        end
+
+        if event_time
+          epoch_ms = (event_time.to_f * 1000).round
+          iso_time = event_time.iso8601(3)
+          event.set("[time]", epoch_ms)
+          event.set("[time_dt]", iso_time)
+          event.set("[timezone_offset]", 0)
+        else
+          event.tag("_ocsf_event_time_parse_failure")
+        end
+      '
+    }
+     if [winlog][event_id] == "4769" {
+        translate {
+          source => "[winlog][event_data][TicketEncryptionType]"
+            target => "[unmapped][windows][ticket_encryption_type]"
+              dictionary => {
+                0x0 => "Success (Service ticket issued)"
+                0x6 => Server/Service Principal Name (SPN) not found"
+                0x12 => "Account restriction or disabled/locked-out target"
+                0x20 => "Ticket expired (often routine/informational)"
+          }
+        fallback => "Unmapped status code"
+      }
+      mutate{
+      convert => {
+        "[winlog][event_data][LogonGuid]" => "[user][gpt to finish mapping]"
+      }
+    }
+
+    if [winlog][event_id] == "4768" {
+      translate {
+          source => "[winlog][event_data][TicketEncryptionType]"
+            target => "[unmapped][windows][ticket_encryption_type]"
+            dictionary => {
+              0x0  => "Success (TGT issued)"
+              0x6  => "Client not found in Active Directory database"
+              0x18 => "Pre-authentication failed"
+              0x25 => "invalid decrypted timestamp (wrong password)"
+            }
+      mutate {
+        rename => {
+          "[winlog][event_data][PreAuthType]" =>
+          "[unmapped][windows][preauth_type_code]"
+        }
+      }
+
+      translate {
+        source => "[unmapped][windows][preauth_type_code]"
+        target => "[unmapped][windows][preauth_type_name]"
+
+        dictionary => {
+          "0"          => "No Pre-Authentication - Account does not require pre-authentication, or pre-authentication was not supplied"
+          "1"          => "PA-TGS-REQ - Ticket-Granting Service request used during TGS-related Kerberos workflows"
+          "2"          => "PA-ENC-TIMESTAMP - Encrypted Timestamp; standard password-based Kerberos pre-authentication"
+          "11"         => "PA-ETYPE-INFO - Encryption type information supplied by the KDC"
+          "14"         => "PA-PK-AS-REQ_OLD - Legacy public-key authentication request, commonly associated with older smart card workflows"
+          "15"         => "PA-PK-AS-REP_OLD - Legacy public-key authentication reply"
+          "16"         => "PA-PK-AS-REQ - Public-key authentication request; used for modern certificate-based authentication such as smart cards or Windows Hello for Business"
+          "17"         => "PA-PK-AS-REP - Public-key authentication reply from the KDC"
+          "19"         => "PA-ETYPE-INFO2 - Updated encryption type information, including modern encryption suites such as AES"
+          "128"        => "PA-PAC-REQUEST - Requests or controls inclusion of the Privileged Attribute Certificate containing authorization information such as group memberships and SIDs"
+          "-"          => "Audit Failure Default - Pre-authentication type was not available, often because authentication failed before pre-authentication completed"
+          "0xFFFFFFFF" => "Audit Failure Default - Placeholder value indicating pre-authentication type was not available"
+        }
+
+        fallback => "Unknown Pre-Authentication Type - Unrecognized Kerberos pre-authentication value"
+      }
+    }
+    mutate {
+      convert => {
+        "category_uid"            => "integer"
+        "class_uid"               => "integer"
+        "activity_id"             => "integer"
+        "type_uid"                => "integer"
+        "auth_protocol_id"        => "integer"
+        "severity_id"             => "integer"
+        "[metadata][log_version]" => "string"
+        "[src_endpoint][port]"    => "integer"
+
+      }
+    }
+
+    mutate {
+      gsub => [
+        "[src_endpoint][ip]", "^::ffff:", ""
+      ]
+    }
+
+    filter {
+      translate {
+        source => "[winlog][event_data][TicketEncryptionType]"
+        target => "[unmapped][windows][ticket_encryption_type]"
+        dictionary => {
+          "0x1"  => "DES-CBS"
+          "0x3"  => "DES-CBS-MD5"
+          "0x12" => "AES-256"
+          "0x17" => "RC4-HMAC"
+          "0x18" => "RC4-HMAC-EXP"
+          "0xffffffff"
+                    }
+        fallback => "Unmapped encrpytion protocol"
+      }
+    }
+    mutate {
+      remove_field => [
+        "tags"
+      ]
+    }
+  }
+}
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+}
