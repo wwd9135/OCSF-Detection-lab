@@ -1,0 +1,80 @@
+ {
+        "message" => "Kerberos pre-authentication failed.\n\nAccount Information:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\nService Information:\n\tService Name:\t\tkrbtgt/LOCAL\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t60006\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tFailure Code:\t\t0x18\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number: \t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options and failure codes are defined in RFC 4120.\n\nIf the ticket was malformed or damaged during transit and could not be decrypted, then many fields in this event might not be present.",
+     "@timestamp" => 2026-09-08T20:09:15.572Z,
+         "winlog" => {
+         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+               "channel" => "Security",
+                "opcode" => "Info",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+             "record_id" => 76765,
+                  "task" => "Kerberos Authentication Service",
+               "process" => {
+                "pid" => 652,
+             "thread" => {
+                 "id" => 2092
+             }
+         },
+            "event_data" => {
+                "ServiceName" => "krbtgt/LOCAL",
+              "TicketOptions" => "0x40810010",
+                     "IpPort" => "60006",
+                  "TargetSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+                "PreAuthType" => "2",
+                  "IpAddress" => "::ffff:10.0.0.14",
+                     "Status" => "0x18",
+             "TargetUserName" => "Administrator"
+         },
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+              "keywords" => [
+             [0] "Audit Failure"
+         ],
+              "event_id" => "4771"
+     },
+          "event" => {
+         "original" => "Kerberos pre-authentication failed.\n\nAccount Information:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\nService Information:\n\tService Name:\t\tkrbtgt/LOCAL\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t60006\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tFailure Code:\t\t0x18\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number: \t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options and failure codes are defined in RFC 4120.\n\nIf the ticket was malformed or damaged during transit and could not be decrypted, then many fields in this event might not be present.",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "created" => "2026-09-08T20:09:17.118Z",
+           "action" => "Kerberos Authentication Service",
+          "outcome" => "failure",
+             "code" => "4771",
+             "kind" => "event"
+     },
+       "@version" => "1",
+          "agent" => {
+                 "name" => "WIN-FVT9AL589OI",
+                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+              "version" => "9.5.2",
+                 "type" => "winlogbeat",
+         "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6"
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+            "log" => {
+         "level" => "information"
+     },
+           "host" => {
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+                 "name" => "win-fvt9al589oi",
+                   "os" => {
+                 "name" => "Windows Server 2022 Standard Evaluation",
+                "build" => "20348.587",
+             "platform" => "windows",
+                 "type" => "windows",
+              "version" => "10.0",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+               "family" => "windows"
+         },
+                   "ip" => [
+             [0] "10.0.0.10"
+         ],
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+         "architecture" => "x86_64",
+             "hostname" => "WIN-FVT9AL589OI"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     }
+ }
