@@ -1,3 +1,7 @@
+Get-WinEvent -FilterHashtable @{
+    LogName='Security'
+    Id=4771
+} -MaxEvents 20
 # Reviewed from joint.yml, the attachment in OCSF Detection Lab Setup.
 # This is Logstash pipeline syntax, despite the original .yml extension.
 # Standalone lab pipeline; when merging, include the filter only if Beats already exists.
