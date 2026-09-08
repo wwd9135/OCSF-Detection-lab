@@ -1,49 +1,49 @@
-Sep 05 13:43:22 siem01 logstash[28779]: {
-Sep 05 13:43:22 siem01 logstash[28779]:            "type_name" => "Authentication: Authentication Ticket",
-Sep 05 13:43:22 siem01 logstash[28779]:        "auth_protocol" => "Kerberos",
-Sep 05 13:43:22 siem01 logstash[28779]:         "category_uid" => 3,
-Sep 05 13:43:22 siem01 logstash[28779]:     "auth_protocol_id" => 2,
-Sep 05 13:43:22 siem01 logstash[28779]:                 "user" => {
-Sep 05 13:43:22 siem01 logstash[28779]:         "domain" => "LOCAL.LAB",
-Sep 05 13:43:22 siem01 logstash[28779]:            "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
-Sep 05 13:43:22 siem01 logstash[28779]:           "name" => "Administrator"
-Sep 05 13:43:22 siem01 logstash[28779]:     },
-Sep 05 13:43:22 siem01 logstash[28779]:             "raw_data" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL.LAB\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t60982\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
-Sep 05 13:43:22 siem01 logstash[28779]:             "unmapped" => {
-Sep 05 13:43:22 siem01 logstash[28779]:         "windows" => {
-Sep 05 13:43:22 siem01 logstash[28779]:             "ticket_encryption_type" => "0x12"
-Sep 05 13:43:22 siem01 logstash[28779]:         }
-Sep 05 13:43:22 siem01 logstash[28779]:     },
-Sep 05 13:43:22 siem01 logstash[28779]:              "time_dt" => "2026-09-05T20:43:09.589Z",
-Sep 05 13:43:22 siem01 logstash[28779]:          "activity_id" => 3,
-Sep 05 13:43:22 siem01 logstash[28779]:        "activity_name" => "Authentication Ticket",
-Sep 05 13:43:22 siem01 logstash[28779]:             "metadata" => {
-Sep 05 13:43:22 siem01 logstash[28779]:         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:70272",
-Sep 05 13:43:22 siem01 logstash[28779]:                    "product" => {
-Sep 05 13:43:22 siem01 logstash[28779]:             "vendor_name" => "Microsoft",
-Sep 05 13:43:22 siem01 logstash[28779]:                    "name" => "Windows Security Auditing"
-Sep 05 13:43:22 siem01 logstash[28779]:         },
-Sep 05 13:43:22 siem01 logstash[28779]:              "original_time" => "2026-09-05T20:43:09.589Z",
-Sep 05 13:43:22 siem01 logstash[28779]:               "log_provider" => "Microsoft-Windows-Security-Auditing",
-Sep 05 13:43:22 siem01 logstash[28779]:                    "version" => "1.8.0",
-Sep 05 13:43:22 siem01 logstash[28779]:                 "event_code" => "4768",
-Sep 05 13:43:22 siem01 logstash[28779]:                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security"
-Sep 05 13:43:22 siem01 logstash[28779]:     },
-Sep 05 13:43:22 siem01 logstash[28779]:      "timezone_offset" => 0,
-Sep 05 13:43:22 siem01 logstash[28779]:          "status_code" => "0x0",
-Sep 05 13:43:22 siem01 logstash[28779]:                 "time" => 1788640989589,
-Sep 05 13:43:22 siem01 logstash[28779]:           "class_name" => "Authentication",
-Sep 05 13:43:22 siem01 logstash[28779]:             "type_uid" => 300203,
-Sep 05 13:43:22 siem01 logstash[28779]:             "severity" => "Informational",
-Sep 05 13:43:22 siem01 logstash[28779]:         "src_endpoint" => {
-Sep 05 13:43:22 siem01 logstash[28779]:           "ip" => "::ffff:10.0.0.14",
-Sep 05 13:43:22 siem01 logstash[28779]:         "port" => "60982"
-Sep 05 13:43:22 siem01 logstash[28779]:     },
-Sep 05 13:43:22 siem01 logstash[28779]:              "service" => {
-Sep 05 13:43:22 siem01 logstash[28779]:          "uid" => "S-1-5-21-149735389-2596996033-189346583-502",
-Sep 05 13:43:22 siem01 logstash[28779]:         "name" => "krbtgt"
-Sep 05 13:43:22 siem01 logstash[28779]:     },
-Sep 05 13:43:22 siem01 logstash[28779]:            "class_uid" => 3002,
-Sep 05 13:43:22 siem01 logstash[28779]:          "severity_id" => 1,
-Sep 05 13:43:22 siem01 logstash[28779]:        "category_name" => "Identity & Access Management"
-Sep 05 13:43:22 siem01 logstash[28779]: }
+ {
+            "type_name" => "Authentication: Authentication Ticket",
+        "auth_protocol" => "Kerberos",
+         "category_uid" => 3,
+     "auth_protocol_id" => 2,
+                 "user" => {
+         "domain" => "LOCAL.LAB",
+            "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
+           "name" => "Administrator"
+     },
+             "raw_data" => "A Kerberos authentication ticket (TGT) was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator\n\tSupplied Realm Name:\tLOCAL.LAB\n\tUser ID:\t\t\tS-1-5-21-149735389-2596996033-189346583-500\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t60982\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tResult Code:\t\t0x0\n\tTicket Encryption Type:\t0x12\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number:\t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options, encryption types and result codes are defined in RFC 4120.",
+             "unmapped" => {
+         "windows" => {
+             "ticket_encryption_type" => "0x12"
+         }
+     },
+              "time_dt" => "2026-09-05T20:43:09.589Z",
+          "activity_id" => 3,
+        "activity_name" => "Authentication Ticket",
+             "metadata" => {
+         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:70272",
+                    "product" => {
+             "vendor_name" => "Microsoft",
+                    "name" => "Windows Security Auditing"
+         },
+              "original_time" => "2026-09-05T20:43:09.589Z",
+               "log_provider" => "Microsoft-Windows-Security-Auditing",
+                    "version" => "1.8.0",
+                 "event_code" => "4768",
+                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security"
+     },
+      "timezone_offset" => 0,
+          "status_code" => "0x0",
+                 "time" => 1788640989589,
+           "class_name" => "Authentication",
+             "type_uid" => 300203,
+             "severity" => "Informational",
+         "src_endpoint" => {
+           "ip" => "::ffff:10.0.0.14",
+         "port" => "60982"
+     },
+              "service" => {
+          "uid" => "S-1-5-21-149735389-2596996033-189346583-502",
+         "name" => "krbtgt"
+     },
+            "class_uid" => 3002,
+          "severity_id" => 1,
+        "category_name" => "Identity & Access Management"
+ }

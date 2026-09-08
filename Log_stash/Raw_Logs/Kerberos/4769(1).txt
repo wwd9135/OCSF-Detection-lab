@@ -1,0 +1,83 @@
+ {
+        "message" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{31B8971A-C9D2-B4CC-F531-0C1EEEDEDC28}\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t61399\n\nAdditional Information:\n\tTicket Options:\t\t0x60810010\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+     "@timestamp" => 2026-09-08T15:51:31.583Z,
+         "winlog" => {
+         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+               "channel" => "Security",
+                "opcode" => "Info",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+             "record_id" => 74914,
+                  "task" => "Kerberos Service Ticket Operations",
+               "process" => {
+                "pid" => 652,
+             "thread" => {
+                 "id" => 3028
+             }
+         },
+            "event_data" => {
+                      "ServiceName" => "krbtgt",
+             "TicketEncryptionType" => "0x12",
+                 "TargetDomainName" => "LOCAL.LAB",
+                           "Status" => "0x0",
+                   "TargetUserName" => "Administrator@LOCAL.LAB",
+                    "TicketOptions" => "0x60810010",
+              "TransmittedServices" => "-",
+                           "IpPort" => "61399",
+                        "LogonGuid" => "{31B8971A-C9D2-B4CC-F531-0C1EEEDEDC28}",
+                        "IpAddress" => "::ffff:10.0.0.14",
+                       "ServiceSid" => "S-1-5-21-149735389-2596996033-189346583-502"
+         },
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+              "event_id" => "4769"
+     },
+          "event" => {
+         "original" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{31B8971A-C9D2-B4CC-F531-0C1EEEDEDC28}\n\nService Information:\n\tService Name:\t\tkrbtgt\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-502\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t61399\n\nAdditional Information:\n\tTicket Options:\t\t0x60810010\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "created" => "2026-09-08T15:51:32.978Z",
+           "action" => "Kerberos Service Ticket Operations",
+          "outcome" => "success",
+             "code" => "4769",
+             "kind" => "event"
+     },
+       "@version" => "1",
+          "agent" => {
+                 "name" => "WIN-FVT9AL589OI",
+                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+              "version" => "9.5.2",
+                 "type" => "winlogbeat",
+         "ephemeral_id" => "3438dc4d-5b4b-4904-925d-cf9431eb57d6"
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+            "log" => {
+         "level" => "information"
+     },
+           "host" => {
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+                 "name" => "win-fvt9al589oi",
+                   "os" => {
+                 "name" => "Windows Server 2022 Standard Evaluation",
+                "build" => "20348.587",
+             "platform" => "windows",
+                 "type" => "windows",
+              "version" => "10.0",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+               "family" => "windows"
+         },
+                   "ip" => [
+             [0] "10.0.0.10"
+         ],
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+             "hostname" => "WIN-FVT9AL589OI",
+         "architecture" => "x86_64"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     }
+ }
