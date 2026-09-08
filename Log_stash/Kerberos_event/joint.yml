@@ -161,7 +161,7 @@ filter {
         lookup_fields = [["TicketEncryptionType", "ticket_encryption_type_code", "kerberos_etype_key"]]
         
         
-        if event.get("[winlog][event_id]").to_s in ["4771",4771,4768,"4768"]
+        if ["4768", "4771"].include?(event.get("[winlog][event_id]").to_s)
           lookup_fields << ["PreAuthType", "preauth_type_code", "kerberos_preauth_key"]
         end
         lookup_fields.each do |source, raw_target, key_target|
@@ -211,36 +211,30 @@ filter {
       }
     }
 
-    translate {
-      source => "[@metadata][kerberos_etype_key]"
-      target => "[unmapped][windows][ticket_encryption_type]"
-      override => true
-      dictionary => {
-        "0x0" => "Reserved encryption type (0); no usable algorithm identified"
-        "0x1" => "DES-CBC-CRC (deprecated)"
-        "0x2" => "DES-CBC-MD4 (deprecated)"
-        "0x3" => "DES-CBC-MD5 (deprecated)"
-        "0x10" => "DES3-CBC-SHA1-KD (deprecated)"
-        "0x11" => "AES128-CTS-HMAC-SHA1-96"
-        "0x12" => "AES256-CTS-HMAC-SHA1-96"
-        "0x13" => "AES128-CTS-HMAC-SHA256-128"
-        "0x14" => "AES256-CTS-HMAC-SHA384-192"
-        "0x17" => "RC4-HMAC (deprecated)"
-        "0x18" => "RC4-HMAC-EXP (deprecated)"
-        "unavailable" => "Ticket encryption type unavailable - Missing value or audit placeholder; no algorithm can be inferred"
-        "invalid" => "Invalid ticket encryption type - Inspect the original event value"
-      }
-      fallback => "Unknown ticket encryption type - Numeric code is not in this dictionary"
-    }
-    if [metadata][event_code] in ["4768", 4768, 4771, "4771"] {
-      mutate { GPT TO FIX IF 4771 needs its own
-        replace => {
-          "activity_id" => "3"
-          "activity_name" => "Authentication Ticket"
-          "type_uid" => "300203"
-          "type_name" => "Authentication: Authentication Ticket"
+    if [@metadata][kerberos_etype_key] {
+      translate {
+        source => "[@metadata][kerberos_etype_key]"
+        target => "[unmapped][windows][ticket_encryption_type]"
+        override => true
+        dictionary => {
+          "0x0" => "Reserved encryption type (0); no usable algorithm identified"
+          "0x1" => "DES-CBC-CRC (deprecated)"
+          "0x2" => "DES-CBC-MD4 (deprecated)"
+          "0x3" => "DES-CBC-MD5 (deprecated)"
+          "0x10" => "DES3-CBC-SHA1-KD (deprecated)"
+          "0x11" => "AES128-CTS-HMAC-SHA1-96"
+          "0x12" => "AES256-CTS-HMAC-SHA1-96"
+          "0x13" => "AES128-CTS-HMAC-SHA256-128"
+          "0x14" => "AES256-CTS-HMAC-SHA384-192"
+          "0x17" => "RC4-HMAC (deprecated)"
+          "0x18" => "RC4-HMAC-EXP (deprecated)"
+          "unavailable" => "Ticket encryption type unavailable - Missing value or audit placeholder; no algorithm can be inferred"
+          "invalid" => "Invalid ticket encryption type - Inspect the original event value"
         }
+        fallback => "Unknown ticket encryption type - Numeric code is not in this dictionary"
       }
+    }
+    if [metadata][event_code] in ["4768", "4771"] {
       translate {
         source => "[@metadata][kerberos_preauth_key]"
         target => "[unmapped][windows][preauth_type_name]"
@@ -260,6 +254,26 @@ filter {
           "invalid" => "Invalid pre-authentication type - Inspect the original event value"
         }
         fallback => "Unknown Pre-Authentication Type - Numeric code is not in this dictionary"
+      }
+    }
+
+    if [metadata][event_code] == "4768" {
+      mutate {
+        replace => {
+          "activity_id" => "3"
+          "activity_name" => "Authentication Ticket"
+          "type_uid" => "300203"
+          "type_name" => "Authentication: Authentication Ticket"
+        }
+      }
+    } else if [metadata][event_code] == "4771" {
+      mutate {
+        replace => {
+          "activity_id" => "6"
+          "activity_name" => "Preauth"
+          "type_uid" => "300206"
+          "type_name" => "Authentication: Preauth"
+        }
       }
     } else if [metadata][event_code] in ["4769", 4769] {
       mutate {
@@ -304,6 +318,20 @@ filter {
         "[metadata][event_code]" => "string"
         "[metadata][log_version]" => "string"
       }
+    }
+
+    mutate {
+      remove_field => [
+        "winlog",
+        "host",
+        "event",
+        "agent",
+        "ecs",
+        "log",
+        "@timestamp",
+        "@version",
+        "message"
+      ]
     }
   }
 }

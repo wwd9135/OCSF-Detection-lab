@@ -16,7 +16,7 @@
          },
             "event_data" => {
                 "ServiceName" => "krbtgt/LOCAL",
-              "TicketOptions" => "0x40810010",
+              "TicketOptions" => "0x408100 0",
                      "IpPort" => "60006",
                   "TargetSid" => "S-1-5-21-149735389-2596996033-189346583-500",
                 "PreAuthType" => "2",

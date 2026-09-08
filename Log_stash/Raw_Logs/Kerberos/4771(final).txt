@@ -1,0 +1,62 @@
+ {
+          "activity_id" => 6,
+          "severity_id" => 1,
+         "category_uid" => 3,
+          "status_code" => "0x18",
+        "category_name" => "Identity & Access Management",
+             "unmapped" => {
+         "windows" => {
+                     "ip_address_raw" => "::ffff:10.0.0.14",
+                  "preauth_type_name" => "PA-ENC-TIMESTAMP - Encrypted timestamp; commonly password-derived-key pre-authentication",
+             "ticket_encryption_type" => "Ticket encryption type unavailable - Missing value or audit placeholder; no algorithm can be inferred",
+                      "status_source" => "Status",
+                        "ip_port_raw" => "64916",
+                  "preauth_type_code" => "2",
+                     "ticket_options" => "0x40810010"
+         }
+     },
+             "raw_data" => "Kerberos pre-authentication failed.\n\nAccount Information:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\nService Information:\n\tService Name:\t\tkrbtgt/LOCAL\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t64916\n\nAdditional Information:\n\tTicket Options:\t\t0x40810010\n\tFailure Code:\t\t0x18\n\tPre-Authentication Type:\t2\n\nCertificate Information:\n\tCertificate Issuer Name:\t\t\n\tCertificate Serial Number: \t\n\tCertificate Thumbprint:\t\t\n\nCertificate information is only provided if a certificate was used for pre-authentication.\n\nPre-authentication types, ticket options and failure codes are defined in RFC 4120.\n\nIf the ticket was malformed or damaged during transit and could not be decrypted, then many fields in this event might not be present.",
+             "metadata" => {
+                    "product" => {
+             "vendor_name" => "Microsoft",
+                    "name" => "Windows Security Auditing"
+         },
+               "log_provider" => "Microsoft-Windows-Security-Auditing",
+                    "version" => "1.8.0",
+         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:77395",
+                 "event_code" => "4771",
+              "original_time" => "2026-09-08T21:10:44.313Z",
+                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security",
+                   "profiles" => [
+             [0] "datetime"
+         ]
+     },
+                 "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+            "status_id" => 2,
+                 "time" => 1788901844313,
+            "class_uid" => 3002,
+           "class_name" => "Authentication",
+      "timezone_offset" => 0,
+              "time_dt" => "2026-09-08T21:10:44.313Z",
+               "status" => "Failure",
+        "status_detail" => "KDC_ERR_PREAUTH_FAILED - Pre-authentication data invalid",
+            "type_name" => "Authentication: Preauth",
+     "auth_protocol_id" => 2,
+        "auth_protocol" => "Kerberos",
+              "service" => {
+         "name" => "krbtgt/LOCAL"
+     },
+             "type_uid" => 300206,
+        "activity_name" => "Preauth",
+             "severity" => "Informational",
+                 "user" => {
+          "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
+         "name" => "Administrator"
+     },
+         "src_endpoint" => {
+           "ip" => "10.0.0.14",
+         "port" => 64916
+     }
+ }

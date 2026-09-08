@@ -1,0 +1,67 @@
+ {
+          "activity_id" => 4,
+          "severity_id" => 1,
+              "session" => {
+         "uid" => "445a8505-723a-1715-9d1a-b5a7bac96095"
+     },
+         "category_uid" => 3,
+          "status_code" => "0x0",
+        "category_name" => "Identity & Access Management",
+             "unmapped" => {
+         "windows" => {
+                          "ip_address_raw" => "::ffff:10.0.0.14",
+                  "ticket_encryption_type" => "AES256-CTS-HMAC-SHA1-96",
+             "ticket_encryption_type_code" => "0x12",
+                              "logon_guid" => "{445A8505-723A-1715-9D1A-B5A7BAC96095}",
+                           "status_source" => "Status",
+                             "ip_port_raw" => "64910",
+                    "transmitted_services" => "-",
+                          "ticket_options" => "0x40810000"
+         }
+     },
+             "raw_data" => "A Kerberos service ticket was requested.\n\nAccount Information:\n\tAccount Name:\t\tAdministrator@LOCAL.LAB\n\tAccount Domain:\t\tLOCAL.LAB\n\tLogon GUID:\t\t{445A8505-723A-1715-9D1A-B5A7BAC96095}\n\nService Information:\n\tService Name:\t\tWIN-FVT9AL589OI$\n\tService ID:\t\tS-1-5-21-149735389-2596996033-189346583-1000\n\nNetwork Information:\n\tClient Address:\t\t::ffff:10.0.0.14\n\tClient Port:\t\t64910\n\nAdditional Information:\n\tTicket Options:\t\t0x40810000\n\tTicket Encryption Type:\t0x12\n\tFailure Code:\t\t0x0\n\tTransited Services:\t-\n\nThis event is generated every time access is requested to a resource such as a computer or a Windows service.  The service name indicates the resource to which access was requested.\n\nThis event can be correlated with Windows logon events by comparing the Logon GUID fields in each event.  The logon event occurs on the machine that was accessed, which is often a different machine than the domain controller which issued the service ticket.\n\nTicket options, encryption types, and failure codes are defined in RFC 4120.",
+             "metadata" => {
+                    "product" => {
+             "vendor_name" => "Microsoft",
+                    "name" => "Windows Security Auditing"
+         },
+               "log_provider" => "Microsoft-Windows-Security-Auditing",
+                    "version" => "1.8.0",
+         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:77381",
+                 "event_code" => "4769",
+              "original_time" => "2026-09-08T21:10:41.167Z",
+                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security",
+                   "profiles" => [
+             [0] "datetime"
+         ]
+     },
+                 "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+            "status_id" => 1,
+                 "time" => 1788901841167,
+            "class_uid" => 3002,
+           "class_name" => "Authentication",
+      "timezone_offset" => 0,
+              "time_dt" => "2026-09-08T21:10:41.167Z",
+               "status" => "Success",
+        "status_detail" => "KDC_ERR_NONE - Request succeeded",
+            "type_name" => "Authentication: Service Ticket Request",
+     "auth_protocol_id" => 2,
+        "auth_protocol" => "Kerberos",
+              "service" => {
+          "uid" => "S-1-5-21-149735389-2596996033-189346583-1000",
+         "name" => "WIN-FVT9AL589OI$"
+     },
+             "type_uid" => 300204,
+        "activity_name" => "Service Ticket Request",
+             "severity" => "Informational",
+                 "user" => {
+         "domain" => "LOCAL.LAB",
+           "name" => "Administrator@LOCAL.LAB"
+     },
+         "src_endpoint" => {
+           "ip" => "10.0.0.14",
+         "port" => 64910
+     }
+ }
