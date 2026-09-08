@@ -1,203 +1,339 @@
+# Reviewed from joint.yml, the attachment in OCSF Detection Lab Setup.
+# This is Logstash pipeline syntax, despite the original .yml extension.
+# Standalone lab pipeline; when merging, include the filter only if Beats already exists.
 input {
-  beats {
-    port => 5044
-  }
+  beats { port => 5044 }
 }
 
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-     [winlog][event_id] in ["4769","4768"] {
+     [winlog][event_id] in ["4768", "4769", 4768, 4769] {
 
+    # Shared classification. replace avoids arrays if a field already exists.
     mutate {
-      add_field => {
-        "category_uid"  => "3"
+      replace => {
+        "category_uid" => "3"
         "category_name" => "Identity & Access Management"
-
-        "class_uid"  => "3002"
+        "class_uid" => "3002"
         "class_name" => "Authentication"
-
-        "activity_id"   => "3"
-        "activity_name" => "Authentication Ticket"
-
-        "type_uid"  => "300203"
-        "type_name" => "Authentication: Authentication Ticket"
-
         "auth_protocol_id" => "2"
-        "auth_protocol"    => "Kerberos"
-
+        "auth_protocol" => "Kerberos"
         "severity_id" => "1"
-        "severity"    => "Informational"
-
-        "[metadata][version]"              => "1.8.0"
-        "[metadata][product][name]"        => "Windows Security Auditing"
+        "severity" => "Informational"
+        "[metadata][version]" => "1.8.0"
+        "[metadata][product][name]" => "Windows Security Auditing"
         "[metadata][product][vendor_name]" => "Microsoft"
-        "[metadata][log_source]"           => "%{[winlog][computer_name]}:%{[winlog][channel]}"
-        "[metadata][original_event_uid]"   => "%{[winlog][computer_name]}:%{[winlog][channel]}:%{[winlog][record_id]}"
       }
     }
 
+    # Preserve source fields, including newer Windows event versions and PKINIT
+    # certificate fields. No rename of event_id before the branches below.
     mutate {
-      rename => {
-        "[event][original]"                           => "[raw_data]"
-        "[winlog][event_data][TargetUserName]"        => "[user][name]"
-        "[winlog][event_data][TargetDomainName]"      => "[user][domain]"
-        "[winlog][event_data][TargetSid]"             => "[user][uid]"
-
-        "[winlog][event_data][IpAddress]"             => "[src_endpoint][ip]"
-        "[winlog][event_data][IpPort]"                => "[src_endpoint][port]"
-
-        "[winlog][event_data][ServiceName]"           => "[service][name]"
-        "[winlog][event_data][ServiceSid]"            => "[service][uid]"
-
-
-        "[winlog][event_data][Status]"                => "[status_code]"
-        "[winlog][event_id]"                          => "[metadata][event_code]"
-        "[winlog][provider_name]"                     => "[metadata][log_provider]"
-        "[winlog][version]"                           => "[metadata][log_version]"
+      copy => {
+        "[event][original]" => "[raw_data]"
+        "[winlog][event_data][TargetUserName]" => "[user][name]"
+        "[winlog][event_data][TargetDomainName]" => "[user][domain]"
+        "[winlog][event_data][TargetSid]" => "[user][uid]"
+        "[winlog][event_data][ServiceName]" => "[service][name]"
+        "[winlog][event_data][ServiceSid]" => "[service][uid]"
+        "[winlog][event_data][TicketOptions]" => "[unmapped][windows][ticket_options]"
+        "[winlog][event_id]" => "[metadata][event_code]"
+        "[winlog][provider_name]" => "[metadata][log_provider]"
+        "[winlog][version]" => "[metadata][log_version]"
       }
     }
 
+    # Ruby is used for validation/arithmetic; fixed descriptions stay in translate.
     ruby {
+      id => "kerberos_shared_validation"
+      init => 'require "time"; require "date"; require "ipaddr"'
       code => '
-        require "time"
-
-        to_time = lambda do |value|
-          begin
-            if value.nil?
-              nil
-            elsif value.respond_to?(:time)
-              value.time.utc
-            elsif value.is_a?(Time)
-              value.utc
-            else
-              Time.parse(value.to_s).utc
+        scalar = lambda do |v|
+          (v.is_a?(String) || v.is_a?(Integer)) ? v.to_s : nil
+        end
+        unavailable = lambda do |v|
+          v.nil? || (v.is_a?(String) && ["", "-", "n/a"].include?(v.strip.downcase))
+        end
+        # Decimal without a prefix, hexadecimal only with 0x; never use to_i
+        # alone: to_i turns garbage into zero and accepts trailing garbage.
+        uint32 = lambda do |v|
+          s = scalar.call(v)
+          n = nil
+          if s
+            s = s.strip
+            if s.match?(/\A0x[0-9a-f]{1,8}\z/i)
+              n = s[2..-1].to_i(16)
+            elsif s.match?(/\A[0-9]{1,10}\z/)
+              n = s.to_i(10)
             end
-          rescue ArgumentError, TypeError
-            nil
+          end
+          n && n <= 4294967295 ? n : nil
+        end
+
+        computer = event.get("[winlog][computer_name]")
+        channel = event.get("[winlog][channel]")
+        record = event.get("[winlog][record_id]")
+        if !unavailable.call(computer) && !unavailable.call(channel)
+          event.set("[metadata][log_source]", "#{computer}:#{channel}")
+          unless unavailable.call(record)
+            event.set("[metadata][original_event_uid]", "#{computer}:#{channel}:#{record}")
           end
         end
 
-        source_time = event.get("[@metadata][event_time]") || event.get("@timestamp")
-        event_time = to_time.call(source_time)
-        original_time = source_time
-
-        if original_time
-          event.set("[metadata][original_time]", original_time.to_s)
+        # The override must contain SOURCE time. An invalid explicit override is
+        # tagged, never silently replaced with ingestion time. Beats @timestamp
+        # is the default event-time source; retain it for Logstash outputs.
+        source_time = event.get("[@metadata][event_time]")
+        source_time = event.get("@timestamp") if source_time.nil?
+        ["time", "time_dt", "timezone_offset"].each { |f| event.remove(f) }
+        event.remove("[metadata][original_time]")
+        unless source_time.nil?
+          event.set("[metadata][original_time]", source_time.to_s)
+        end
+        begin
+          t = if source_time.is_a?(Time)
+                source_time.getutc
+              elsif source_time.respond_to?(:time)
+                source_time.time.getutc
+              elsif source_time.is_a?(String) && source_time.match?(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})\z/)
+                Date.iso8601(source_time[0, 10])
+                Time.iso8601(source_time).getutc
+              else
+                raise ArgumentError, "Missing or ambiguous source timestamp"
+              end
+          event.set("time", (t.to_r * 1000).floor)
+          event.set("time_dt", t.iso8601(3))
+          event.set("timezone_offset", 0)
+          profiles = Array(event.get("[metadata][profiles]"))
+          event.set("[metadata][profiles]", (profiles + ["datetime"]).uniq)
+        rescue ArgumentError, TypeError, RangeError
+          event.tag("_ocsf_event_time_parse_failure")
         end
 
-        if event_time
-          epoch_ms = (event_time.to_f * 1000).round
-          iso_time = event_time.iso8601(3)
-          event.set("[time]", epoch_ms)
-          event.set("[time_dt]", iso_time)
-          event.set("[timezone_offset]", 0)
+        # Windows XML calls this Status for BOTH events. FailureCode is a
+        # compatibility fallback for collectors which expose that field name.
+        primary = event.get("[winlog][event_data][Status]")
+        alternate = event.get("[winlog][event_data][FailureCode]")
+        use_alternate = unavailable.call(primary) && !unavailable.call(alternate)
+        raw_status = use_alternate ? alternate : primary
+        event.remove("status_code")
+        s = scalar.call(raw_status)
+        event.set("status_code", s) if s
+        event.set("[unmapped][windows][status_source]", use_alternate ? "FailureCode" : "Status") unless raw_status.nil?
+        code = uint32.call(raw_status)
+        code = nil if code == 4294967295
+        conflict = false
+        unless unavailable.call(primary) || unavailable.call(alternate)
+          p_code = uint32.call(primary)
+          a_code = uint32.call(alternate)
+          conflict = p_code != a_code
+        end
+        event.remove("[@metadata][kerberos_status_key]")
+        event.remove("status_detail")
+        if conflict
+          code = nil
+          event.tag("_kerberos_status_conflict")
+        end
+        if code.nil?
+          event.set("status_id", 0)
+          event.set("status", "Unknown")
+          event.set("status_detail", "Result code missing, unavailable, malformed, or conflicting; outcome cannot be determined")
+          event.tag("_kerberos_status_unknown")
         else
-          event.tag("_ocsf_event_time_parse_failure")
+          event.set("status_id", code == 0 ? 1 : 2)
+          event.set("status", code == 0 ? "Success" : "Failure")
+          event.set("[@metadata][kerberos_status_key]", "0x#{code.to_s(16)}")
+        end
+
+        # IPAddr validates literal addresses and converts all IPv4-mapped forms,
+        # including ::ffff:a00:e. Reject CIDRs and scoped addresses for ip fields.
+        raw_ip = event.get("[winlog][event_data][IpAddress]")
+        event.remove("[src_endpoint][ip]")
+        s = scalar.call(raw_ip)
+        event.set("[unmapped][windows][ip_address_raw]", s) if s
+        unless unavailable.call(raw_ip)
+          begin
+            raise ArgumentError unless raw_ip.is_a?(String)
+            ip_text = raw_ip.strip
+            raise ArgumentError if ip_text.include?("/") || ip_text.include?("%")
+            ip = IPAddr.new(ip_text)
+            ip = ip.native if ip.ipv4_mapped?
+            event.set("[src_endpoint][ip]", ip.to_s)
+          rescue ArgumentError, IPAddr::Error
+            event.tag("_kerberos_invalid_source_ip")
+          end
+        end
+
+        raw_port = event.get("[winlog][event_data][IpPort]")
+        event.remove("[src_endpoint][port]")
+        s = scalar.call(raw_port)
+        event.set("[unmapped][windows][ip_port_raw]", s) if s
+        unless unavailable.call(raw_port)
+          if s && s.strip.match?(/\A[0-9]{1,5}\z/) && s.strip.to_i(10) <= 65535
+            # Port 0 is documented for local Kerberos requests; preserve it.
+            event.set("[src_endpoint][port]", s.strip.to_i(10))
+          else
+            event.tag("_kerberos_invalid_source_port")
+          end
+        end
+
+        # Keep raw evidence separate from normalized dictionary keys. Signed -1
+        # and unsigned 0xffffffff represent the unavailable sentinel here.
+        lookup_fields = [["TicketEncryptionType", "ticket_encryption_type_code", "kerberos_etype_key"]]
+        if event.get("[winlog][event_id]").to_s == "4768"
+          lookup_fields << ["PreAuthType", "preauth_type_code", "kerberos_preauth_key"]
+        end
+        lookup_fields.each do |source, raw_target, key_target|
+          raw = event.get("[winlog][event_data][#{source}]")
+          text = scalar.call(raw)
+          event.set("[unmapped][windows][#{raw_target}]", text) if text
+          n = uint32.call(raw)
+          key = if unavailable.call(raw)
+                  "unavailable"
+                elsif n == 4294967295 || (text && text.strip == "-1")
+                  "unavailable"
+                elsif n.nil?
+                  event.tag("_kerberos_invalid_#{raw_target}")
+                  "invalid"
+                elsif source == "PreAuthType"
+                  n.to_s
+                else
+                  "0x#{n.to_s(16)}"
+                end
+          event.set("[@metadata][#{key_target}]", key)
         end
       '
     }
-     if [winlog][event_id] == "4769" {
-        translate {
-          source => "[winlog][event_data][TicketEncryptionType]"
-            target => "[unmapped][windows][ticket_encryption_type]"
-              dictionary => {
-                0x0 => "Success (Service ticket issued)"
-                0x6 => Server/Service Principal Name (SPN) not found"
-                0x12 => "Account restriction or disabled/locked-out target"
-                0x20 => "Ticket expired (often routine/informational)"
-          }
-        fallback => "Unmapped status code"
-      }
-      mutate{
-      convert => {
-        "[winlog][event_data][LogonGuid]" => "[user][gpt to finish mapping]"
+
+    if [@metadata][kerberos_status_key] {
+      translate {
+        source => "[@metadata][kerberos_status_key]"
+        target => "[status_detail]"
+        override => true
+        dictionary => {
+          "0x0" => "KDC_ERR_NONE - Request succeeded"
+          "0x6" => "KDC_ERR_C_PRINCIPAL_UNKNOWN - Client principal not found"
+          "0x7" => "KDC_ERR_S_PRINCIPAL_UNKNOWN - Server/service principal not found"
+          "0x8" => "KDC_ERR_PRINCIPAL_NOT_UNIQUE - Duplicate principal names"
+          "0xc" => "KDC_ERR_POLICY - Request rejected by KDC policy"
+          "0xe" => "KDC_ERR_ETYPE_NOSUPP - Requested encryption type not supported"
+          "0x10" => "KDC_ERR_PADATA_TYPE_NOSUPP - Pre-authentication data type not supported"
+          "0x12" => "KDC_ERR_CLIENT_REVOKED - Client credentials revoked; investigate account state"
+          "0x17" => "KDC_ERR_KEY_EXPIRED - Password/key expired"
+          "0x18" => "KDC_ERR_PREAUTH_FAILED - Pre-authentication data invalid"
+          "0x19" => "KDC_ERR_PREAUTH_REQUIRED - Additional pre-authentication required"
+          "0x20" => "KRB_AP_ERR_TKT_EXPIRED - Ticket expired; may occur during ordinary renewal workflows"
+          "0x25" => "KRB_AP_ERR_SKEW - Client/server clock difference exceeds Kerberos tolerance"
+          "0x29" => "KRB_AP_ERR_MODIFIED - Integrity check failed; investigate service keys and SPN configuration"
+        }
+        fallback => "Unmapped Kerberos result code - Nonzero code indicates request failure; retain status_code for investigation"
       }
     }
 
-    if [winlog][event_id] == "4768" {
-      translate {
-          source => "[winlog][event_data][TicketEncryptionType]"
-            target => "[unmapped][windows][ticket_encryption_type]"
-            dictionary => {
-              0x0  => "Success (TGT issued)"
-              0x6  => "Client not found in Active Directory database"
-              0x18 => "Pre-authentication failed"
-              0x25 => "invalid decrypted timestamp (wrong password)"
-            }
+    translate {
+      source => "[@metadata][kerberos_etype_key]"
+      target => "[unmapped][windows][ticket_encryption_type]"
+      override => true
+      dictionary => {
+        "0x0" => "Reserved encryption type (0); no usable algorithm identified"
+        "0x1" => "DES-CBC-CRC (deprecated)"
+        "0x2" => "DES-CBC-MD4 (deprecated)"
+        "0x3" => "DES-CBC-MD5 (deprecated)"
+        "0x10" => "DES3-CBC-SHA1-KD (deprecated)"
+        "0x11" => "AES128-CTS-HMAC-SHA1-96"
+        "0x12" => "AES256-CTS-HMAC-SHA1-96"
+        "0x13" => "AES128-CTS-HMAC-SHA256-128"
+        "0x14" => "AES256-CTS-HMAC-SHA384-192"
+        "0x17" => "RC4-HMAC (deprecated)"
+        "0x18" => "RC4-HMAC-EXP (deprecated)"
+        "unavailable" => "Ticket encryption type unavailable - Missing value or audit placeholder; no algorithm can be inferred"
+        "invalid" => "Invalid ticket encryption type - Inspect the original event value"
+      }
+      fallback => "Unknown ticket encryption type - Numeric code is not in this dictionary"
+    }
+
+    if [metadata][event_code] in ["4768", 4768] {
       mutate {
-        rename => {
-          "[winlog][event_data][PreAuthType]" =>
-          "[unmapped][windows][preauth_type_code]"
+        replace => {
+          "activity_id" => "3"
+          "activity_name" => "Authentication Ticket"
+          "type_uid" => "300203"
+          "type_name" => "Authentication: Authentication Ticket"
         }
       }
-
       translate {
-        source => "[unmapped][windows][preauth_type_code]"
+        source => "[@metadata][kerberos_preauth_key]"
         target => "[unmapped][windows][preauth_type_name]"
-
+        override => true
         dictionary => {
-          "0"          => "No Pre-Authentication - Account does not require pre-authentication, or pre-authentication was not supplied"
-          "1"          => "PA-TGS-REQ - Ticket-Granting Service request used during TGS-related Kerberos workflows"
-          "2"          => "PA-ENC-TIMESTAMP - Encrypted Timestamp; standard password-based Kerberos pre-authentication"
-          "11"         => "PA-ETYPE-INFO - Encryption type information supplied by the KDC"
-          "14"         => "PA-PK-AS-REQ_OLD - Legacy public-key authentication request, commonly associated with older smart card workflows"
-          "15"         => "PA-PK-AS-REP_OLD - Legacy public-key authentication reply"
-          "16"         => "PA-PK-AS-REQ - Public-key authentication request; used for modern certificate-based authentication such as smart cards or Windows Hello for Business"
-          "17"         => "PA-PK-AS-REP - Public-key authentication reply from the KDC"
-          "19"         => "PA-ETYPE-INFO2 - Updated encryption type information, including modern encryption suites such as AES"
-          "128"        => "PA-PAC-REQUEST - Requests or controls inclusion of the Privileged Attribute Certificate containing authorization information such as group memberships and SIDs"
-          "-"          => "Audit Failure Default - Pre-authentication type was not available, often because authentication failed before pre-authentication completed"
-          "0xFFFFFFFF" => "Audit Failure Default - Placeholder value indicating pre-authentication type was not available"
+          "0" => "No Pre-Authentication - None recorded; may indicate an account that does not require pre-authentication. Correlate with result and account configuration"
+          "1" => "PA-TGS-REQ - Carries the authentication header used in a ticket-granting service request"
+          "2" => "PA-ENC-TIMESTAMP - Encrypted timestamp; commonly password-derived-key pre-authentication"
+          "11" => "PA-ETYPE-INFO - KDC information about encryption types and salt for client key selection"
+          "14" => "PA-PK-AS-REQ_OLD - Legacy public-key authentication request, associated with older PKINIT/smart card workflows"
+          "15" => "PA-PK-AS-REP_OLD - Legacy public-key authentication reply from the KDC"
+          "16" => "PA-PK-AS-REQ - PKINIT public-key request; used in certificate/smart card and some Windows Hello for Business flows. This value alone does not identify the product or prove abuse"
+          "17" => "PA-PK-AS-REP - PKINIT public-key authentication reply from the KDC"
+          "19" => "PA-ETYPE-INFO2 - Updated KDC encryption-type, salt and key-derivation information"
+          "128" => "PA-PAC-REQUEST - Controls inclusion of the Privileged Attribute Certificate carrying authorization data such as group memberships"
+          "unavailable" => "Pre-authentication type unavailable - Missing, hyphen, or all-ones audit placeholder; does not by itself establish success or failure"
+          "invalid" => "Invalid pre-authentication type - Inspect the original event value"
         }
-
-        fallback => "Unknown Pre-Authentication Type - Unrecognized Kerberos pre-authentication value"
+        fallback => "Unknown Pre-Authentication Type - Numeric code is not in this dictionary"
+      }
+    } else if [metadata][event_code] in ["4769", 4769] {
+      mutate {
+        replace => {
+          "activity_id" => "4"
+          "activity_name" => "Service Ticket Request"
+          "type_uid" => "300204"
+          "type_name" => "Authentication: Service Ticket Request"
+        }
+        copy => {
+          "[winlog][event_data][LogonGuid]" => "[unmapped][windows][logon_guid]"
+          "[winlog][event_data][TransmittedServices]" => "[unmapped][windows][transmitted_services]"
+        }
+      }
+      ruby {
+        id => "kerberos_logon_guid"
+        code => '
+          raw = event.get("[winlog][event_data][LogonGuid]")
+          event.remove("[session][uid]")
+          if raw.is_a?(String)
+            guid = raw.strip
+            guid = guid[1...-1] if guid.start_with?("{") && guid.end_with?("}")
+            if guid.match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i)
+              # An all-zero GUID means unavailable, not a shared session.
+              event.set("[session][uid]", guid.downcase) unless guid == "00000000-0000-0000-0000-000000000000"
+            elsif !["", "-"].include?(guid)
+              event.tag("_kerberos_invalid_logon_guid")
+            end
+          elsif !raw.nil?
+            event.tag("_kerberos_invalid_logon_guid")
+          end
+        '
       }
     }
+
+    # convert performs type conversion, never field mapping. Run AFTER copies.
     mutate {
       convert => {
-        "category_uid"            => "integer"
-        "class_uid"               => "integer"
-        "activity_id"             => "integer"
-        "type_uid"                => "integer"
-        "auth_protocol_id"        => "integer"
-        "severity_id"             => "integer"
+        "category_uid" => "integer"
+        "class_uid" => "integer"
+        "activity_id" => "integer"
+        "type_uid" => "integer"
+        "auth_protocol_id" => "integer"
+        "severity_id" => "integer"
+        "[metadata][event_code]" => "string"
         "[metadata][log_version]" => "string"
-        "[src_endpoint][port]"    => "integer"
-
       }
     }
-
-    mutate {
-      gsub => [
-        "[src_endpoint][ip]", "^::ffff:", ""
-      ]
-    }
-
-    filter {
-      translate {
-        source => "[winlog][event_data][TicketEncryptionType]"
-        target => "[unmapped][windows][ticket_encryption_type]"
-        dictionary => {
-          "0x1"  => "DES-CBS"
-          "0x3"  => "DES-CBS-MD5"
-          "0x12" => "AES-256"
-          "0x17" => "RC4-HMAC"
-          "0x18" => "RC4-HMAC-EXP"
-          "0xffffffff"
-                    }
-        fallback => "Unmapped encrpytion protocol"
-      }
-    }
-    mutate {
-      remove_field => [
-        "tags"
-      ]
-    }
+    # Keep tags: parse failures are useful telemetry, not clutter to delete.
+    # This retains Beats/source fields for lab debugging; strict OCSF export is
+    # a separate projection/validation step, not achieved by setting version.
   }
 }
 
 output {
-  stdout {
-    codec => rubydebug
-  }
+  stdout { codec => rubydebug }
 }
