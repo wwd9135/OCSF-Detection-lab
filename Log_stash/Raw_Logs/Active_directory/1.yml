@@ -26,7 +26,6 @@ filter {
         "[metadata][product][vendor_name]" => "Microsoft"
       }
     }
-    # Rename only: preserve GUID braces/case, SIDs, hex logon IDs and values.
     mutate {
       rename => {
         "[winlog][event_data][SubjectUserName]"   => "[actor][user][name]"
@@ -82,8 +81,6 @@ filter {
             event.set("[metadata][original_event_uid]", "#{computer}:#{channel}:#{record}")
           end
         end
-        # Winlogbeat supplies the event occurrence time in @timestamp.
-        # An explicit upstream event_time takes precedence; invalid overrides fail.
         source_time = event.get("[@metadata][event_time]")
         source_time = event.get("@timestamp") if source_time.nil?
         ["time", "time_dt", "timezone_offset"].each { |f| event.remove(f) }
@@ -126,9 +123,6 @@ filter {
         "[metadata][log_version]" => "string"
       }
     }
-
-    # Keep source fields on failure so the event can be investigated/reprocessed.
-    # Keep @timestamp for Logstash output index dates and dashboard compatibility.
     if "_ocsf_event_time_parse_failure" not in [tags] and "_rubyexception" not in [tags] {
       mutate {
         remove_field => [
@@ -139,9 +133,13 @@ filter {
           "ecs",
           "log",
           "@version",
-          "message"
+          "message",
+          "tags"
         ]
       }
     }
   }
+}
+output {
+  stdout { codec => rubydebug }
 }
