@@ -12,9 +12,13 @@ filter {
         "category_uid" => "3"
         "category_name" => "Identity & Access Management"
         "class_uid" => "3004"
-        "class_name" => "Authentication"
-        "auth_protocol_id" => "_"
-        "auth_protocol" => "LDAP"
+        "class_name" => "Entity Management"
+        "activity_id" => "3"
+        "activity_name" => "Update"
+        "type_uid" => "300403"
+        "type_name" => "Entity Management: Update"
+        "status_id" => "1"
+        "status" => "Success"
         "severity_id" => "1"
         "severity" => "Informational"
         "[metadata][version]" => "1.8.0"
@@ -22,8 +26,9 @@ filter {
         "[metadata][product][vendor_name]" => "Microsoft"
       }
     }
-    mutate{
-      rename { 
+    # Rename only: preserve GUID braces/case, SIDs, hex logon IDs and values.
+    mutate {
+      rename => {
         "[winlog][event_data][SubjectUserName]"   => "[actor][user][name]"
         "[winlog][event_data][SubjectDomainName]" => "[actor][user][domain]"
         "[winlog][event_data][SubjectUserSid]"    => "[actor][user][uid]"
@@ -52,32 +57,20 @@ filter {
         "[winlog][event_id]" => "[metadata][event_code]"
         "[winlog][provider_name]" => "[metadata][log_provider]"
         "[winlog][version]" => "[metadata][log_version]"
-        
+      }
+    }
+    if ![raw_data] and [message] {
+      mutate {
+        copy => { "message" => "raw_data" }
       }
     }
 
     ruby {
-      id => "kerberos_shared_validation"
-      init => 'require "time"; require "date"; require "ipaddr"'
+      id => "ad_5136_metadata_and_time"
+      init => 'require "time"; require "date"'
       code => '
-        scalar = lambda do |v|
-          (v.is_a?(String) || v.is_a?(Integer)) ? v.to_s : nil
-        end
         unavailable = lambda do |v|
           v.nil? || (v.is_a?(String) && ["", "-", "n/a"].include?(v.strip.downcase))
-        end
-        uint32 = lambda do |v|
-          s = scalar.call(v)
-          n = nil
-          if s
-            s = s.strip
-            if s.match?(/\A0x[0-9a-f]{1,8}\z/i)
-              n = s[2..-1].to_i(16)
-            elsif s.match?(/\A[0-9]{1,10}\z/)
-              n = s.to_i(10)
-            end
-          end
-          n && n <= 4294967295 ? n : nil
         end
 
         computer = event.get("[winlog][computer_name]")
@@ -89,6 +82,8 @@ filter {
             event.set("[metadata][original_event_uid]", "#{computer}:#{channel}:#{record}")
           end
         end
+        # Winlogbeat supplies the event occurrence time in @timestamp.
+        # An explicit upstream event_time takes precedence; invalid overrides fail.
         source_time = event.get("[@metadata][event_time]")
         source_time = event.get("@timestamp") if source_time.nil?
         ["time", "time_dt", "timezone_offset"].each { |f| event.remove(f) }
@@ -110,11 +105,14 @@ filter {
           event.set("time", (t.to_r * 1000).floor)
           event.set("time_dt", t.iso8601(3))
           event.set("timezone_offset", 0)
+          event.set("@timestamp", LogStash::Timestamp.new(t))
           profiles = Array(event.get("[metadata][profiles]"))
           event.set("[metadata][profiles]", (profiles + ["datetime"]).uniq)
         rescue ArgumentError, TypeError, RangeError
           event.tag("_ocsf_event_time_parse_failure")
         end
+      '
+    }
 
     mutate {
       convert => {
@@ -122,25 +120,28 @@ filter {
         "class_uid" => "integer"
         "activity_id" => "integer"
         "type_uid" => "integer"
-        "auth_protocol_id" => "integer"
+        "status_id" => "integer"
         "severity_id" => "integer"
         "[metadata][event_code]" => "string"
         "[metadata][log_version]" => "string"
       }
     }
 
-    mutate {
-      remove_field => [
-        "winlog",
-        "host",
-        "event",
-        "agent",
-        "ecs",
-        "log",
-        "@timestamp",
-        "@version",
-        "message"
-      ]
+    # Keep source fields on failure so the event can be investigated/reprocessed.
+    # Keep @timestamp for Logstash output index dates and dashboard compatibility.
+    if "_ocsf_event_time_parse_failure" not in [tags] and "_rubyexception" not in [tags] {
+      mutate {
+        remove_field => [
+          "winlog",
+          "host",
+          "event",
+          "agent",
+          "ecs",
+          "log",
+          "@version",
+          "message"
+        ]
+      }
     }
   }
 }
