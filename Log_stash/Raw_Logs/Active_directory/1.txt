@@ -1,0 +1,87 @@
+Sep 09 12:39:39 siem01 logstash[3549]: {
+Sep 09 12:39:39 siem01 logstash[3549]:            "log" => {
+Sep 09 12:39:39 siem01 logstash[3549]:         "level" => "information"
+Sep 09 12:39:39 siem01 logstash[3549]:     },
+Sep 09 12:39:39 siem01 logstash[3549]:        "message" => "A directory service object was modified.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tCN=wr r. d,OU=audit,DC=Local,DC=lab\n\tGUID:\t{FFDB98BB-85C0-4989-B58F-28167952EC9F}\n\tClass:\tuser\n\t\nAttribute:\n\tLDAP Display Name:\tgivenName\n\tSyntax (OID):\t2.5.5.12\n\tValue:\tvfsfedvfs\n\t\nOperation:\n\tType:\tValue Added\n\tCorrelation ID:\t{58D15AED-C169-42AC-ACF4-24601E68831D}\n\tApplication Correlation ID:\t-",
+Sep 09 12:39:39 siem01 logstash[3549]:           "host" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                   "os" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                 "name" => "Windows Server 2022 Standard Evaluation",
+Sep 09 12:39:39 siem01 logstash[3549]:               "family" => "windows",
+Sep 09 12:39:39 siem01 logstash[3549]:                 "type" => "windows",
+Sep 09 12:39:39 siem01 logstash[3549]:                "build" => "20348.587",
+Sep 09 12:39:39 siem01 logstash[3549]:             "platform" => "windows",
+Sep 09 12:39:39 siem01 logstash[3549]:              "version" => "10.0",
+Sep 09 12:39:39 siem01 logstash[3549]:               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)"
+Sep 09 12:39:39 siem01 logstash[3549]:         },
+Sep 09 12:39:39 siem01 logstash[3549]:                 "name" => "win-fvt9al589oi",
+Sep 09 12:39:39 siem01 logstash[3549]:         "architecture" => "x86_64",
+Sep 09 12:39:39 siem01 logstash[3549]:                  "mac" => [
+Sep 09 12:39:39 siem01 logstash[3549]:             [0] "00-0C-29-CF-45-91"
+Sep 09 12:39:39 siem01 logstash[3549]:         ],
+Sep 09 12:39:39 siem01 logstash[3549]:                   "ip" => [
+Sep 09 12:39:39 siem01 logstash[3549]:             [0] "10.0.0.10"
+Sep 09 12:39:39 siem01 logstash[3549]:         ],
+Sep 09 12:39:39 siem01 logstash[3549]:                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+Sep 09 12:39:39 siem01 logstash[3549]:             "hostname" => "WIN-FVT9AL589OI"
+Sep 09 12:39:39 siem01 logstash[3549]:     },
+Sep 09 12:39:39 siem01 logstash[3549]:            "ecs" => {
+Sep 09 12:39:39 siem01 logstash[3549]:         "version" => "8.0.0"
+Sep 09 12:39:39 siem01 logstash[3549]:     },
+Sep 09 12:39:39 siem01 logstash[3549]:           "tags" => [
+Sep 09 12:39:39 siem01 logstash[3549]:         [0] "beats_input_codec_plain_applied"
+Sep 09 12:39:39 siem01 logstash[3549]:     ],
+Sep 09 12:39:39 siem01 logstash[3549]:     "@timestamp" => 2026-09-09T19:39:30.641Z,
+Sep 09 12:39:39 siem01 logstash[3549]:       "@version" => "1",
+Sep 09 12:39:39 siem01 logstash[3549]:         "winlog" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                  "task" => "Directory Service Changes",
+Sep 09 12:39:39 siem01 logstash[3549]:               "process" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                "pid" => 652,
+Sep 09 12:39:39 siem01 logstash[3549]:             "thread" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                 "id" => 760
+Sep 09 12:39:39 siem01 logstash[3549]:             }
+Sep 09 12:39:39 siem01 logstash[3549]:         },
+Sep 09 12:39:39 siem01 logstash[3549]:            "event_data" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                               "DSName" => "Local.lab",
+Sep 09 12:39:39 siem01 logstash[3549]:                   "AttributeSyntaxOID" => "2.5.5.12",
+Sep 09 12:39:39 siem01 logstash[3549]:                        "OperationType" => "Value Added",
+Sep 09 12:39:39 siem01 logstash[3549]:                               "DSType" => "Active Directory Domain Services",
+Sep 09 12:39:39 siem01 logstash[3549]:                       "SubjectLogonId" => "0x805526",
+Sep 09 12:39:39 siem01 logstash[3549]:                          "ObjectClass" => "user",
+Sep 09 12:39:39 siem01 logstash[3549]:                             "ObjectDN" => "CN=wr r. d,OU=audit,DC=Local,DC=lab",
+Sep 09 12:39:39 siem01 logstash[3549]:             "AttributeLDAPDisplayName" => "givenName",
+Sep 09 12:39:39 siem01 logstash[3549]:                       "AttributeValue" => "vfsfedvfs",
+Sep 09 12:39:39 siem01 logstash[3549]:                           "ObjectGUID" => "{FFDB98BB-85C0-4989-B58F-28167952EC9F}",
+Sep 09 12:39:39 siem01 logstash[3549]:                    "SubjectDomainName" => "LOCAL",
+Sep 09 12:39:39 siem01 logstash[3549]:                      "SubjectUserName" => "Administrator",
+Sep 09 12:39:39 siem01 logstash[3549]:                      "OpCorrelationID" => "{58D15AED-C169-42AC-ACF4-24601E68831D}",
+Sep 09 12:39:39 siem01 logstash[3549]:                       "SubjectUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+Sep 09 12:39:39 siem01 logstash[3549]:                     "AppCorrelationID" => "-"
+Sep 09 12:39:39 siem01 logstash[3549]:         },
+Sep 09 12:39:39 siem01 logstash[3549]:                "opcode" => "Info",
+Sep 09 12:39:39 siem01 logstash[3549]:         "provider_name" => "Microsoft-Windows-Security-Auditing",
+Sep 09 12:39:39 siem01 logstash[3549]:              "event_id" => "5136",
+Sep 09 12:39:39 siem01 logstash[3549]:               "channel" => "Security",
+Sep 09 12:39:39 siem01 logstash[3549]:              "keywords" => [
+Sep 09 12:39:39 siem01 logstash[3549]:             [0] "Audit Success"
+Sep 09 12:39:39 siem01 logstash[3549]:         ],
+Sep 09 12:39:39 siem01 logstash[3549]:         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+Sep 09 12:39:39 siem01 logstash[3549]:             "record_id" => 82059,
+Sep 09 12:39:39 siem01 logstash[3549]:         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}"
+Sep 09 12:39:39 siem01 logstash[3549]:     },
+Sep 09 12:39:39 siem01 logstash[3549]:          "event" => {
+Sep 09 12:39:39 siem01 logstash[3549]:         "provider" => "Microsoft-Windows-Security-Auditing",
+Sep 09 12:39:39 siem01 logstash[3549]:           "action" => "Directory Service Changes",
+Sep 09 12:39:39 siem01 logstash[3549]:             "code" => "5136",
+Sep 09 12:39:39 siem01 logstash[3549]:          "outcome" => "success",
+Sep 09 12:39:39 siem01 logstash[3549]:         "original" => "A directory service object was modified.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tCN=wr r. d,OU=audit,DC=Local,DC=lab\n\tGUID:\t{FFDB98BB-85C0-4989-B58F-28167952EC9F}\n\tClass:\tuser\n\t\nAttribute:\n\tLDAP Display Name:\tgivenName\n\tSyntax (OID):\t2.5.5.12\n\tValue:\tvfsfedvfs\n\t\nOperation:\n\tType:\tValue Added\n\tCorrelation ID:\t{58D15AED-C169-42AC-ACF4-24601E68831D}\n\tApplication Correlation ID:\t-",
+Sep 09 12:39:39 siem01 logstash[3549]:          "created" => "2026-09-09T19:39:31.749Z",
+Sep 09 12:39:39 siem01 logstash[3549]:             "kind" => "event"
+Sep 09 12:39:39 siem01 logstash[3549]:     },
+Sep 09 12:39:39 siem01 logstash[3549]:          "agent" => {
+Sep 09 12:39:39 siem01 logstash[3549]:                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+Sep 09 12:39:39 siem01 logstash[3549]:                 "name" => "WIN-FVT9AL589OI",
+Sep 09 12:39:39 siem01 logstash[3549]:              "version" => "9.5.2",
+Sep 09 12:39:39 siem01 logstash[3549]:         "ephemeral_id" => "694b59e4-237e-4e26-b51f-473a7d2bb714",
+Sep 09 12:39:39 siem01 logstash[3549]:                 "type" => "winlogbeat"
+Sep 09 12:39:39 siem01 logstash[3549]:     }
+Sep 09 12:39:39 siem01 logstash[3549]: }

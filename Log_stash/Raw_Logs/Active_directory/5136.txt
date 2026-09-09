@@ -1,0 +1,87 @@
+ {
+            "log" => {
+         "level" => "information"
+     },
+        "message" => "A directory service object was modified.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tCN=wr r. d,OU=audit,DC=Local,DC=lab\n\tGUID:\t{FFDB98BB-85C0-4989-B58F-28167952EC9F}\n\tClass:\tuser\n\t\nAttribute:\n\tLDAP Display Name:\tgivenName\n\tSyntax (OID):\t2.5.5.12\n\tValue:\tvfsfedvfs\n\t\nOperation:\n\tType:\tValue Added\n\tCorrelation ID:\t{58D15AED-C169-42AC-ACF4-24601E68831D}\n\tApplication Correlation ID:\t-",
+           "host" => {
+                   "os" => {
+                 "name" => "Windows Server 2022 Standard Evaluation",
+               "family" => "windows",
+                 "type" => "windows",
+                "build" => "20348.587",
+             "platform" => "windows",
+              "version" => "10.0",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)"
+         },
+                 "name" => "win-fvt9al589oi",
+         "architecture" => "x86_64",
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+                   "ip" => [
+             [0] "10.0.0.10"
+         ],
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+             "hostname" => "WIN-FVT9AL589OI"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+     "@timestamp" => 2026-09-09T19:39:30.641Z,
+       "@version" => "1",
+         "winlog" => {
+                  "task" => "Directory Service Changes",
+               "process" => {
+                "pid" => 652,
+             "thread" => {
+                 "id" => 760
+             }
+         },
+            "event_data" => {
+                               "DSName" => "Local.lab",
+                   "AttributeSyntaxOID" => "2.5.5.12",
+                        "OperationType" => "Value Added",
+                               "DSType" => "Active Directory Domain Services",
+                       "SubjectLogonId" => "0x805526",
+                          "ObjectClass" => "user",
+                             "ObjectDN" => "CN=wr r. d,OU=audit,DC=Local,DC=lab",
+             "AttributeLDAPDisplayName" => "givenName",
+                       "AttributeValue" => "vfsfedvfs",
+                           "ObjectGUID" => "{FFDB98BB-85C0-4989-B58F-28167952EC9F}",
+                    "SubjectDomainName" => "LOCAL",
+                      "SubjectUserName" => "Administrator",
+                      "OpCorrelationID" => "{58D15AED-C169-42AC-ACF4-24601E68831D}",
+                       "SubjectUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+                     "AppCorrelationID" => "-"
+         },
+                "opcode" => "Info",
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+              "event_id" => "5136",
+               "channel" => "Security",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+             "record_id" => 82059,
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}"
+     },
+          "event" => {
+         "provider" => "Microsoft-Windows-Security-Auditing",
+           "action" => "Directory Service Changes",
+             "code" => "5136",
+          "outcome" => "success",
+         "original" => "A directory service object was modified.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tCN=wr r. d,OU=audit,DC=Local,DC=lab\n\tGUID:\t{FFDB98BB-85C0-4989-B58F-28167952EC9F}\n\tClass:\tuser\n\t\nAttribute:\n\tLDAP Display Name:\tgivenName\n\tSyntax (OID):\t2.5.5.12\n\tValue:\tvfsfedvfs\n\t\nOperation:\n\tType:\tValue Added\n\tCorrelation ID:\t{58D15AED-C169-42AC-ACF4-24601E68831D}\n\tApplication Correlation ID:\t-",
+          "created" => "2026-09-09T19:39:31.749Z",
+             "kind" => "event"
+     },
+          "agent" => {
+                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+                 "name" => "WIN-FVT9AL589OI",
+              "version" => "9.5.2",
+         "ephemeral_id" => "694b59e4-237e-4e26-b51f-473a7d2bb714",
+                 "type" => "winlogbeat"
+     }
+ }

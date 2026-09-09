@@ -1,2 +1,0 @@
-cd "C:\Program Files\Winlogbeat"
-.\winlogbeat.exe test output -c .\winlogbeat.yml -e
