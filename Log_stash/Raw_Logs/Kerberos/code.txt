@@ -1,0 +1,21 @@
+New-ADUser `
+  -Name "AuditTest" `
+  -SamAccountName "AuditTest" `
+  -Path "OU=AuditLab,DC=local,DC=lab"
+Immediately query the DC itself:
+Get-WinEvent -FilterHashtable @{
+    LogName = 'Security'
+    Id      = 5137
+    StartTime = (Get-Date).AddMinutes(-2)
+}
+Do not involve Winlogbeat yet. We first need to prove Windows itself generated the event.
+Then test 5136:
+Set-ADUser AuditTest -Description "5136 test"
+and:
+Get-WinEvent -FilterHashtable @{
+    LogName = 'Security'
+    Id      = 5136
+    StartTime = (Get-Date).AddMinutes(-2)
+}
+Then create a second OU:
+New-ADOrganizationalUnit -Name "AuditLab2"
