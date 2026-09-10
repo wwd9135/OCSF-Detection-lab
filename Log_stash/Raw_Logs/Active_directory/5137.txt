@@ -1,0 +1,83 @@
+ {
+        "message" => "A directory service object was created.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\t\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tcn=sdd d.,OU=audit,DC=Local,DC=lab\n\tGUID:\t{4D834F66-638A-4F4A-80B2-4A079A99E923}\n\tClass:\tuser\n\t\nOperation:\n\tCorrelation ID:\t{CFD4CCAC-4B2E-4E85-93C9-E76DE22E0164}\n\tApplication Correlation ID:\t-",
+     "@timestamp" => 2026-09-10T01:00:04.838Z,
+            "log" => {
+         "level" => "information"
+     },
+         "winlog" => {
+               "process" => {
+                "pid" => 652,
+             "thread" => {
+                 "id" => 760
+             }
+         },
+              "event_id" => "5137",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+                "opcode" => "Info",
+                  "task" => "Directory Service Changes",
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+             "record_id" => 83030,
+               "channel" => "Security",
+            "event_data" => {
+                "SubjectLogonId" => "0x805526",
+                    "ObjectGUID" => "{4D834F66-638A-4F4A-80B2-4A079A99E923}",
+                "SubjectUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+              "AppCorrelationID" => "-",
+                        "DSType" => "Active Directory Domain Services",
+               "OpCorrelationID" => "{CFD4CCAC-4B2E-4E85-93C9-E76DE22E0164}",
+                        "DSName" => "Local.lab",
+                      "ObjectDN" => "cn=sdd d.,OU=audit,DC=Local,DC=lab",
+             "SubjectDomainName" => "LOCAL",
+               "SubjectUserName" => "Administrator",
+                   "ObjectClass" => "user"
+         }
+     },
+          "event" => {
+           "action" => "Directory Service Changes",
+             "kind" => "event",
+             "code" => "5137",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "created" => "2026-09-10T01:00:06.344Z",
+          "outcome" => "success",
+         "original" => "A directory service object was created.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\t\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tcn=sdd d.,OU=audit,DC=Local,DC=lab\n\tGUID:\t{4D834F66-638A-4F4A-80B2-4A079A99E923}\n\tClass:\tuser\n\t\nOperation:\n\tCorrelation ID:\t{CFD4CCAC-4B2E-4E85-93C9-E76DE22E0164}\n\tApplication Correlation ID:\t-"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+       "@version" => "1",
+          "agent" => {
+                 "name" => "WIN-FVT9AL589OI",
+              "version" => "9.5.2",
+                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+                 "type" => "winlogbeat",
+         "ephemeral_id" => "694b59e4-237e-4e26-b51f-473a7d2bb714"
+     },
+           "host" => {
+             "hostname" => "WIN-FVT9AL589OI",
+                 "name" => "win-fvt9al589oi",
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+         "architecture" => "x86_64",
+                   "os" => {
+                 "name" => "Windows Server 2022 Standard Evaluation",
+                "build" => "20348.587",
+                 "type" => "windows",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+              "version" => "10.0",
+             "platform" => "windows",
+               "family" => "windows"
+         },
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+                   "ip" => [
+             [0] "10.0.0.10"
+         ]
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ]
+ }

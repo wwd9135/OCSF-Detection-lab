@@ -1,0 +1,84 @@
+ {
+        "message" => "A directory service object was moved.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\t\nDirectory Service:\n\tName:\t\tLocal.lab\n\tType:\t\tActive Directory Domain Services\n\t\nObject:\n\tOld DN:\t\tCN=wr r. d,CN=Users,DC=Local,DC=lab\n\tNew DN:\tCN=wr r. d,OU=audit,DC=Local,DC=lab\n\tGUID:\t\t{FFDB98BB-85C0-4989-B58F-28167952EC9F}\n\tClass:\t\tuser\n\t\nOperation:\n\tCorrelation ID:\t\t\t{CEA5636B-9623-405B-B3F1-362EAD0F2965}\n\tApplication Correlation ID:\t-",
+     "@timestamp" => 2026-09-10T01:21:35.918Z,
+            "log" => {
+         "level" => "information"
+     },
+         "winlog" => {
+               "process" => {
+                "pid" => 652,
+             "thread" => {
+                 "id" => 760
+             }
+         },
+              "event_id" => "5139",
+                "opcode" => "Info",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+                  "task" => "Directory Service Changes",
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+         "computer_name" => "WIN-FVT9AL589OI.Local.lab",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+             "record_id" => 83398,
+               "channel" => "Security",
+            "event_data" => {
+                "SubjectLogonId" => "0x805526",
+                    "ObjectGUID" => "{FFDB98BB-85C0-4989-B58F-28167952EC9F}",
+                "SubjectUserSid" => "S-1-5-21-149735389-2596996033-189346583-500",
+              "AppCorrelationID" => "-",
+                        "DSType" => "Active Directory Domain Services",
+                   "OldObjectDN" => "CN=wr r. d,CN=Users,DC=Local,DC=lab",
+                        "DSName" => "Local.lab",
+               "OpCorrelationID" => "{CEA5636B-9623-405B-B3F1-362EAD0F2965}",
+                   "NewObjectDN" => "CN=wr r. d,OU=audit,DC=Local,DC=lab",
+             "SubjectDomainName" => "LOCAL",
+               "SubjectUserName" => "Administrator",
+                   "ObjectClass" => "user"
+         }
+     },
+          "event" => {
+           "action" => "Directory Service Changes",
+             "kind" => "event",
+             "code" => "5139",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "created" => "2026-09-10T01:21:37.483Z",
+          "outcome" => "success",
+         "original" => "A directory service object was moved.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\t\nDirectory Service:\n\tName:\t\tLocal.lab\n\tType:\t\tActive Directory Domain Services\n\t\nObject:\n\tOld DN:\t\tCN=wr r. d,CN=Users,DC=Local,DC=lab\n\tNew DN:\tCN=wr r. d,OU=audit,DC=Local,DC=lab\n\tGUID:\t\t{FFDB98BB-85C0-4989-B58F-28167952EC9F}\n\tClass:\t\tuser\n\t\nOperation:\n\tCorrelation ID:\t\t\t{CEA5636B-9623-405B-B3F1-362EAD0F2965}\n\tApplication Correlation ID:\t-"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+       "@version" => "1",
+          "agent" => {
+              "version" => "9.5.2",
+                 "name" => "WIN-FVT9AL589OI",
+                   "id" => "1f7c2a05-f0ab-4deb-b23a-3ab73a166959",
+                 "type" => "winlogbeat",
+         "ephemeral_id" => "694b59e4-237e-4e26-b51f-473a7d2bb714"
+     },
+           "host" => {
+             "hostname" => "WIN-FVT9AL589OI",
+                 "name" => "win-fvt9al589oi",
+                  "mac" => [
+             [0] "00-0C-29-CF-45-91"
+         ],
+         "architecture" => "x86_64",
+                   "os" => {
+                 "name" => "Windows Server 2022 Standard Evaluation",
+                "build" => "20348.587",
+                 "type" => "windows",
+              "version" => "10.0",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+             "platform" => "windows",
+               "family" => "windows"
+         },
+                   "id" => "74bc4021-e90d-42ea-9707-a6e13974a138",
+                   "ip" => [
+             [0] "10.0.0.10"
+         ]
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ]
+ }

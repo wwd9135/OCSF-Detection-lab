@@ -1,0 +1,64 @@
+ {
+            "raw_data" => "A directory service object was modified.\n\t\nSubject:\n\tSecurity ID:\t\tS-1-5-21-149735389-2596996033-189346583-500\n\tAccount Name:\t\tAdministrator\n\tAccount Domain:\t\tLOCAL\n\tLogon ID:\t\t0x805526\n\nDirectory Service:\n\tName:\tLocal.lab\n\tType:\tActive Directory Domain Services\n\t\nObject:\n\tDN:\tcn=sdd d.,OU=audit,DC=Local,DC=lab\n\tGUID:\t{4D834F66-638A-4F4A-80B2-4A079A99E923}\n\tClass:\tuser\n\t\nAttribute:\n\tLDAP Display Name:\tuserAccountControl\n\tSyntax (OID):\t2.5.5.9\n\tValue:\t546\n\t\nOperation:\n\tType:\tValue Deleted\n\tCorrelation ID:\t{B96063E2-A204-4127-9545-CD68A1D3B360}\n\tApplication Correlation ID:\t-",
+       "category_name" => "Identity & Access Management",
+         "severity_id" => 1,
+                "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ],
+       "activity_name" => "Update",
+     "timezone_offset" => 0,
+            "metadata" => {
+                 "log_source" => "WIN-FVT9AL589OI.Local.lab:Security",
+                   "profiles" => [
+             [0] "datetime"
+         ],
+              "original_time" => "2026-09-10T01:00:04.841Z",
+                    "product" => {
+             "vendor_name" => "Microsoft",
+                    "name" => "Windows Security Auditing"
+         },
+                    "version" => "1.8.0",
+                 "event_code" => "5136",
+               "log_provider" => "Microsoft-Windows-Security-Auditing",
+         "original_event_uid" => "WIN-FVT9AL589OI.Local.lab:Security:83039"
+     },
+          "@timestamp" => 2026-09-10T01:00:04.841Z,
+               "actor" => {
+            "user" => {
+             "domain" => "LOCAL",
+                "uid" => "S-1-5-21-149735389-2596996033-189346583-500",
+               "name" => "Administrator"
+         },
+         "session" => {
+             "uid" => "0x805526"
+         }
+     },
+            "unmapped" => {
+         "windows" => {
+                                 "ds_type" => "Active Directory Domain Services",
+                         "attribute_value" => "546",
+             "attribute_ldap_display_name" => "userAccountControl",
+                          "operation_type" => "Value Deleted",
+                    "attribute_syntax_oid" => "2.5.5.9",
+                                 "ds_name" => "Local.lab",
+                "operation_correlation_id" => "{B96063E2-A204-4127-9545-CD68A1D3B360}",
+              "application_correlation_id" => "-"
+         }
+     },
+           "class_uid" => 3004,
+              "status" => "Success",
+            "severity" => "Informational",
+              "entity" => {
+          "uid" => "{4D834F66-638A-4F4A-80B2-4A079A99E923}",
+         "name" => "cn=sdd d.,OU=audit,DC=Local,DC=lab",
+         "type" => "user"
+     },
+           "status_id" => 1,
+                "time" => 1789002004841,
+           "type_name" => "Entity Management: Update",
+         "activity_id" => 3,
+        "category_uid" => 3,
+             "time_dt" => "2026-09-10T01:00:04.841Z",
+            "type_uid" => 300403,
+          "class_name" => "Entity Management"
+ }

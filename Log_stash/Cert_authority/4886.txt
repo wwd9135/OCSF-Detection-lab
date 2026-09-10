@@ -1,0 +1,77 @@
+ {
+        "message" => "Certificate Services received a certificate request.\n\t\nRequest ID:\t8\nRequester:\tLOCAL\\b.bradley16\nAttributes:\t\ncdc:WIN-FVT9AL589OI.Local.lab\nrmd:WinUser-01.Local.lab\n\nccm:WinUser-01.Local.lab",
+     "@timestamp" => 2026-09-10T19:50:12.906Z,
+            "log" => {
+         "level" => "information"
+     },
+         "winlog" => {
+               "process" => {
+                "pid" => 640,
+             "thread" => {
+                 "id" => 6176
+             }
+         },
+              "event_id" => "4886",
+                "opcode" => "Info",
+         "provider_guid" => "{54849625-5478-4994-A5BA-3E3B0328C30D}",
+                  "task" => "Certification Services",
+         "provider_name" => "Microsoft-Windows-Security-Auditing",
+         "computer_name" => "CA-01.Local.lab",
+           "activity_id" => "{5E948C9D-4150-0000-A493-945E5041DD01}",
+              "keywords" => [
+             [0] "Audit Success"
+         ],
+             "record_id" => 8250,
+               "channel" => "Security",
+            "event_data" => {
+             "Attributes" => "\ncdc:WIN-FVT9AL589OI.Local.lab\nrmd:WinUser-01.Local.lab\n\nccm:WinUser-01.Local.lab",
+              "RequestId" => "8",
+              "Requester" => "LOCAL\\b.bradley16"
+         }
+     },
+          "event" => {
+             "kind" => "event",
+           "action" => "Certification Services",
+             "code" => "4886",
+         "provider" => "Microsoft-Windows-Security-Auditing",
+          "created" => "2026-09-10T19:50:14.294Z",
+          "outcome" => "success",
+         "original" => "Certificate Services received a certificate request.\n\t\nRequest ID:\t8\nRequester:\tLOCAL\\b.bradley16\nAttributes:\t\ncdc:WIN-FVT9AL589OI.Local.lab\nrmd:WinUser-01.Local.lab\n\nccm:WinUser-01.Local.lab"
+     },
+            "ecs" => {
+         "version" => "8.0.0"
+     },
+       "@version" => "1",
+          "agent" => {
+                 "name" => "CA-01",
+              "version" => "9.5.3",
+                   "id" => "05f04397-d695-4854-894c-3af622bc5975",
+                 "type" => "winlogbeat",
+         "ephemeral_id" => "5e43b8c1-9e84-4e1e-838e-d1d0647c26b6"
+     },
+           "host" => {
+             "hostname" => "CA-01",
+                 "name" => "ca-01",
+                  "mac" => [
+             [0] "00-0C-29-34-57-FA"
+         ],
+         "architecture" => "x86_64",
+                   "os" => {
+                 "name" => "Windows Server 2022 Standard Evaluation",
+                "build" => "20348.587",
+                 "type" => "windows",
+               "kernel" => "10.0.20348.587 (WinBuild.160101.0800)",
+              "version" => "10.0",
+             "platform" => "windows",
+               "family" => "windows"
+         },
+                   "id" => "ccf082f3-a32b-4d9a-ad8b-89a476e0e910",
+                   "ip" => [
+             [0] "fe80::7583:c06a:9c:b9d9",
+             [1] "10.0.0.11"
+         ]
+     },
+           "tags" => [
+         [0] "beats_input_codec_plain_applied"
+     ]
+ }

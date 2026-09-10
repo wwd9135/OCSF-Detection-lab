@@ -6,7 +6,7 @@ input {
 
 filter {
   if [winlog][provider_name] == "Microsoft-Windows-Security-Auditing" and
-      [winlog][event_id] in [5136, "5136"] {
+      [winlog][event_id] in [5136, "5136", 5137, "5137", 5139, "5139", 5141, "5141"] {
     mutate {
       replace => {
         "category_uid" => "3"
@@ -45,6 +45,7 @@ filter {
         "[winlog][event_data][AttributeValue]"           => "[unmapped][windows][attribute_value]"
 
         "[winlog][event_data][OperationType]"            => "[unmapped][windows][operation_type]"
+        "[winlog][event_data][TreeDelete]"               => "[unmapped][windows][tree_delete]"
 
         "[winlog][event_data][OpCorrelationID]"          => "[unmapped][windows][operation_correlation_id]"
         "[winlog][event_data][AppCorrelationID]"         => "[unmapped][windows][application_correlation_id]"
@@ -65,7 +66,7 @@ filter {
     }
 
     ruby {
-      id => "ad_5136_metadata_and_time"
+      id => "ad_directory_metadata_and_time"
       init => 'require "time"; require "date"'
       code => '
         unavailable = lambda do |v|
@@ -109,6 +110,39 @@ filter {
           event.tag("_ocsf_event_time_parse_failure")
         end
       '
+    }
+
+    if [winlog][event_id] in [5137, "5137"] {
+      mutate {
+        replace => {
+          "activity_id" => "1"
+          "activity_name" => "Create"
+          "type_uid" => "300401"
+          "type_name" => "Entity Management: Create"
+        }
+      }
+    } else if [winlog][event_id] in [5139, "5139"] {
+      mutate {
+        replace => {
+          "activity_id" => "5"
+          "activity_name" => "Move"
+          "type_uid" => "300405"
+          "type_name" => "Entity Management: Move"
+        }
+        rename => {
+          "[winlog][event_data][OldObjectDN]" => "[unmapped][windows][old_object_dn]"
+          "[winlog][event_data][NewObjectDN]" => "[entity][name]"
+        }
+      }
+    } else if [winlog][event_id] in [5141, "5141"] {
+      mutate {
+        replace => {
+          "activity_id" => "4"
+          "activity_name" => "Delete"
+          "type_uid" => "300404"
+          "type_name" => "Entity Management: Delete"
+        }
+      }
     }
 
     mutate {
