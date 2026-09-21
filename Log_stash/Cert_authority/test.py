@@ -6,3 +6,4 @@ def parse_login(log):
     print(valuew)
 parse_login(log)
 
+sew
