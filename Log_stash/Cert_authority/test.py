@@ -5,5 +5,3 @@ def parse_login(log):
     key, valuew = log.split("=")
     print(valuew)
 parse_login(log)
-
-sew
