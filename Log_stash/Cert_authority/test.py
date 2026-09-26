@@ -3,5 +3,5 @@ def parse_login(log):
     log = log.strip().lower()
     for i in log
     key, valuew = log.split("=")
-    print(valuew)
+    print(valuew)ht
 parse_login(log)
